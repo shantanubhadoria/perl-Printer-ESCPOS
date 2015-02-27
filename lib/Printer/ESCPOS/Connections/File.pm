@@ -5,17 +5,18 @@ package Printer::ESCPOS::Connections::File;
 
 use 5.010;
 use Moose;
+with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
 use IO::File;
 
-=attr device_path
+=attr deviceFilePath
 
 This variable contains the path for the printer device file on UNIX-like systems. I haven't added support for Windows and it probably wont work in doz as a local printer without some modifications. Feel free to try it out and let me know what happens. This must be passed in the constructor
 
 =cut
 
-has device_path => (
+has deviceFilePath => (
   is => 'ro',
   isa => 'Str',
 );
@@ -30,15 +31,9 @@ sub _build__connection {
     my ($self) = @_;
     my $printer;
 
-    $printer = new IO::File ">>" . $self->device_path ;
+    $printer = new IO::File ">>" . $self->deviceFilePath ;
 
     return $printer;
-}
-
-sub write {
-    my ($self,$raw) = @_;
-
-    $self->_connection->write($raw);
 }
 
 no Moose;

@@ -5,19 +5,20 @@ package Printer::ESCPOS::Connections::Serial;
 
 use 5.010;
 use Moose;
+with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
 use Device::SerialPort;
 
-=attr serial_device_path
+=attr deviceFilePath
 
 This variable contains the path for the printer device file when connected as a serial device on UNIX-like systems. I haven't added support for Windows and it probably wont work in doz as a local printer without some modifications. Feel free to try it out and let me know what happens. This must be passed in the constructor
 
 =cut
 
-has serial_device_path => (
-  is => 'ro',
-  isa => 'Str',
+has deviceFilePath => (
+    is  => 'ro',
+    isa => 'Str',
 );
 
 =attr baudrate
@@ -26,14 +27,20 @@ When used as a local serial device you can set the baudrate of the printer too. 
 
 This param may be specified when creating printer object to make sure it works properly.
 
-$printer = Printer::Thermal->new(serial_device_path => '/dev/ttyACM0', baudrate => 9600);
+$printer = Printer::Thermal->new(deviceFilePath => '/dev/ttyACM0', baudrate => 9600);
 
 =cut
 
 has baudrate => (
-  is => 'ro',
-  isa => 'Int',
-  default => 38400,
+    is      => 'ro',
+    isa     => 'Int',
+    default => 38400,
+);
+
+has readConstTime => (
+    is      => 'ro',
+    isa     => 'Int',
+    default => 150,
 );
 
 has _connection => (
@@ -44,25 +51,22 @@ has _connection => (
 
 sub _build__connection {
     my ($self) = @_;
-    my $printer;
 
-    $printer = Device::SerialPort->new( $self->serial_device_path );
+    my $printer = new Device::SerialPort( $self->deviceFilePath )
+        || die "Can't open Port: $!\n";
     $printer->baudrate( $self->baudrate );
+    $printer->read_const_time( $self->readConstTime ); # 1 second per unfulfilled "read" call
+    $printer->read_char_time( 0 );     # don't wait for each character
 
     return $printer;
 }
 
-sub write {
-    my ($self,$raw) = @_;
-
-    $self->_connection->write($raw);
-}
-
 sub read {
-    my ($self,$bytes) = @_;
+    my ( $self, $question, $bytes ) = @_;
     $bytes |= 1024;
 
-    my $data = $self->_connection->read($bytes);
+    $self->_connection->write( $question );
+    my ( $count, $data ) = $self->_connection->read( $bytes );
 
     return $data;
 }

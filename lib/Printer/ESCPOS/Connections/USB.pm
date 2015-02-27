@@ -1,10 +1,11 @@
 use strict;
 use warnings;
 
-package Printer::ESCPOS::Connections::Usb;
+package Printer::ESCPOS::Connections::USB;
 
 use 5.010;
 use Moose;
+with 'Printer::ESCPOS::Roles::Connection';
 
 use Device::USB;
 

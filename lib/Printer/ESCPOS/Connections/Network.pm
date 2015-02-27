@@ -5,28 +5,29 @@ package Printer::ESCPOS::Connections::Network;
 
 use 5.010;
 use Moose;
+with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
 use IO::Socket;
 
-=attr device_ip
+=attr deviceIP
 
 Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
 
 =cut
 
-has device_ip => (
+has deviceIP => (
   is => 'ro',
   isa => 'Str',
 );
 
-=attr device_port
+=attr devicePort
 
 Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
 
 =cut
 
-has device_port => (
+has devicePort => (
   is => 'ro',
   isa => 'Int',
 );
@@ -43,18 +44,12 @@ sub _build__connection {
 
     $printer = IO::Socket::INET->new(
         Proto     => "tcp",
-        PeerAddr  => $self->device_ip,
-        PeerPort  => $self->device_port,
+        PeerAddr  => $self->deviceIP,
+        PeerPort  => $self->devicePort,
         Timeout   => 1,
     ) or die " Can't connect to printer";
 
     return $printer;
-}
-
-sub write {
-    my ($self,$raw) = @_;
-
-    $self->_connection->write($raw);
 }
 
 sub read {

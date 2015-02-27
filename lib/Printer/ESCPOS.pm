@@ -11,7 +11,145 @@ package Printer::ESCPOS;
 # Dependencies
 use 5.010;
 use Moose;
+use Moose::Util::TypeConstraints;
+use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
 use namespace::autoclean;
+
+use Printer::ESCPOS::Connections::File;
+use Printer::ESCPOS::Connections::Network;
+use Printer::ESCPOS::Connections::Serial;
+use Printer::ESCPOS::Connections::USB;
+
+=attr driverType
+
+"Required attribute". The driver type to use for your printer. This can be "File", "Network" or "Serial". "USB" driver is not implemented yet.
+If you choose "File" or "Serial" driver, you must provide the deviceFilePath, for "Network" driver you must provide the printerIp and printerPort.
+
+=cut
+
+has driverType => (
+    is       => 'rw',
+    isa      => enum( [qw[ File Network Serial USB ]] ),
+    required => 1,
+);
+
+=attr profile
+
+There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( [Printer::ESCPOS::Profiles::Generic] ).
+Use the following classes as examples.
+[Printer::ESCPOS::Profiles::Generic]
+[Printer::ESCPOS::Profiles::SinocanPSeries]
+
+Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.
+
+    use Moose;
+    extends 'Printer::ESCPOS::Roles::Profile';
+
+=cut
+
+has profile => (
+    is      => 'rw',
+    default => 'Generic',
+);
+
+=attr deviceFilePath
+
+File path for UNIX device file. e.g. "/dev/ttyACM0"
+
+=cut
+
+has deviceFilePath => (
+    is  => 'rw',
+    isa => 'Str',
+);
+
+=attr deviceIP
+
+Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+
+=cut
+
+has deviceIP => (
+  is => 'ro',
+  isa => 'Str',
+);
+
+=attr devicePort
+
+Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+
+=cut
+
+has devicePort => (
+  is => 'ro',
+  isa => 'Int',
+);
+
+=attr baudrate
+
+When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but not always. 
+
+=cut
+
+has baudrate => (
+  is => 'ro',
+  isa => 'Int',
+  default => 38400,
+);
+
+has _driver => (
+    is         => 'ro',
+    lazy_build => 1,
+    init_arg   => undef,
+);
+
+sub _build__driver {
+    my ( $self ) = @_;
+
+    if( $self->driverType eq 'File' ) {
+        return Printer::ESCPOS::Connections::File->new(
+            deviceFilePath => $self->deviceFilePath,
+        );
+    } elsif( $self->driverType eq 'Network' ) {
+        return Printer::ESCPOS::Connections::Network->new(
+            deviceIP   => $self->deviceIP,
+            devicePort => $self->devicePort,
+        );
+    } elsif( $self->driverType eq 'Serial' ) {
+        return Printer::ESCPOS::Connections::Serial->new(
+            deviceFilePath => $self->deviceFilePath,
+            baudrate       => $self->baudrate,
+        );
+    }
+}
+
+=attr printer
+
+Use this attribute to send commands to the printer
+    
+    $device->printer->setFont('a');
+    $device->printer->write("blah blah blah\n");
+
+=cut
+
+has printer => (
+    is         => 'ro',
+    lazy_build => 1,
+);
+
+sub _build_printer {
+    my ( $self ) = @_;
+   
+    my $base  = __PACKAGE__ . "::Profiles::";
+    my $class = $base . $self->profile;
+    Class::Load::load_class($class);
+    unless ($class->does(ESCPOSProfile)){
+        confess "Class ${class} in ${base} does not implement the Printer::ESCPOS::Roles::Profile Interface";
+    }
+    my $object = $class->new(
+        driver => $self->_driver,
+    );
+}
 
 no Moose;
 __PACKAGE__->meta->make_immutable;

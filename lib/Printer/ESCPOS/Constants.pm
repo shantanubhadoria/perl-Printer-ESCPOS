@@ -1,5 +1,22 @@
 package  Printer::ESCPOS;
 
+require Exporter;
+@ISA = qw[Exporter];
+@EXPORT = qw[
+    ESC
+    GS
+    DLE
+    FS
+
+    FF
+    SP
+    
+    LF
+    CR
+    HT
+];
+
+
 use constant {
     ESC => "\x1b",
     GS  => "\x1d",
@@ -24,7 +41,6 @@ use constant {
     CAN                => "\x18",                 # In page mode, deletes(Cancel) all the data in the current printable area 
     # Feed control sequences
     LF                 => "\x0a",                 # Print and line feed
-    FF                 => "\x0c",                 # Form feed
     CR                 => "\x0d",                 # Carriage return
     HT                 => "\x09",                 # Horizontal tab
     SET_HT             => ESC . 'D',              # Set horizontal tab positions
