@@ -14,14 +14,6 @@ use Moose;
 with 'Printer::ESCPOS::Roles::Profile';
 use namespace::autoclean;
 
-use Printer::ESCPOS::Constants;
-
-has init => (
-    is => 'Str',
-    default => ESC . '@', # Initialize the Printer
-    . ESC . "=\x01",      # Set Printer
-);
-
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
