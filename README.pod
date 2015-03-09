@@ -1,0 +1,165 @@
+=pod
+
+=head1 NAME
+
+Printer::ESCPOS - Interface for all thermal or dot-matrix receipt printers that support ESC-POS specification.
+
+=head1 VERSION
+
+version 0.001
+
+=head1 SYNOPSIS
+
+   use Printer::ESCPOS;
+ 
+   #For Network Printers $port is 9100 in most cases but might differ depending on how you have configured your printer
+   $printer = Printer::ESCPOS->new(device_ip=>$printer_ip,device_port=>$port);
+ 
+   #These commands won't actually send anything to the printer but it will store all the merged data including control codes to send to printer in $printer->print_string variable.
+   $printer->write("Blah Blah \nReceipt Details\nFooter");
+   $printer->bold_on();
+   $printer->write("Bold Text");
+   $printer->bold_off();
+   $printer->print(); ##Sends the above set of code to the printer. Clears the buffer text in module.
+ 
+   #For local printer connected on serial port, check syslog(Usually under /var/log/syslog) for what device file was created for your printer when you connect it to your system(For plug and play printers).
+   my $path = '/dev/ttyACM0';
+   $printer = Printer::ESCPOS->new(serial_device_path=$path);
+   $printer->write("Blah Blah \nReceipt Details\nFooter");
+   $printer->bold_on();
+   $printer->write("Bold Text");
+   $printer->bold_off();
+   $printer->print();
+ 
+   #For local printer connected on usb port, check syslog(Usually under /var/log/syslog) for what device file was created for your printer when you connect it to your system(For plug and play printers).
+   my $path = '/dev/usb/lp0';
+   $printer = Printer::ESCPOS->new(usb_device_path=$path);
+   $printer->write("Blah Blah \nReceipt Details\nFooter");
+   $printer->bold_on();
+   $printer->write("Bold Text");
+   $printer->bold_off();
+   $printer->print();
+
+=head1 DESCRIPTION
+
+You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you can even extend this module by adding specialized funtions for your printer in it's own subclass.
+
+For ESC-P codes refer the guide from Epson http:E<sol>E<sol>support.epson.ruE<sol>uploadE<sol>library_fileE<sol>14E<sol>esc-p.pdf
+
+=head1 ATTRIBUTES
+
+=head2 driverType
+
+"Required attribute". The driver type to use for your printer. This can be "File", "Network" or "Serial". "USB" driver is not implemented yet.
+If you choose "File" or "Serial" driver, you must provide the deviceFilePath, for "Network" driver you must provide the printerIp and printerPort.
+
+=head2 profile
+
+There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( [Printer::ESCPOS::Profiles::Generic] ).
+Use the following classes as examples.
+[Printer::ESCPOS::Profiles::Generic]
+[Printer::ESCPOS::Profiles::SinocanPSeries]
+
+Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.
+
+    use Moose;
+    extends 'Printer::ESCPOS::Roles::Profile';
+
+=head2 deviceFilePath
+
+File path for UNIX device file. e.g. "/dev/ttyACM0"
+
+=head2 deviceIP
+
+Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+
+=head2 devicePort
+
+Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+
+=head2 baudrate
+
+When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but not always. 
+
+=head2 printer
+
+Use this attribute to send commands to the printer
+
+    $device->printer->setFont('a');
+    $device->printer->write("blah blah blah\n");
+
+=head1 NOTES
+
+=over
+
+=item *
+
+If the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when creating printer object when you create the printer object(not for network or USB printers)
+
+=back
+
+     $printer = Printer::ESCPOS->new(serial_device_path => '/dev/ttyACM0', baudrate => 9600);
+
+=head1 USAGE
+
+=over
+
+=item *
+
+This Module offers a object oriented interface to ESC-POS Printers. 
+
+=item *
+
+Create a printer object by providing parameters for one of the three types of 
+printers supported.
+
+=item *
+
+then call formatting options or write() text to printer object in sequence. 
+
+=item *
+
+Then call the print() method to dispatch the sequences from the module buffer 
+to the printer. 
+
+=back
+
+Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many commands too quickly.
+
+=for :stopwords cpan testmatrix url annocpan anno bugtracker rt cpants kwalitee diff irc mailto metadata placeholders metacpan
+
+=head1 SUPPORT
+
+=head2 Bugs / Feature Requests
+
+Please report any bugs or feature requests through github at 
+L<https://github.com/shantanubhadoria/printer-escpos/issues>.
+You will be notified automatically of any progress on your issue.
+
+=head2 Source Code
+
+This is open source software.  The code repository is available for
+public review and contribution under the terms of the license.
+
+L<https://github.com/shantanubhadoria/printer-escpos>
+
+  git clone git://github.com/shantanubhadoria/printer-escpos.git
+
+=head1 AUTHOR
+
+Shantanu Bhadoria (shantanu@cpan.org)
+
+=head1 CONTRIBUTOR
+
+=for stopwords Shantanu Bhadoria
+
+Shantanu Bhadoria <shantanu att cpan dott org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2015 by Shantanu Bhadoria.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
