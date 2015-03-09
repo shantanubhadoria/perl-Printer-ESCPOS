@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 package Printer::ESCPOS::Profiles::Generic;
 
 # PODNAME: Printer::ESCPOS::Profiles::Generic
@@ -11,19 +14,16 @@ use Moose;
 with 'Printer::ESCPOS::Roles::Profile';
 use namespace::autoclean;
 
-use Printer::ESCPOS::Constants;
-
 use constant {
-    ESC => "\x1b",
-    GS  => "\x1d",
-    DLE => "\x10",
-    FS  => "\x1c",
+    _ESC => "\x1b",
+    _GS  => "\x1d",
+    _DLE => "\x10",
+    _FS  => "\x1c",
     # Level 2 Constants
-    FF   => "\x0c",
-    SP   => "\x20",
-    EOT  => "\x04",
-    DC4  => "\x14",
-    NULL => "\x00",
+    _FF   => "\x0c",
+    _SP   => "\x20",
+    _EOT  => "\x04",
+    _DC4  => "\x14",
 };
 
 =method init
@@ -35,12 +35,12 @@ Initializes the Printer. Clears the data in print buffer and resets the printer 
 sub init {
     my ( $self ) = @_;
 
-    $self->driver->write( ESC . '@' );
+    $self->driver->write( _ESC . '@' );
 }
 
 =method enable 
 
-Enables/Disables the printer with a 'ESC =' command (Set peripheral device). When disabled, the printer ignores all commands except enable() or other real-time commands
+Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all commands except enable() or other real-time commands
 pass 1 to enable, pass 0 to disable
     
     $device->printer->enable(0) # disabled
@@ -52,9 +52,9 @@ sub enable {
     my ( $self, $n ) = @_;
 
     if ( $n == 1 ) {
-        $self->driver->write( ESC . '=' . chr(1) );
+        $self->driver->write( _ESC . '=' . chr(1) );
     } else {
-        $self->driver->write( ESC . '=' . chr(2) );
+        $self->driver->write( _ESC . '=' . chr(2) );
     }
 }
 
@@ -78,7 +78,7 @@ sub printAreaWidth {
     say $params{nH};
 
     $self->lf();
-    $self->driver->write( GS . 'W' . chr( $params{nL} ) . chr( $params{nH} ) );
+    $self->driver->write( _GS . 'W' . chr( $params{nL} ) . chr( $params{nH} ) );
 }
 
 =method tabPositions
@@ -96,7 +96,7 @@ sub tabPositions {
     my $pos = '';
 
     $pos .= chr( $_ ) for @positions;
-    $self->driver->write( ESC . 'D' . $pos . NULL );
+    $self->driver->write( _ESC . 'D' . $pos . chr(0) );
 }
 
 =method tab 
@@ -159,7 +159,7 @@ sub cr {
     $self->driver->write( "\x0d" );
 }
 
-=method can
+=method cancel
 
 Cancel (delete) page data in page mode
 
@@ -190,7 +190,7 @@ sub font {
             c => "\x02",
         );
 
-        $self->driver->write( ESC . 'M' . $fontMap{$font});
+        $self->driver->write( _ESC . 'M' . $fontMap{$font});
     }
 }
 
@@ -207,7 +207,7 @@ sub emphasized {
     if( $self->usePrintMode ) {
         $self->_updatePrintMode;
     } else {
-        $self->driver->write( ESC . 'E' . int( $emphasized ) );
+        $self->driver->write( _ESC . 'E' . int( $emphasized ) );
     }
 }
 
@@ -220,7 +220,7 @@ Set double-strike mode 0 for off and 1 for on
 sub doubleStrike {
     my ( $self, $flag ) = @_;
 
-    $self->driver->write( ESC . 'G' . int( $flag ) );
+    $self->driver->write( _ESC . 'G' . int( $flag ) );
 }
 
 =method justification 
@@ -240,7 +240,7 @@ sub justification {
         right  => 2,
     );
     $self->lf();
-    $self->driver->write( ESC . 'a' . int( $jmap{lc $j} ) );
+    $self->driver->write( _ESC . 'a' . int( $jmap{lc $j} ) );
 }
 
 =method upsideDown
@@ -255,7 +255,7 @@ sub upsideDown {
     my ( $self, $flag ) = @_;
 
     $self->lf();
-    $self->driver->write( ESC . '{' . int( $flag ) );
+    $self->driver->write( _ESC . '{' . int( $flag ) );
 }
 
 =method height 
@@ -272,7 +272,7 @@ sub height {
     if( $self->usePrintMode ) {
         $self->_updatePrintMode;
     } else {
-        $self->driver->write( GS . '!' . chr( $width << 4 | $height ));
+        $self->driver->write( _GS . '!' . chr( $width << 4 | $height ));
     }
 }
 
@@ -290,7 +290,7 @@ sub width {
     if( $self->usePrintMode ) {
         $self->_updatePrintMode;
     } else {
-        $self->driver->write( GS . '!' . chr( int( $width ) << 4 | int( $height ) ));
+        $self->driver->write( _GS . '!' . chr( int( $width ) << 4 | int( $height ) ));
     }
 }
 
@@ -307,7 +307,7 @@ sub underline {
     if( $self->usePrintMode ) {
         $self->_updatePrintMode;
     } else {
-        $self->driver->write( ESC . '-' . $underline );
+        $self->driver->write( _ESC . '-' . $underline );
     }
 }
 
@@ -321,7 +321,7 @@ Reverse white/black printing mode pass 0 for off and 1 for on
 
 sub invert {
     my ( $self, $invert ) = @_;
-    $self->driver->write( GS . 'B' . chr( $invert ) );
+    $self->driver->write( _GS . 'B' . chr( $invert ) );
 }
 
 =method charSpacing
@@ -336,7 +336,7 @@ Sets charachter spacing takes a value between 0 and 255
 
 sub charSpacing {
     my ( $self, $spacing ) = @_;
-    $self->driver->write( ESC . SP . chr( $spacing ) );
+    $self->driver->write( _ESC . _SP . chr( $spacing ) );
 }
 
 =method lineSpacing 
@@ -349,7 +349,7 @@ sub charSpacing {
 
 sub lineSpacing {
     my ( $self, $spacing ) = @_;
-    $self->driver->write( ESC . '3' . chr( $spacing ) );
+    $self->driver->write( _ESC . '3' . chr( $spacing ) );
 }
 
 =method selectDefaultLineSpacing 
@@ -360,7 +360,7 @@ Revert to default Line spacing for the printer
 
 sub selectDefaultLineSpacing {
     my ( $self ) = @_;
-    $self->driver->write( ESC . '2' );
+    $self->driver->write( _ESC . '2' );
 }
 
 =method printPosition
@@ -375,7 +375,7 @@ Sets the distance from the beginning of the line to the position at which charac
 
 sub printPosition {
     my ( $self, $length, $height ) = @_;
-    $self->driver->write( ESC . '$' . chr( $length )  . chr( $height ) );
+    $self->driver->write( _ESC . '$' . chr( $length )  . chr( $height ) );
 }
 
 =method drawerKickPulse
@@ -398,7 +398,7 @@ sub drawerKickPulse {
     $pin  = defined $pin ? $pin : 0;
     $time = defined $time ? $time : 8;
 
-    $self->driver->write( DLE . DC4 . "\x01" . chr( $pin )  . chr( $time ) );
+    $self->driver->write( _DLE . _DC4 . "\x01" . chr( $pin )  . chr( $time ) );
 }
 
 =method cutPaper
@@ -415,9 +415,9 @@ sub cutPaper {
 
     $self->lf();
     if( $params{feed} == 0 ) {
-        $self->driver->write( GS . 'V' . chr(1));
+        $self->driver->write( _GS . 'V' . chr(1));
     } else {
-        $self->driver->write( GS . 'V' . chr(66) . chr(0) );
+        $self->driver->write( _GS . 'V' . chr(66) . chr(0) );
     }
 
 }
@@ -437,7 +437,7 @@ sub _updatePrintMode {
     . ( $self->widthStatus?'1':'0' )
     . '0'
     . $self->underlineStatus;
-    $self->driver->write( ESC . '!' . pack( "b*", $value ) );
+    $self->driver->write( _ESC . '!' . pack( "b*", $value ) );
 }
 
 # BEGIN: Bitmap printing methods
@@ -459,7 +459,7 @@ This function also writes the buffer data to the printer before printing the bit
 sub printNVImage {
     my ( $self, $flag ) = @_;
 
-    $self->driver->write( FS . 'p' . chr(1) . chr($flag) );
+    $self->driver->write( _FS . 'p' . chr(1) . chr($flag) );
 }
 
 =method printImage
@@ -479,7 +479,7 @@ This function also writes the buffer data to the printer before printing the bit
 sub printImage {
     my ( $self, $flag ) = @_;
 
-    $self->driver->write( GS . '/' . chr($flag) );
+    $self->driver->write( _GS . '/' . chr($flag) );
 }
 
 # END: Bitmap printing methods 
@@ -504,7 +504,7 @@ sub printerStatus {
     
     my @flags = split(
         //,
-        unpack( "B*", $self->driver->read( DLE . EOT . "\x01", 255 ) )
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x01", 255 ) )
     );
     return {
         drawer_pin3_high            => $flags[5],
@@ -532,7 +532,7 @@ sub offlineStatus {
     
     my @flags = split(
         //,
-        unpack( "B*", $self->driver->read( DLE . EOT . "\x02", 255 ) )
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x02", 255 ) )
     );
     return {
         cover_is_closed     => $flags[5],
@@ -559,7 +559,7 @@ sub errorStatus {
     
     my @flags = split(
         //,
-        unpack( "B*", $self->driver->read( DLE . EOT . "\x03", 255 ) )
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x03", 255 ) )
     );
     return {
         auto_cutter_error     => $flags[4],
@@ -586,7 +586,7 @@ sub paperSensorStatus {
     
     my @flags = split(
         //,
-        unpack( "B*", $self->driver->read( DLE . EOT . "\x04", 255 ) )
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x04", 255 ) )
     );
     return {
         paper_roll_near_end_sensor_1 => $flags[5],
@@ -614,7 +614,7 @@ sub inkStatusA {
     
     my @flags = split(
         //,
-        unpack( "B*", $self->driver->read( DLE . EOT . "\x07" . "\x01", 255 ) )
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x07" . "\x01", 255 ) )
     );
     return {
         ink_near_end          => $flags[5],
@@ -641,7 +641,7 @@ sub inkStatusB {
     
     my @flags = split(
         //,
-        unpack( "B*", $self->driver->read( DLE . EOT . "\x07" . "\x02", 255 ) )
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x07" . "\x02", 255 ) )
     );
     return {
         ink_near_end          => $flags[5],
@@ -708,7 +708,7 @@ sub barcode {
         below         => 2,
         aboveandbelow => 3,
     );
-    $self->driver->write( GS . 'H' . chr(
+    $self->driver->write( _GS . 'H' . chr(
             $map{$params{HRIPosition} || 'below'}
         ) );
 
@@ -716,15 +716,15 @@ sub barcode {
         a => 0,
         b => 1,
     );
-    $self->driver->write( GS . 'f' . chr(
+    $self->driver->write( _GS . 'f' . chr(
             $map{$params{font} || 'b'}
         ) );
 
-    $self->driver->write( GS . 'h' . chr(
+    $self->driver->write( _GS . 'h' . chr(
             $params{height} || 50 
         ) );
 
-    $self->driver->write( GS . 'w' . chr(
+    $self->driver->write( _GS . 'w' . chr(
             $params{width} || 2 
         ) );
   
@@ -744,7 +744,7 @@ sub barcode {
     if(
         $map{$params{system}} < 9
     ) {
-        $self->driver->write( GS . 'k' 
+        $self->driver->write( _GS . 'k' 
             . chr( $map{$params{system}} + 65 )
             . chr( length $params{barcode} )
             . $params{barcode}

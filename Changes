@@ -1,0 +1,9 @@
+Changelog for Printer-ESCPOS
+
+0.001 2015-03-09T09:32:49
+ - Test Release (Shantanu Bhadoria)
+ - Removing Constants.pm adding other files (Shantanu Bhadoria)
+ - All in a days work adding functions to the default profile (Shantanu
+   Bhadoria)
+ - first commit (Shantanu Bhadoria)
+

@@ -3,6 +3,13 @@ use warnings;
 
 package Printer::ESCPOS::Connections::File;
 
+# PODNAME: Printer::ESCPOS::Connections::File
+# ABSTRACT: Bare Device File Connection Interface for Printer::ESCPOS 
+# COPYRIGHT
+# VERSION
+
+# Dependencies
+
 use 5.010;
 use Moose;
 with 'Printer::ESCPOS::Roles::Connection';

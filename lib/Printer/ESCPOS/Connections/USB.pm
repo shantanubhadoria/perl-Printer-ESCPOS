@@ -3,16 +3,31 @@ use warnings;
 
 package Printer::ESCPOS::Connections::USB;
 
+# PODNAME: Printer::ESCPOS::Connections::USB
+# ABSTRACT: USB Connection Interface for Printer::ESCPOS 
+# COPYRIGHT
+# VERSION
+
+# Dependencies
+
 use 5.010;
 use Moose;
 with 'Printer::ESCPOS::Roles::Connection';
 
 use Device::USB;
 
+=attr vendorId
+
+=cut
+
 has vendorId => (
     is         => 'ro',
     required => 1,
 );
+
+=attr productId
+
+=cut
 
 has productId => (
     is         => 'ro',
@@ -33,5 +48,8 @@ sub _build__connection {
 
     return $device;
 }
+
+no Moose;
+__PACKAGE__->meta->make_immutable;
 
 1;

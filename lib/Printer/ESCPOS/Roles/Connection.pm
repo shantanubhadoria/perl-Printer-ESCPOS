@@ -1,24 +1,46 @@
+use strict;
+use warnings;
+
 package Printer::ESCPOS::Roles::Connection;
+
+# PODNAME: Printer::ESCPOS::Roles::Connection
+# ABSTRACT: Role for Connection Classes for Printer::ESCPOS
+# COPYRIGHT
+# VERSION
+
+# Dependencies
 
 use 5.010;
 use Moose::Role;
 
 
-has buffer => (
+has _buffer => (
     is      => 'rw',
     default => '',
 );
 
+=method write
+
+Writes prepared data to the module buffer. This data is dispatched to printer with print() method. The print method takes care of buffer control issues.
+
+=cut
+
 sub write {
     my ($self,$raw) = @_;
 
-    $self->buffer( $self->buffer . $raw );
+    $self->_buffer( $self->_buffer . $raw );
 }
+
+=method print
+
+Sends buffer data to the printer.
+
+=cut
 
 sub print {
     my ($self,$raw) = @_;
     my @chunks;
-    my $buffer = $self->buffer;
+    my $buffer = $self->_buffer;
     my $n = 64; # Size of each chunk in bytes
 
     @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
@@ -26,7 +48,7 @@ sub print {
         $self->_connection->write($chunk);
         $self->_connection->read();
     }
-    $self->buffer('');
+    $self->_buffer('');
 }
 
 1;

@@ -3,6 +3,13 @@ use warnings;
 
 package Printer::ESCPOS::Connections::Serial;
 
+# PODNAME: Printer::ESCPOS::Connections::Serial
+# ABSTRACT: Serial Connection Interface for Printer::ESCPOS (supports status commands) 
+# COPYRIGHT
+# VERSION
+
+# Dependencies
+
 use 5.010;
 use Moose;
 with 'Printer::ESCPOS::Roles::Connection';
@@ -37,6 +44,12 @@ has baudrate => (
     default => 38400,
 );
 
+=attr readConstTime
+
+Seconds per unfulfilled read call, default 150 
+
+=cut
+
 has readConstTime => (
     is      => 'ro',
     isa     => 'Int',
@@ -60,6 +73,12 @@ sub _build__connection {
 
     return $printer;
 }
+
+=method read
+
+Read Data from the printer 
+
+=cut
 
 sub read {
     my ( $self, $question, $bytes ) = @_;

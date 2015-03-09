@@ -3,6 +3,13 @@ use warnings;
 
 package Printer::ESCPOS::Connections::Network;
 
+# PODNAME: Printer::ESCPOS::Connections::Network
+# ABSTRACT: Network Connection Interface for Printer::ESCPOS 
+# COPYRIGHT
+# VERSION
+
+# Dependencies
+
 use 5.010;
 use Moose;
 with 'Printer::ESCPOS::Roles::Connection';
@@ -51,6 +58,12 @@ sub _build__connection {
 
     return $printer;
 }
+
+=method read
+
+Read Data from the printer 
+
+=cut
 
 sub read {
     my ($self,$bytes) = @_;

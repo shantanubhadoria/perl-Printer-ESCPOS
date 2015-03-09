@@ -1,5 +1,14 @@
+use strict;
+use warnings;
+
 package Printer::ESCPOS::Roles::Profile;
 
+# PODNAME: Printer::ESCPOS::Roles::Profile
+# ABSTRACT: Role for all Printer Profiles for Printer::ESCPOS 
+# COPYRIGHT
+# VERSION
+
+# Dependencies
 use 5.010;
 use Moose::Role;
 
