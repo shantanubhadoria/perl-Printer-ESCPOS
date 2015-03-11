@@ -167,26 +167,67 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 
     use Printer::ESCPOS;
 
-    #For Network Printers $port is 9100 in most cases but might differ depending on how you have configured your printer
-    $printer = Printer::ESCPOS->new(device_ip=>$printer_ip,device_port=>$port);
+    use Data::Dumper; # Just to get dumps of status functions.
 
-    #These commands won't actually send anything to the printer but it will store all the merged data including control codes to send to printer in $printer->print_string variable.
-    $printer->write("Blah Blah \nReceipt Details\nFooter");
-    $printer->bold_on();
-    $printer->write("Bold Text");
-    $printer->bold_off();
-    $printer->print(); ##Sends the above set of code to the printer. Clears the buffer text in module.
+    # For Network Printers $port is 9100 in most cases but might differ depending on how 
+    # you have configured your printer
+    my $device = Printer::ESCPOS->new(
+        driverType => 'Network',
+        deviceIp   => $printer_ip,
+        devicePort => $port,
+    );
+    $device->printer->init(); # This calls the initialization functions for your printer.
 
-    #For local printer connected on serial port, check syslog(Usually under /var/log/syslog) for what device file was created for your printer when you connect it to your system(For plug and play printers).
+    # These commands won't actually send anything to the printer but will store all the 
+    # merged data including control codes to module buffer.
+    $device->printer->printAreaWidth( nL => 0, nH => 1);
+    $device->printer->write("Print Area Width Modified\n");
+    $device->printer->printAreaWidth(); # Reset to default
+    $device->printer->write("print area width reset\n");
+    $device->printer->tab();
+    $device->printer->underline(1);
+    $device->printer->write("underline on\n");
+    $device->printer->invert(1);
+    $device->printer->write("Inverted Text\n");
+    $device->printer->justification('right');
+    $device->printer->write("Right Justified\n");
+    $device->printer->upsideDown(1);
+    $device->printer->write("Upside Down\n");
+    $device->printer->cutPaper();
+
+    $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+                               # This command takes care of read write buffers for the printer.
+
+    # Use the Serial mode for local printer connected on serial port(or a printer connected via 
+    # a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
+    # for what device file was created for your printer when you connect it to your system(For 
+    # plug and play printers).
     my $path = '/dev/ttyACM0';
-    $device = Printer::ESCPOS->new(serial_device_path=$path);
-    $device->printer->write("Blah Blah \nReceipt Details\nFooter");
-    $printer->bold_on();
-    $printer->write("Bold Text");
-    $printer->bold_off();
-    $printer->print();
+    $device = Printer::ESCPOS->new(
+        driverType     => 'Serial',
+        deviceFilePath => $path,
+    );
+    $device->printer->init(); # This calls the initialization functions for your printer.
 
+    say Dumper $printer_serial->printer->printerStatus();
+    say Dumper $printer_serial->printer->offlineStatus();
+    say Dumper $printer_serial->printer->errorStatus();
+    say Dumper $printer_serial->printer->paperSensorStatus();
 
+    $device->printer->bold(1);
+    $device->printer->write("Bold Text\n");
+    $device->printer->bold(0);
+    $device->printer->write("Bold Text Off\n");
+
+    $device->printer->print();
+
+    # A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
+    # doesn't support the status functions for the printer. i.e. you will not be able to use 
+    # printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
+    $device = Printer::ESCPOS->new(
+        driverType     => 'File',
+        deviceFilePath => $path,
+    );
 = DESCRIPTION
 
 You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you may extend this module by adding specialized funtions for your printer in it's own subclass. Refer to [Printer::ESCPOS::Roles::Profile] and [Printer::ESCPOS::Profiles::Generic]
@@ -194,20 +235,23 @@ You can use this module for all your ESC-POS Printing needs. If some of your pri
 
 = NOTES
 
-* If the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when creating printer object when you create the printer object(not for network or USB printers)
-    $printer = Printer::ESCPOS->new(serial_device_path => '/dev/ttyACM0', baudrate => 9600);
+* In Serial mode if the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when creating printer object when you create the printer object. The default baudrate is set at 38400
+    $device = Printer::ESCPOS->new(
+        driverType     => 'Serial',
+        deviceFilePath => $path,
+        baudrate       => 9600,
+    );
 * For ESC-P codes refer the guide from Epson http://support.epson.ru/upload/library_file/14/esc-p.pdf
 
 = USAGE
 
-* This Module offers a object oriented interface to ESC-POS Printers. 
-* Create a printer object by providing parameters for one of the three types of 
-printers supported.
-* then call formatting options or write() text to printer object in sequence. 
-* Then call the print() method to dispatch the sequences from the module buffer 
-to the printer. 
+* This Module offers a object oriented interface to ESC-POS Printers.
+* Create a device object $device by providing parameters for one of the supported printer types. Call $device->printer->init to initialize the printer.
+* call write() and other Text formatting functions on $device->printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device->printer->lf().
+* Then call the print() method to dispatch the sequences from the module buffer to the printer
+    $device->printer->print()
 
-Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many commands too quickly.
+Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many commands print commands too quickly. To avoid this aggregate the data to be sent to the printer with write() and other text formatting functions and then send it all in one go using print()
 
 =end wikidoc
 
