@@ -1,6 +1,11 @@
 Changelog for Printer-ESCPOS
 
-0.002 2015-03-11T02:59:07
+0.003 2015-03-11T09:27:19
+ - Fine Tunning Connections for non Serial and SerialoverUSB types
+   (Shantanu Bhadoria)
+
+0.002 2015-03-11T03:01:52
+ - v0.002 (Shantanu Bhadoria)
  - Fixed the POD Documentation a little (Shantanu Bhadoria)
  - POD data updates (Shantanu Bhadoria)
 

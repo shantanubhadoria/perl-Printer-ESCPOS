@@ -6,7 +6,7 @@ Printer::ESCPOS - Interface for all thermal or dot-matrix receipt printers that 
 
 =head1 VERSION
 
-version 0.002
+version 0.003
 
 =head1 SYNOPSIS
 
@@ -115,6 +115,10 @@ Contains the network port of the device when its a network printer. The module c
 =head2 baudrate
 
 When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but not always. 
+
+=head2 serialOverUSB
+
+Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the 'Serial' driver.
 
 =head2 printer
 
