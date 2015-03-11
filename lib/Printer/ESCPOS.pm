@@ -70,7 +70,7 @@ Contains the IP address of the device when its a network printer. The module cre
 =cut
 
 has deviceIP => (
-  is => 'ro',
+  is  => 'ro',
   isa => 'Str',
 );
 
@@ -81,8 +81,9 @@ Contains the network port of the device when its a network printer. The module c
 =cut
 
 has devicePort => (
-  is => 'ro',
-  isa => 'Int',
+  is      => 'ro',
+  isa     => 'Int',
+  default => '9100',
 );
 
 =attr baudrate
@@ -92,9 +93,21 @@ When used as a local serial device you can set the baudrate of the printer too. 
 =cut
 
 has baudrate => (
-  is => 'ro',
-  isa => 'Int',
+  is      => 'ro',
+  isa     => 'Int',
   default => 38400,
+);
+
+=attr serialOverUSB
+
+Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the 'Serial' driver.
+
+=cut
+
+has serialOverUSB => (
+  is      => 'rw',
+  isa     => 'Bool',
+  default => '1',
 );
 
 has _driver => (
@@ -119,6 +132,7 @@ sub _build__driver {
         return Printer::ESCPOS::Connections::Serial->new(
             deviceFilePath => $self->deviceFilePath,
             baudrate       => $self->baudrate,
+            serialOverUSB  => $self->serialOverUSB,
         );
     }
 }

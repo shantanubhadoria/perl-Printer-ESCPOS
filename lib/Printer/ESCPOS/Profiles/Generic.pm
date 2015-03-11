@@ -74,9 +74,6 @@ sub printAreaWidth {
     $params{nL} = defined $params{nL} ? $params{nL} : 65;
     $params{nH} = defined $params{nH} ? $params{nH} : 2;
 
-    say $params{nL};
-    say $params{nH};
-
     $self->lf();
     $self->driver->write( _GS . 'W' . chr( $params{nL} ) . chr( $params{nH} ) );
 }

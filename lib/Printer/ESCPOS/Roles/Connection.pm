@@ -46,7 +46,6 @@ sub print {
     @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
     for my $chunk( @chunks ){
         $self->_connection->write($chunk);
-        $self->_connection->read();
     }
     $self->_buffer('');
 }

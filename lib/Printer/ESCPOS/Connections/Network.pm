@@ -24,7 +24,7 @@ Contains the IP address of the device when its a network printer. The module cre
 =cut
 
 has deviceIP => (
-  is => 'ro',
+  is  => 'ro',
   isa => 'Str',
 );
 
@@ -35,8 +35,9 @@ Contains the network port of the device when its a network printer. The module c
 =cut
 
 has devicePort => (
-  is => 'ro',
-  isa => 'Int',
+  is      => 'ro',
+  isa     => 'Int',
+  default => '9100',
 );
 
 has _connection => (
@@ -66,13 +67,34 @@ Read Data from the printer
 =cut
 
 sub read {
-    my ($self,$bytes) = @_;
+    my ($self, $question, $bytes) = @_;
     my $data;
-    $bytes |= 1024;
+    $bytes ||= 2;
 
+    say unpack("H*",$question);
+    $self->_connection->write( $question );
     $self->_connection->read($data, $bytes);
 
     return $data;
+}
+
+=method print
+
+Sends buffer data to the printer.
+
+=cut
+
+sub print {
+    my ($self,$raw) = @_;
+    my @chunks;
+    my $buffer = $self->_buffer;
+    my $n = 64; # Size of each chunk in bytes
+
+    @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
+    for my $chunk( @chunks ){
+        $self->_connection->write($chunk);
+    }
+    $self->_buffer('');
 }
 
 no Moose;

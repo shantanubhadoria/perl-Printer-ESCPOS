@@ -16,6 +16,7 @@ with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
 use Device::SerialPort;
+use Time::HiRes qw(usleep);
 
 =attr deviceFilePath
 
@@ -56,6 +57,18 @@ has readConstTime => (
     default => 150,
 );
 
+=attr serialOverUSB
+
+Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device
+
+=cut
+
+has serialOverUSB => (
+  is      => 'rw',
+  isa     => 'Bool',
+  default => '0',
+);
+
 has _connection => (
     is         => 'ro',
     lazy_build => 1,
@@ -88,6 +101,31 @@ sub read {
     my ( $count, $data ) = $self->_connection->read( $bytes );
 
     return $data;
+}
+
+=method print
+
+Sends buffer data to the printer.
+
+=cut
+
+sub print {
+    my ($self,$raw) = @_;
+    my @chunks;
+    my $buffer = $self->_buffer;
+    my $n = 8; # Size of each chunk in bytes
+    $n = 64 if($self->serialOverUSB);
+
+    @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
+    for my $chunk( @chunks ){
+        $self->_connection->write($chunk);
+        if( $self->serialOverUSB ) {
+            $self->_connection->read();
+        } else {
+            usleep(10000); # Serial Port is annoying, it doesn't tell you when it is ready to get the next chunk
+        }
+    }
+    $self->_buffer('');
 }
 
 no Moose;
