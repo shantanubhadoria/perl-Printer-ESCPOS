@@ -6,7 +6,7 @@ Printer::ESCPOS - Interface for all thermal or dot-matrix receipt printers that 
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
