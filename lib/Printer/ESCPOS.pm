@@ -183,6 +183,10 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 
     use Data::Dumper; # Just to get dumps of status functions.
 
+
+    #########################################################
+    BEGIN: Network Printer
+    #########################################################
     # For Network Printers $port is 9100 in most cases but might differ depending on how 
     # you have configured your printer
     my $device = Printer::ESCPOS->new(
@@ -212,6 +216,10 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
                                # This command takes care of read write buffers for the printer.
 
+
+    #########################################################
+    BEGIN: Serial Printer
+    #########################################################
     # Use the Serial mode for local printer connected on serial port(or a printer connected via 
     # a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
     # for what device file was created for your printer when you connect it to your system(For 
@@ -235,6 +243,10 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 
     $device->printer->print();
 
+
+    #########################################################
+    BEGIN: File(Direct to Device File) Printer
+    #########################################################
     # A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
     # doesn't support the status functions for the printer. i.e. you will not be able to use 
     # printerStatus, offlineStatus, errorStatus or paperSensorStatus functions

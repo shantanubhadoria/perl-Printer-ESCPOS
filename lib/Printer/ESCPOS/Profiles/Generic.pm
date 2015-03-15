@@ -224,7 +224,7 @@ sub doubleStrike {
 
 Set Justification. Options 'left', 'right' and 'center'
 
-    $self->printer->justification('right');
+    $device->printer->justification('right');
 
 =cut
 
@@ -244,7 +244,7 @@ sub justification {
 
 Sets Upside Down Printing on/off (pass 0 or 1)
 
-    $self->printer->upsideDownPrinting(1);
+    $device->printer->upsideDownPrinting(1);
 
 =cut
 
@@ -444,7 +444,7 @@ sub _updatePrintMode {
 Prints bit image stored in Non-Volatile (NV) memory of the printer. 
 This function also writes the buffer data to the printer before printing the bit image. 
 
-    $self->printer->printNVImage($flag);
+    $device->printer->printNVImage($flag);
 
 * $flag = 0 # Normal width and Normal Height
 * $flag = 1 # Double width and Normal Height
@@ -464,7 +464,7 @@ sub printNVImage {
 Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset. 
 This function also writes the buffer data to the printer before printing the bit image. 
 
-    $self->printer->printImage($flag);
+    $device->printer->printImage($flag);
 
 * $flag = 0 # Normal width and Normal Height
 * $flag = 1 # Double width and Normal Height
