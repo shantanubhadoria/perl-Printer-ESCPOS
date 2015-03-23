@@ -267,7 +267,7 @@ You can use this module for all your ESC-POS Printing needs. If some of your pri
 
 = MANUALS
 
-Refer to the following manuals for to get started with [Printer::ESCPOS]
+Refer to the following manuals to get started with [Printer::ESCPOS]
 
 * [Printer::ESCPOS::Manual]
 
