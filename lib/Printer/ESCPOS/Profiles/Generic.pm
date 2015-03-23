@@ -345,7 +345,7 @@ sub upsideDown {
 
 =method fontHeight 
 
-Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*,*1*,*2*,*3*,*4*,*5*,*6* and *7* for non-printmode state (default) 
+Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
 
     $device->printer->fontHeight(1);
     $device->printer->write("double height\n");
@@ -371,7 +371,7 @@ sub fontHeight {
 
 =method fontWidth 
 
-Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*,*1*,*2*,*3*,*4*,*5*,*6* and *7* for non-printmode state (default) 
+Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
 
     $device->printer->fontWidth(1);
     $device->printer->write("double width\n");
@@ -412,11 +412,11 @@ sub charSpacing {
 
 =method lineSpacing 
 
-Sets the spacing between each line of printout.
+Sets the line spacing i.e the spacing between each line of printout.
 
     $device->printer->lineSpacing($spacing);
 
-* 0 <= spacing <= 255
+* 0 <= $spacing <= 255
 
 =cut
 
@@ -427,7 +427,7 @@ sub lineSpacing {
 
 =method selectDefaultLineSpacing 
 
-Revert to default Line spacing for the printer
+Reverts to default line spacing for the printer
 
     $device->printer->selectDefaultLineSpacing();
 
@@ -456,9 +456,10 @@ sub printPosition {
 
 =method leftMargin
 
-Sets the left margin code to the printer. takes two single byte parameters, ~nL~ and ~nH~.
-To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number) part of a number, while MOD indicates the
-remainder of a division operation. Must be sent before a new line begins to be effective.
+Sets the left margin. Takes two single byte parameters, ~nL~ and ~nH~.
+
+To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number) part of a number, while MOD indicates the remainder of a division operation. Must be sent before a new line begins to be effective.
+
 For example, to break the value 520 into two bytes, use the following two equations:
 ~nH~ = INT 520/256
 ~nL~ = MOD 520/256
@@ -517,7 +518,8 @@ However there are several customizations available including barcode ~system~, ~
         height      => $height,        # no of dots in vertical direction
         system      => $system,        # Barcode system
         width       => 2               # 2:0.25mm, 3:0.375mm, 4:0.5mm, 5:0.625mm, 6:0.75mm
-        barcode     => '123456789012', # Check barcode systems for allowed value
+        barcode     => '123456789012', # Check barcode system you are using for allowed 
+                                       # characters in barcode
     );
     $device->printer->barcode(
         system      => 'CODE39',
@@ -530,7 +532,7 @@ However there are several customizations available including barcode ~system~, ~
         barcode     => 'Shan',
     );
 
-Available systems:
+Available barcode ~systems~:
 
 * UPC-A
 * UPC-C
@@ -625,7 +627,6 @@ sub printNVImage {
 =method printImage
 
 Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset. 
-This function also writes the buffer data to the printer before printing the bit image. 
 
     $device->printer->printImage($flag);
 
