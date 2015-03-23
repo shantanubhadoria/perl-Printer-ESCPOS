@@ -35,13 +35,13 @@ Initializes the Printer. Clears the data in print buffer and resets the printer 
 sub init {
     my ( $self ) = @_;
 
-    $self->driver->write( _ESC . '@' );
+    $self->driver->print( _ESC . '@' );
 }
 
 =method enable 
 
-Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all commands except enable() or other real-time commands
-pass 1 to enable, pass 0 to disable
+Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all commands except enable() or other real-time commands.
+Pass 1 to enable, pass 0 to disable
     
     $device->printer->enable(0) # disabled
     $device->printer->enable(1) # enabled
@@ -52,9 +52,9 @@ sub enable {
     my ( $self, $n ) = @_;
 
     if ( $n == 1 ) {
-        $self->driver->write( _ESC . '=' . chr(1) );
+        $self->driver->print( _ESC . '=' . chr(1) );
     } else {
-        $self->driver->write( _ESC . '=' . chr(2) );
+        $self->driver->print( _ESC . '=' . chr(2) );
     }
 }
 
@@ -98,19 +98,29 @@ sub tabPositions {
 
 =method tab 
 
-moves the cursor to next horizontal tab position like a "\t". This command is ignored unless the next horizontal tab position has been set.
+moves the cursor to next horizontal tab position like a "\t". This command is ignored unless the next horizontal tab position has been set. You may substitute this command with a "\t" as well.
+
+This
+
+    $device->printer->write("blah blah");
+    $device->printer->tab();
+    $device->printer->write("blah2 blah2");
+
+is same as this
+
+    $device->printer->write("blah blah\tblah2 blah2");
 
 =cut
 
 sub tab {
     my ( $self ) = @_;
 
-    $self->driver->write( "\x09" );
+    $self->driver->write( "\t" );
 }
 
 =method lf
 
-line feed. This method will most likely not be used since you can simply insert a \n in your print string for write function to substitute for this function e.g. :
+line feed. Moves to the next line. You can substitute this method with "\n" in your print or write method e.g. :
 
 This
 
@@ -127,7 +137,7 @@ is same as this
 sub lf {
     my ( $self ) = @_;
 
-    $self->driver->write( "\x0a" );
+    $self->driver->write( "\n" );
 }
 
 =method ff
@@ -172,6 +182,11 @@ sub cancel {
 
 Set Font style, you can pass 'a', 'b' or 'c'. Many printers don't support style 'c' and only have two supported styles.
 
+    $device->printer->font('a');
+    $device->printer->write('Writing in Font A');
+    $device->printer->font('b');
+    $device->printer->write('Writing in Font B');
+
 =cut
 
 sub font {
@@ -191,13 +206,18 @@ sub font {
     }
 }
 
-=method emphasized
+=method bold 
 
-Set emphasized mode 0 for off and 1 for on
+Set bold mode 0 for off and 1 for on. Also called emphasized mode in some printer manuals 
+
+    $device->printer->bold(1);
+    $device->printer->write("This is Bold Text\n");
+    $device->printer->bold(0);
+    $device->printer->write("This is not Bold Text\n");
 
 =cut
 
-sub emphasized {
+sub bold {
     my ( $self, $emphasized ) = @_;
 
     $self->emphasizedStatus( $emphasized );
@@ -218,77 +238,6 @@ sub doubleStrike {
     my ( $self, $flag ) = @_;
 
     $self->driver->write( _ESC . 'G' . int( $flag ) );
-}
-
-=method justification 
-
-Set Justification. Options 'left', 'right' and 'center'
-
-    $device->printer->justification('right');
-
-=cut
-
-sub justification {
-    my ( $self, $j ) = @_;
-
-    my %jmap = (
-        left   => 0,
-        center => 1,
-        right  => 2,
-    );
-    $self->lf();
-    $self->driver->write( _ESC . 'a' . int( $jmap{lc $j} ) );
-}
-
-=method upsideDown
-
-Sets Upside Down Printing on/off (pass 0 or 1)
-
-    $device->printer->upsideDownPrinting(1);
-
-=cut
-
-sub upsideDown {
-    my ( $self, $flag ) = @_;
-
-    $self->lf();
-    $self->driver->write( _ESC . '{' . int( $flag ) );
-}
-
-=method height 
-
-Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
-
-=cut
-
-sub height {
-    my ( $self, $height ) = @_;
-    my $width = $self->widthStatus;
-
-    $self->heightStatus( $height );
-    if( $self->usePrintMode ) {
-        $self->_updatePrintMode;
-    } else {
-        $self->driver->write( _GS . '!' . chr( $width << 4 | $height ));
-    }
-}
-
-=method width 
-
-Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
-
-=cut
-
-sub width {
-    my ( $self, $width ) = @_;
-    my $height = $self->heightStatus;
-
-    $self->widthStatus( $width );
-    if( $self->usePrintMode ) {
-        $self->_updatePrintMode;
-    } else {
-        $self->driver->write( _GS . '!' . chr( int( $width ) << 4 | int( $height ) ));
-    }
 }
 
 =method underline
@@ -319,6 +268,98 @@ Reverse white/black printing mode pass 0 for off and 1 for on
 sub invert {
     my ( $self, $invert ) = @_;
     $self->driver->write( _GS . 'B' . chr( $invert ) );
+}
+
+=method color
+
+Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text is printed.
+
+    $device->printer->lf();
+    $device->printer->color(0); #black
+    $device->printer->write("black"); 
+    $device->printer->lf();
+    $device->printer->color(1); #red
+    $device->printer->write("Red"); 
+    $device->printer->print();
+
+
+=cut
+
+sub color {
+    my ( $self, $color ) = @_;
+
+    $self->driver->write( _ESC . 'r' . chr( $color ) );
+}
+
+=method justify 
+
+Set Justification. Options 'left', 'right' and 'center'
+
+    $device->printer->justify( 'right' );
+
+=cut
+
+sub justify {
+    my ( $self, $j ) = @_;
+
+    my %jmap = (
+        left   => 0,
+        center => 1,
+        right  => 2,
+    );
+    $self->lf();
+    $self->driver->write( _ESC . 'a' . int( $jmap{lc $j} ) );
+}
+
+=method upsideDown
+
+Sets Upside Down Printing on/off (pass 0 or 1)
+
+    $device->printer->upsideDownPrinting(1);
+
+=cut
+
+sub upsideDown {
+    my ( $self, $flag ) = @_;
+
+    $self->lf();
+    $self->driver->write( _ESC . '{' . int( $flag ) );
+}
+
+=method fontHeight 
+
+Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+
+=cut
+
+sub fontHeight {
+    my ( $self, $height ) = @_;
+    my $width = $self->widthStatus;
+
+    $self->heightStatus( $height );
+    if( $self->usePrintMode ) {
+        $self->_updatePrintMode;
+    } else {
+        $self->driver->write( _GS . '!' . chr( $width << 4 | $height ));
+    }
+}
+
+=method fontWidth 
+
+Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+
+=cut
+
+sub fontWidth {
+    my ( $self, $width ) = @_;
+    my $height = $self->heightStatus;
+
+    $self->widthStatus( $width );
+    if( $self->usePrintMode ) {
+        $self->_updatePrintMode;
+    } else {
+        $self->driver->write( _GS . '!' . chr( int( $width ) << 4 | int( $height ) ));
+    }
 }
 
 =method charSpacing
@@ -373,6 +414,25 @@ Sets the distance from the beginning of the line to the position at which charac
 sub printPosition {
     my ( $self, $length, $height ) = @_;
     $self->driver->write( _ESC . '$' . chr( $length )  . chr( $height ) );
+}
+
+=method leftMargin
+
+Sets the left margin code to the printer. takes two single byte parameters, nL and nH.
+To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number) part of a number, while MOD indicates the
+remainder of a division operation. Must be sent before a new line begins to be effective.
+For example, to break the value 520 into two bytes, use the following two equations:
+nH = INT 520/256
+nL = MOD 520/256
+
+    $device->printer->leftMargin(nL => $nl, nH => $nh);
+
+=cut
+
+sub leftMargin {
+    my ( $self, %params ) = @_;
+
+    $self->driver->write( _GS . 'L' . chr( $params{nL} )  . chr( $params{nH} ) );
 }
 
 =method drawerKickPulse

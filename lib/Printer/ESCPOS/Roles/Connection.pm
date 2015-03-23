@@ -33,21 +33,30 @@ sub write {
 
 =method print
 
-Sends buffer data to the printer.
+If a string is passed then it passes the string to the printer else passes the buffer data to the printer and clears the buffer.
+
+    $device->printer->print(); # Prints and clears the Buffer.
+    $device->printer->print($raw); # Prints $raw 
 
 =cut
 
 sub print {
     my ($self,$raw) = @_;
     my @chunks;
-    my $buffer = $self->_buffer;
+
+    my $printString;
+    if( defined $raw ) {
+        $printString = $raw;
+    } else {
+        $printString = $self->_buffer;
+        $self->_buffer('');
+    }
     my $n = 64; # Size of each chunk in bytes
 
-    @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
+    @chunks = unpack "a$n" x ((length($printString)/$n)-1) . "a*", $printString;    
     for my $chunk( @chunks ){
         $self->_connection->write($chunk);
     }
-    $self->_buffer('');
 }
 
 1;

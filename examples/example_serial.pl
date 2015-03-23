@@ -38,6 +38,11 @@ $printer_serial->printer->printAreaWidth( nL => 200, nH => 0);
 $printer_serial->printer->write("blah blah blah blah blah blah blah blah blah blah blah");
 $printer_serial->printer->printAreaWidth(); # Reset to default
 
+$printer_serial->printer->lf();
+$printer_serial->printer->leftMargin( nL => 0, nH => 1);
+$printer_serial->printer->write("Left Margin nL => 0 nH => 1\n");
+$printer_serial->printer->leftMargin( nL => 0, nH => 0);
+
 $printer_serial->printer->tab();
 $printer_serial->printer->write("tab position default\n");
 $printer_serial->printer->tabPositions(30);

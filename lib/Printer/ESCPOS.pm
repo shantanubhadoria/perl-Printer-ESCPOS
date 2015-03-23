@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS;
 
 # PODNAME: Printer::ESCPOS
-# ABSTRACT: Interface for all thermal or dot-matrix receipt printers that support ESC-POS specification.  
+# ABSTRACT: Interface for all thermal, dot-matrix and other receipt printers that support ESC-POS specification.  
 # COPYRIGHT
 # VERSION
 
@@ -231,10 +231,10 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     );
     $device->printer->init(); # This calls the initialization functions for your printer.
 
-    say Dumper $printer_serial->printer->printerStatus();
-    say Dumper $printer_serial->printer->offlineStatus();
-    say Dumper $printer_serial->printer->errorStatus();
-    say Dumper $printer_serial->printer->paperSensorStatus();
+    say Dumper $device->printer->printerStatus();
+    say Dumper $device->printer->offlineStatus();
+    say Dumper $device->printer->errorStatus();
+    say Dumper $device->printer->paperSensorStatus();
 
     $device->printer->bold(1);
     $device->printer->write("Bold Text\n");
@@ -258,6 +258,11 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 
 You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you may extend this module by adding specialized funtions for your printer in it's own subclass. Refer to [Printer::ESCPOS::Roles::Profile] and [Printer::ESCPOS::Profiles::Generic]
 
+= MANUALS
+
+Refer to the following manuals for usage documentation:
+
+* [Printer::ESCPOS::Manual]
 
 = NOTES
 

@@ -1,15 +1,23 @@
 Changelog for Printer-ESCPOS
 
-0.004 2015-03-15T04:06:52
- - No changes found
+0.005 2015-03-16T05:27:42
+ - Adding a Manual (Shantanu Bhadoria)
+ - Beautified(and fixed) some Pod (Shantanu Bhadoria)
+
+0.004 2015-03-15T04:08:32
+ - v0.004 (Shantanu Bhadoria)
 
 0.003 2015-03-11T09:28:38
  - v0.003 (Shantanu Bhadoria)
  - Fine Tunning Connections for non Serial and SerialoverUSB types
    (Shantanu Bhadoria)
+
+0.002 2015-03-11T03:01:52
  - v0.002 (Shantanu Bhadoria)
  - Fixed the POD Documentation a little (Shantanu Bhadoria)
  - POD data updates (Shantanu Bhadoria)
+
+0.001 2015-03-09T09:34:07
  - v0.001 (Shantanu Bhadoria)
  - Test Release (Shantanu Bhadoria)
  - Removing Constants.pm adding other files (Shantanu Bhadoria)
