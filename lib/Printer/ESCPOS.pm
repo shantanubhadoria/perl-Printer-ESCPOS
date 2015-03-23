@@ -265,30 +265,29 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 
 You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you may extend this module by adding specialized funtions for your printer in it's own subclass. Refer to [Printer::ESCPOS::Roles::Profile] and [Printer::ESCPOS::Profiles::Generic]
 
-= MANUALS
+= USAGE
 
-Refer to the following manuals for to get started with [Printer::ESCPOS]
+Refer to the following manual to get started with [Printer::ESCPOS]
 
 * [Printer::ESCPOS::Manual]
 
+== Quick usage summary in steps:
+
+0 Create a device object $device by providing parameters for one of the supported printer types. Call $device->printer->init to initialize the printer.
+0 call write() and other Text formatting functions on $device->printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device->printer->lf().
+0 Then call the print() method to dispatch the sequences from the module buffer to the printer
+    $device->printer->print()
+
+Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many print commands in quick succession. To avoid this, aggregate the data to be sent to the printer with write() and other text formatting functions and then send it all in one go using print() at the very end.
+
 = NOTES
 
-* In Serial mode if the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when creating printer object when you create the printer object. The default baudrate is set at 38400
+* In Serial mode if the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when you create the printer object. The default baudrate is set at 38400
     $device = Printer::ESCPOS->new(
         driverType     => 'Serial',
         deviceFilePath => $path,
         baudrate       => 9600,
     );
 * For ESC-P codes refer the guide from Epson http://support.epson.ru/upload/library_file/14/esc-p.pdf
-
-= USAGE
-
-* This Module offers a object oriented interface to ESC-POS Printers.
-* Create a device object $device by providing parameters for one of the supported printer types. Call $device->printer->init to initialize the printer.
-* call write() and other Text formatting functions on $device->printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device->printer->lf().
-* Then call the print() method to dispatch the sequences from the module buffer to the printer
-    $device->printer->print()
-
-Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many commands print commands too quickly. To avoid this aggregate the data to be sent to the printer with write() and other text formatting functions and then send it all in one go using print()
 
 =end wikidoc
