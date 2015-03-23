@@ -120,7 +120,7 @@ sub tab {
 
 =method lf
 
-line feed. Moves to the next line. You can substitute this method with "\n" in your print or write method e.g. :
+line feed. Moves to the next line. You can substitute this method with {"\n"} in your print or write method e.g. :
 
 This
 
@@ -180,7 +180,7 @@ sub cancel {
 
 =method font
 
-Set Font style, you can pass 'a', 'b' or 'c'. Many printers don't support style 'c' and only have two supported styles.
+Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style *c* and only have two supported styles.
 
     $device->printer->font('a');
     $device->printer->write('Writing in Font A');
@@ -208,7 +208,7 @@ sub font {
 
 =method bold 
 
-Set bold mode 0 for off and 1 for on. Also called emphasized mode in some printer manuals 
+Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals 
 
     $device->printer->bold(1);
     $device->printer->write("This is Bold Text\n");
@@ -230,7 +230,7 @@ sub bold {
 
 =method doubleStrike 
 
-Set double-strike mode 0 for off and 1 for on
+Set double-strike mode *0* for off and *1* for on
 
     $device->printer->doubleStrike(1);
     $device->printer->write("This is Double Striked Text\n");
@@ -247,7 +247,7 @@ sub doubleStrike {
 
 =method underline
 
-set underline, 0 for off, 1 for on and 2 for double thickness 
+set underline, *0* for off, *1* for on and *2* for double thickness 
 
     $device->printer->underline(1);
     $device->printer->write("This is Underlined Text\n");
@@ -271,7 +271,7 @@ sub underline {
 
 =method invert
 
-Reverse white/black printing mode pass 0 for off and 1 for on
+Reverse white/black printing mode pass *0* for off and *1* for on
 
     $device->printer->invert(1);
     $device->printer->write("This is Inverted Text\n");
@@ -287,7 +287,7 @@ sub invert {
 
 =method color
 
-Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text is printed.
+Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text is printed. Pass *0* or *1* to switch between the two colors.
 
     $device->printer->lf();
     $device->printer->color(0); #black
@@ -308,9 +308,10 @@ sub color {
 
 =method justify 
 
-Set Justification. Options 'left', 'right' and 'center'
+Set Justification. Options *left*, *right* and *center*
 
     $device->printer->justify( 'right' );
+    $device->printer->write("This is right justified"); 
 
 =cut
 
@@ -328,9 +329,10 @@ sub justify {
 
 =method upsideDown
 
-Sets Upside Down Printing on/off (pass 0 or 1)
+Sets Upside Down Printing on/off (pass *0* or *1*)
 
     $device->printer->upsideDownPrinting(1);
+    $device->printer->write("This text is upside down"); 
 
 =cut
 
@@ -343,7 +345,15 @@ sub upsideDown {
 
 =method fontHeight 
 
-Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*,*1*,*2*,*3*,*4*,*5*,*6* and *7* for non-printmode state (default) 
+
+    $device->printer->fontHeight(1);
+    $device->printer->write("double height\n");
+    $device->printer->fontHeight(2);
+    $device->printer->write("triple height\n");
+    $device->printer->fontHeight(3);
+    $device->printer->write("quadruple height\n");
+    . . .
 
 =cut
 
@@ -361,7 +371,7 @@ sub fontHeight {
 
 =method fontWidth 
 
-Set font width. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*,*1*,*2*,*3*,*4*,*5*,*6* and *7* for non-printmode state (default) 
 
     $device->printer->fontWidth(1);
     $device->printer->write("double width\n");
@@ -387,7 +397,7 @@ sub fontWidth {
 
 =method charSpacing
 
-Sets charachter spacing takes a value between 0 and 255
+Sets character spacing takes a value between 0 and 255
 
     $device->printer->charSpacing(5);
     $device->printer->write("Blah Blah Blah\n");
@@ -419,6 +429,8 @@ sub lineSpacing {
 
 Revert to default Line spacing for the printer
 
+    $device->printer->selectDefaultLineSpacing();
+
 =cut
 
 sub selectDefaultLineSpacing {
@@ -429,6 +441,7 @@ sub selectDefaultLineSpacing {
 =method printPosition
 
 Sets the distance from the beginning of the line to the position at which characters are to be printed.
+
     $device->printer->printPosition( $length, $height );
 
 * 0 <= $length <= 255
@@ -443,12 +456,12 @@ sub printPosition {
 
 =method leftMargin
 
-Sets the left margin code to the printer. takes two single byte parameters, nL and nH.
+Sets the left margin code to the printer. takes two single byte parameters, ~nL~ and ~nH~.
 To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number) part of a number, while MOD indicates the
 remainder of a division operation. Must be sent before a new line begins to be effective.
 For example, to break the value 520 into two bytes, use the following two equations:
-nH = INT 520/256
-nL = MOD 520/256
+~nH~ = INT 520/256
+~nL~ = MOD 520/256
 
     $device->printer->leftMargin(nL => $nl, nH => $nh);
 
@@ -482,6 +495,17 @@ sub _updatePrintMode {
 
 =method barcode
 
+This method prints a barcode to the printer. This can be bundled with other text formatting commands at the appropriate point where you would like to print a barcode on your print out. takes argument ~barcode~ as the barcode value.
+
+In the simplest form you can use this command as follows:
+
+    #Default barcode printed in code93 system with a width of 2 and HRI Chars printed below the barcode
+    $device->printer->barcode(
+        barcode     => 'SHANTANU BHADORIA',
+    );
+
+However there are several customizations available including barcode ~system~, ~font~, ~height~ etc.
+
     my $hripos = 'above';
     my $font   = 'a';
     my $height = 100;
@@ -504,11 +528,6 @@ sub _updatePrintMode {
         system      => 'CODE93',
         HRIPosition => 'above',
         barcode     => 'Shan',
-    );
-
-    #Default barcode printed in code93 width 2 and HRI Chars below the barcode
-    $device->printer->barcode(
-        barcode     => 'SHANTANU BHADORIA',
     );
 
 Available systems:
@@ -629,11 +648,11 @@ sub printImage {
 
 =method cutPaper
 
-Cuts the paper, if feed is set to 0 then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut.
+Cuts the paper, if ~feed~ is set to *0* then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut though.
 
-    $device->printer->cutPaper( feed => false )
+    $device->printer->cutPaper( feed => 0 )
 
-While not strictly a text formatting option, in receipt printer the cut paper code is sent along with the rest of the print data and the printer automatically cuts the paper at the appropriate point
+While not strictly a text formatting option, in receipt printer the cut paper instruction is sent along with the rest of the text and text formatting data and the printer cuts the paper at the appropriate points wherever this command is used.
 
 =cut
 
@@ -652,7 +671,7 @@ sub cutPaper {
 
 =method drawerKickPulse
 
-Trigger drawer kick. Used to open cash drawer connected to the printer. In some usecases it may be used to trigger other devices by close contact.
+Trigger drawer kick. Used to open cash drawer connected to the printer. In some use cases it may be used to trigger other devices by close contact.
 
     $device->printer->drawerKickPulse( $pin, $time );
 
@@ -662,6 +681,8 @@ Trigger drawer kick. Used to open cash drawer connected to the printer. In some 
 For default values use without any params to kick drawer pin 2 with a 800ms pulse
 
     $device->printer->drawerKickPulse();
+
+Again like cutPaper command this is obviously not a text formatting command but this command is sent along with the rest of the text and text formatting data and the printer sends the pulse at the appropriate points wherever this command is used. While originally designed for triggering a cash drawer to open, in practice this port can be used for all sorts of devices like pulsing light, or sound alarm etc.
 
 =cut
 

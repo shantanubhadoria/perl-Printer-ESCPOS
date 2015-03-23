@@ -59,7 +59,7 @@ __END__
 === SERIAL PRINTER
 
 The Mandatory parameters for a *Serial* ~driverType~ are ~driverType~( *Serial* ) and ~deviceFilePath~
-This is the prefered ~driverType~ for connecting to a printer. This connection type is valid for printers connected over serial ports or for printers connected on physical USB ports but showing up as *Serial* devices(check syslog when you connect the printer). Note that not all printers show up as Serial devices when connected on USB port.
+This is the preferred ~driverType~ for connecting to a printer. This connection type is valid for printers connected over serial ports or for printers connected on physical USB ports but showing up as *Serial* devices(check syslog when you connect the printer). Note that not all printers show up as Serial devices when connected on USB port.
 
     my $device = Printer::ESCPOS->new(
         driverType     => 'Serial',
@@ -76,7 +76,7 @@ the driver uses 38400 as default baudrate. If necessary you can change this valu
         baudrate       => 9600,
     );
 
-If your printer is not printing properly when connected on physical serial port try setting the flag ~serialOverUSB~ to *0* to tell [Printer::ESCPOS] to use special buffer management optimisations for physical serial ports
+If your printer is not printing properly when connected on physical serial port try setting the flag ~serialOverUSB~ to *0* to tell [Printer::ESCPOS] to use special buffer management optimizations for physical serial ports
 
     my $device = Printer::ESCPOS->new(
         driverType     => 'Serial',
@@ -100,7 +100,7 @@ This is a ~driverType~ for printers connected over a network.
 === BASIC DEVICE FILE Driver
 
 The Mandatory parameters for a *File* ~driverType~ are ~driverType~( *File* ) and ~deviceFilePath~
-This Driver is included for those instances when your printing needs are simple(You dont want to check the printer for printer status etc. and are only interested in pushing data to the printer for printing) and *Serial* driver type is just refusing to work altogether. In this ~driverType~ the data is written directly to the printer device file and from there sent to the printer. This is the basic write method for ESCPOS printers and it almost always works but it doesn't allow you to read Printer Status which might not be a deal breaker for most people. This ~driverType~ can also be used for Printers which connect on USB ports but don't show up as Serial devices in syslog
+This Driver is included for those instances when your printing needs are simple(You don't want to check the printer for printer status etc. and are only interested in pushing data to the printer for printing) and *Serial* driver type is just refusing to work altogether. In this ~driverType~ the data is written directly to the printer device file and from there sent to the printer. This is the basic write method for ESCPOS printers and it almost always works but it doesn't allow you to read Printer Status which might not be a deal breaker for most people. This ~driverType~ can also be used for Printers which connect on USB ports but don't show up as Serial devices in syslog
 
     my $device = Printer::ESCPOS->new(
         driverType     => 'File',
@@ -120,7 +120,7 @@ Sends raw text to the printer.
 
 === printAreaWidth
 
-Sets the Print area width specified by nL and NH. The width is calculated as 
+Sets the Print area width specified by ~nL~ and ~NH~. The width is calculated as 
     ( nL + nH * 256 ) * horiz_motion_unit 
     
 A pre-requisite line feed is automatically executed before printAreaWidth method.
@@ -174,7 +174,7 @@ Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style 
 
 === bold 
 
-Set bold mode 0 for off and 1 for on. Also called emphasized mode in some printer manuals 
+Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals 
 
     $device->printer->bold(1);
     $device->printer->write("This is Bold Text\n");
@@ -183,7 +183,7 @@ Set bold mode 0 for off and 1 for on. Also called emphasized mode in some printe
 
 === doubleStrike 
 
-Set double-strike mode 0 for off and 1 for on
+Set double-strike mode *0* for off and *1* for on
 
     $device->printer->doubleStrike(1);
     $device->printer->write("This is Double Striked Text\n");
@@ -192,7 +192,7 @@ Set double-strike mode 0 for off and 1 for on
 
 === underline
 
-set underline, 0 for off, 1 for on and 2 for double thickness 
+set underline, *0* for off, *1* for on and *2* for double thickness 
 
     $device->printer->underline(1);
     $device->printer->write("This is Underlined Text\n");
@@ -203,7 +203,7 @@ set underline, 0 for off, 1 for on and 2 for double thickness
 
 === invert
 
-Reverse white/black printing mode pass 0 for off and 1 for on
+Reverse white/black printing mode pass *0* for off and *1* for on
 
     $device->printer->invert(1);
     $device->printer->write("This is Inverted Text\n");
@@ -212,7 +212,7 @@ Reverse white/black printing mode pass 0 for off and 1 for on
 
 === color
 
-Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text is printed.
+Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text is printed. Pass *0* or *1* to switch between the two colors.
 
     $device->printer->lf();
     $device->printer->color(0); #black
@@ -231,14 +231,14 @@ Set Justification. Options *left*, *right* and *center*
 
 === upsideDown
 
-Sets Upside Down Printing on/off (pass 0 or 1)
+Sets Upside Down Printing on/off (pass *0* or *1*)
 
     $device->printer->upsideDownPrinting(1);
     $device->printer->write("This text is upside down"); 
 
 === fontHeight 
 
-Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*,*1*,*2*,*3*,*4*,*5*,*6* and *7* for non-printmode state (default) 
 
     $device->printer->fontHeight(1);
     $device->printer->write("double height\n");
@@ -250,7 +250,7 @@ Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 
 
 === fontWidth 
 
-Set font width. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*,*1*,*2*,*3*,*4*,*5*,*6* and *7* for non-printmode state (default) 
 
     $device->printer->fontWidth(1);
     $device->printer->write("double width\n");
@@ -285,6 +285,7 @@ Revert to default Line spacing for the printer
 === printPosition
 
 Sets the distance from the beginning of the line to the position at which characters are to be printed.
+
     $device->printer->printPosition( $length, $height );
 
 * 0 <= $length <= 255
@@ -292,18 +293,18 @@ Sets the distance from the beginning of the line to the position at which charac
 
 === leftMargin
 
-Sets the left margin code to the printer. takes two single byte parameters, nL and nH.
+Sets the left margin code to the printer. takes two single byte parameters, ~nL~ and ~nH~.
 To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number) part of a number, while MOD indicates the
 remainder of a division operation. Must be sent before a new line begins to be effective.
 For example, to break the value 520 into two bytes, use the following two equations:
-nH = INT 520/256
-nL = MOD 520/256
+~nH~ = INT 520/256
+~nL~ = MOD 520/256
 
     $device->printer->leftMargin(nL => $nl, nH => $nh);
 
 === barcode
 
-This method prints a barcode to the printer. This can be bundled with other text formatting commands at the appropriate point where you would like to print a barcode on your print out.
+This method prints a barcode to the printer. This can be bundled with other text formatting commands at the appropriate point where you would like to print a barcode on your print out. takes argument ~barcode~ as the barcode value.
 
 In the simplest form you can use this command as follows:
 
@@ -312,7 +313,7 @@ In the simplest form you can use this command as follows:
         barcode     => 'SHANTANU BHADORIA',
     );
 
-However there are several customizations available including barcode format, font, height etc.
+However there are several customizations available including barcode ~system~, ~font~, ~height~ etc.
 
     my $hripos = 'above';
     my $font   = 'a';
@@ -375,15 +376,15 @@ This function also writes the buffer data to the printer before printing the bit
 
 === cutPaper
 
-Cuts the paper, if feed is set to 0 then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut though.
+Cuts the paper, if ~feed~ is set to *0* then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut though.
 
-    $device->printer->cutPaper( feed => false )
+    $device->printer->cutPaper( feed => 0 )
 
-While not strictly a text formatting option, in receipt printer the cutpaper instruction is sent along with the rest of the text and text formatting data and the printer cuts the paper at the appropriate points wherever this command is used.
+While not strictly a text formatting option, in receipt printer the cut paper instruction is sent along with the rest of the text and text formatting data and the printer cuts the paper at the appropriate points wherever this command is used.
 
 === drawerKickPulse
 
-Trigger drawer kick. Used to open cash drawer connected to the printer. In some usecases it may be used to trigger other devices by close contact.
+Trigger drawer kick. Used to open cash drawer connected to the printer. In some use cases it may be used to trigger other devices by close contact.
 
     $device->printer->drawerKickPulse( $pin, $time );
 
@@ -405,7 +406,7 @@ Once Initialization is done and the formatted text for printing is prepared usin
     $device->printer->print();
 
 Why an extra print step to send this data to the printer?
-This is necessary because many printers have difficulty handling large amount of print data sent across in a single large stream. Seperating the preparation of data from transmission of data to the printer allows [Printer::ESCPOS] to do some buffer management and optimization in the way the entire data is sent to the printer with tiny timed breaks between chunks of data for a reliable printer output.
+This is necessary because many printers have difficulty handling large amount of print data sent across in a single large stream. Separating the preparation of data from transmission of data to the printer allows [Printer::ESCPOS] to do some buffer management and optimization in the way the entire data is sent to the printer with tiny timed breaks between chunks of data for a reliable printer output.
 
 == GETTING PRINTER HEALTH STATUS
 
