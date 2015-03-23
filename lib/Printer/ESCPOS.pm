@@ -156,6 +156,7 @@ sub _build_printer {
    
     my $base  = __PACKAGE__ . "::Profiles::";
     my $class = $base . $self->profile;
+
     Class::Load::load_class($class);
     unless ($class->does(ESCPOSProfile)){
         confess "Class ${class} in ${base} does not implement the Printer::ESCPOS::Roles::Profile Interface";
@@ -163,6 +164,10 @@ sub _build_printer {
     my $object = $class->new(
         driver => $self->_driver,
     );
+
+    $object->init();
+
+    return $object;
 }
 
 no Moose;
@@ -175,6 +180,8 @@ __END__
 =begin wikidoc
 
 = SYNOPSIS
+
+If you are just starting up with POS RECEIPT Printers, you must first refer to [Printer::ESCPOS::Manual] to get started.
 
 Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
 Among these connection types 'Serial', 'Network', 'File' are already implemented in this module. 'USB' type using [Device::USB] module is under development. In the meantime most of the printing tasks for USB connected printer can be achieved using the 'File' connection mode for usb connected ESCPOS printers.
@@ -260,7 +267,7 @@ You can use this module for all your ESC-POS Printing needs. If some of your pri
 
 = MANUALS
 
-Refer to the following manuals for usage documentation:
+Refer to the following manuals for to get started with [Printer::ESCPOS]
 
 * [Printer::ESCPOS::Manual]
 
@@ -285,5 +292,3 @@ Refer to the following manuals for usage documentation:
 Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many commands print commands too quickly. To avoid this aggregate the data to be sent to the printer with write() and other text formatting functions and then send it all in one go using print()
 
 =end wikidoc
-
-=cut

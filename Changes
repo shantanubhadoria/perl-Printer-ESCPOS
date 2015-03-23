@@ -1,6 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.005 2015-03-16T05:27:42
+0.005 2015-03-23T05:52:49
+ - Fixed/Added some more POD Documentation (Shantanu Bhadoria)
  - Adding a Manual (Shantanu Bhadoria)
  - Beautified(and fixed) some Pod (Shantanu Bhadoria)
 

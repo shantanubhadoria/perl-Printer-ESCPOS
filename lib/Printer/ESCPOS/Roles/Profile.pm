@@ -11,6 +11,7 @@ package Printer::ESCPOS::Roles::Profile;
 # Dependencies
 use 5.010;
 use Moose::Role;
+requires 'init';
 
 =attr driver
 
@@ -94,7 +95,7 @@ has underlineStatus => (
   default => 0,
 );
 
-=attr write
+=method write
 
 Sends raw data to the local buffer ready for sending this to the printer. This would contain a set of strings to print or ESCPOS Codes.
 
@@ -105,7 +106,7 @@ sub write {
     $self->driver->write( $text );
 }
 
-=attr print 
+=method print 
 
 prints data in the buffer
 
@@ -116,7 +117,7 @@ sub print {
     $self->driver->print( $text );
 }
 
-=attr read
+=method read
 
 Reads n bytes from the printer. This function is used internally to get printer statuses when supported.
 

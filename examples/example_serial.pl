@@ -9,7 +9,7 @@ use Printer::ESCPOS;
 use Data::Dumper;
 
 my $printer_serial = Printer::ESCPOS->new(
-    driverType => 'Serial',
+    driverType     => 'Serial',
     deviceFilePath => '/dev/ttyACM0',
 );
 

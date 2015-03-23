@@ -28,7 +28,7 @@ use constant {
 
 =method init
 
-Initializes the Printer. Clears the data in print buffer and resets the printer to the mode that was in effect when the power was turned on.
+Initializes the Printer. Clears the data in print buffer and resets the printer to the mode that was in effect when the power was turned on. This function is automatically called on creation of printer object.
 
 =cut
 
@@ -232,6 +232,11 @@ sub bold {
 
 Set double-strike mode 0 for off and 1 for on
 
+    $device->printer->doubleStrike(1);
+    $device->printer->write("This is Double Striked Text\n");
+    $device->printer->doubleStrike(0);
+    $device->printer->write("This is not Double Striked  Text\n");
+
 =cut
 
 sub doubleStrike {
@@ -243,6 +248,13 @@ sub doubleStrike {
 =method underline
 
 set underline, 0 for off, 1 for on and 2 for double thickness 
+
+    $device->printer->underline(1);
+    $device->printer->write("This is Underlined Text\n");
+    $device->printer->underline(2);
+    $device->printer->write("This is Underlined Text with thicker underline\n");
+    $device->printer->underline(0);
+    $device->printer->write("This is not Underlined Text\n");
 
 =cut
 
@@ -261,7 +273,10 @@ sub underline {
 
 Reverse white/black printing mode pass 0 for off and 1 for on
 
+    $device->printer->invert(1);
+    $device->printer->write("This is Inverted Text\n");
     $device->printer->invert(0);
+    $device->printer->write("This is not Inverted Text\n");
 
 =cut
 
@@ -346,7 +361,15 @@ sub fontHeight {
 
 =method fontWidth 
 
-Set font height. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+Set font width. Only supports 0 or 1 for printmode set to 1, supports values 0 to 7 for non-printmode state (default) 
+
+    $device->printer->fontWidth(1);
+    $device->printer->write("double width\n");
+    $device->printer->fontWidth(2);
+    $device->printer->write("triple width\n");
+    $device->printer->fontWidth(3);
+    $device->printer->write("quadruple width\n");
+    . . .
 
 =cut
 
@@ -379,7 +402,9 @@ sub charSpacing {
 
 =method lineSpacing 
 
-    $device->printer->lineSpacing($spacing)
+Sets the spacing between each line of printout.
+
+    $device->printer->lineSpacing($spacing);
 
 * 0 <= spacing <= 255
 
@@ -435,50 +460,6 @@ sub leftMargin {
     $self->driver->write( _GS . 'L' . chr( $params{nL} )  . chr( $params{nH} ) );
 }
 
-=method drawerKickPulse
-
-Trigger drawer kick
-
-    $device->printer->drawerKickPulse( $pin, $time );
-
-* $pin is either 0( for pin 2 ) and 1( for pin5 ) default value is 0
-* $time is a value between 1 to 8 and the pulse duration in multiples of 100ms. default value is 8
-
-For default values use without any params to kick drawer pin 2 with a 800ms pulse
-
-    $device->printer->drawerKickPulse();
-
-=cut
-
-sub drawerKickPulse {
-    my ( $self, $pin, $time ) = @_;
-    $pin  = defined $pin ? $pin : 0;
-    $time = defined $time ? $time : 8;
-
-    $self->driver->write( _DLE . _DC4 . "\x01" . chr( $pin )  . chr( $time ) );
-}
-
-=method cutPaper
-
-Cuts the paper, if feed is set to 0 then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut.
-
-    $device->printer->cutPaper( feed => false )
-
-=cut
-
-sub cutPaper {
-    my ( $self, %params ) = @_;
-    $params{feed} = defined $params{feed} ? $params{feed} : 0;
-
-    $self->lf();
-    if( $params{feed} == 0 ) {
-        $self->driver->write( _GS . 'V' . chr(1));
-    } else {
-        $self->driver->write( _GS . 'V' . chr(66) . chr(0) );
-    }
-
-}
-
 # This is a redundant function in ESCPOS which updates the printer
 sub _updatePrintMode {
     my ( $self ) = @_;
@@ -497,12 +478,115 @@ sub _updatePrintMode {
     $self->driver->write( _ESC . '!' . pack( "b*", $value ) );
 }
 
+# BEGIN: BARCODE functions
+
+=method barcode
+
+    my $hripos = 'above';
+    my $font   = 'a';
+    my $height = 100;
+    my $system = 'UPC-A';
+    $device->printer->barcode(
+        HRIPosition => $hripos,        # Position of Human Readable characters
+                                       # 'none','above','below','aboveandbelow'
+        font        => $font,          # Font for HRI characters. 'a' or 'b'
+        height      => $height,        # no of dots in vertical direction
+        system      => $system,        # Barcode system
+        width       => 2               # 2:0.25mm, 3:0.375mm, 4:0.5mm, 5:0.625mm, 6:0.75mm
+        barcode     => '123456789012', # Check barcode systems for allowed value
+    );
+    $device->printer->barcode(
+        system      => 'CODE39',
+        HRIPosition => 'above',
+        barcode     => '*1-I.I/ $IA*',
+    );
+    $device->printer->barcode(
+        system      => 'CODE93',
+        HRIPosition => 'above',
+        barcode     => 'Shan',
+    );
+
+    #Default barcode printed in code93 width 2 and HRI Chars below the barcode
+    $device->printer->barcode(
+        barcode     => 'SHANTANU BHADORIA',
+    );
+
+Available systems:
+
+* UPC-A
+* UPC-C
+* JAN13
+* JAN8
+* CODE39
+* ITF
+* CODABAR
+* CODE93  
+* CODE128 
+
+=cut
+
+sub barcode {
+    my ( $self, %params ) = @_;
+
+    my %map = (
+        none          => 0,
+        above         => 1,
+        below         => 2,
+        aboveandbelow => 3,
+    );
+    $self->driver->write( _GS . 'H' . chr(
+            $map{$params{HRIPosition} || 'below'}
+        ) );
+
+    %map = (
+        a => 0,
+        b => 1,
+    );
+    $self->driver->write( _GS . 'f' . chr(
+            $map{$params{font} || 'b'}
+        ) );
+
+    $self->driver->write( _GS . 'h' . chr(
+            $params{height} || 50 
+        ) );
+
+    $self->driver->write( _GS . 'w' . chr(
+            $params{width} || 2 
+        ) );
+  
+    %map = (
+        'UPC-A' => 0,
+        'UPC-B' => 1,
+        JAN13   => 2,
+        JAN8    => 3,
+        CODE39  => 4,
+        ITF     => 5,
+        CODABAR => 6,
+        CODE93  => 7,
+        CODE128 => 8,
+    );
+    $params{system} ||= 'CODE93';
+
+    if(
+        $map{$params{system}} < 9
+    ) {
+        $self->driver->write( _GS . 'k' 
+            . chr( $map{$params{system}} + 65 )
+            . chr( length $params{barcode} )
+            . $params{barcode}
+        );
+    } else {
+        die "Invalid system in barcode";
+    }
+}
+
+# END: BARCODE functions
+
 # BEGIN: Bitmap printing methods
 
 =method printNVImage
 
 Prints bit image stored in Non-Volatile (NV) memory of the printer. 
-This function also writes the buffer data to the printer before printing the bit image. 
 
     $device->printer->printNVImage($flag);
 
@@ -540,6 +624,56 @@ sub printImage {
 }
 
 # END: Bitmap printing methods 
+
+# BEGIN: Peripheral and cutter Control Commands
+
+=method cutPaper
+
+Cuts the paper, if feed is set to 0 then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut.
+
+    $device->printer->cutPaper( feed => false )
+
+While not strictly a text formatting option, in receipt printer the cut paper code is sent along with the rest of the print data and the printer automatically cuts the paper at the appropriate point
+
+=cut
+
+sub cutPaper {
+    my ( $self, %params ) = @_;
+    $params{feed} = defined $params{feed} ? $params{feed} : 0;
+
+    $self->lf();
+    if( $params{feed} == 0 ) {
+        $self->driver->write( _GS . 'V' . chr(1));
+    } else {
+        $self->driver->write( _GS . 'V' . chr(66) . chr(0) );
+    }
+
+}
+
+=method drawerKickPulse
+
+Trigger drawer kick. Used to open cash drawer connected to the printer. In some usecases it may be used to trigger other devices by close contact.
+
+    $device->printer->drawerKickPulse( $pin, $time );
+
+* $pin is either 0( for pin 2 ) and 1( for pin5 ) default value is 0
+* $time is a value between 1 to 8 and the pulse duration in multiples of 100ms. default value is 8
+
+For default values use without any params to kick drawer pin 2 with a 800ms pulse
+
+    $device->printer->drawerKickPulse();
+
+=cut
+
+sub drawerKickPulse {
+    my ( $self, $pin, $time ) = @_;
+    $pin  = defined $pin ? $pin : 0;
+    $time = defined $time ? $time : 8;
+
+    $self->driver->write( _DLE . _DC4 . "\x01" . chr( $pin )  . chr( $time ) );
+}
+
+# End Peripheral Control Commands
 
 # BEGIN: Printer STATUS methods 
 
@@ -708,110 +842,6 @@ sub inkStatusB {
 }
 
 # END: Printer STATUS methods 
-
-# BEGIN: BARCODE functions
-
-=method barcode
-
-    my $hripos = 'above';
-    my $font   = 'a';
-    my $height = 100;
-    my $system = 'UPC-A';
-    $device->printer->barcode(
-        HRIPosition => $hripos,        # Position of Human Readable characters
-                                       # 'none','above','below','aboveandbelow'
-        font        => $font,          # Font for HRI characters. 'a' or 'b'
-        height      => $height,        # no of dots in vertical direction
-        system      => $system,        # Barcode system
-        width       => 2               # 2:0.25mm, 3:0.375mm, 4:0.5mm, 5:0.625mm, 6:0.75mm
-        barcode     => '123456789012', # Check barcode systems for allowed value
-    );
-    $device->printer->barcode(
-        system      => 'CODE39',
-        HRIPosition => 'above',
-        barcode     => '*1-I.I/ $IA*',
-    );
-    $device->printer->barcode(
-        system      => 'CODE93',
-        HRIPosition => 'above',
-        barcode     => 'Shan',
-    );
-
-    #Default barcode printed in code93 width 2 and HRI Chars below the barcode
-    $device->printer->barcode(
-        barcode     => 'SHANTANU BHADORIA',
-    );
-
-Available systems:
-
-* UPC-A
-* UPC-C
-* JAN13
-* JAN8
-* CODE39
-* ITF
-* CODABAR
-* CODE93  
-* CODE128 
-
-=cut
-
-sub barcode {
-    my ( $self, %params ) = @_;
-
-    my %map = (
-        none          => 0,
-        above         => 1,
-        below         => 2,
-        aboveandbelow => 3,
-    );
-    $self->driver->write( _GS . 'H' . chr(
-            $map{$params{HRIPosition} || 'below'}
-        ) );
-
-    %map = (
-        a => 0,
-        b => 1,
-    );
-    $self->driver->write( _GS . 'f' . chr(
-            $map{$params{font} || 'b'}
-        ) );
-
-    $self->driver->write( _GS . 'h' . chr(
-            $params{height} || 50 
-        ) );
-
-    $self->driver->write( _GS . 'w' . chr(
-            $params{width} || 2 
-        ) );
-  
-    %map = (
-        'UPC-A' => 0,
-        'UPC-B' => 1,
-        JAN13   => 2,
-        JAN8    => 3,
-        CODE39  => 4,
-        ITF     => 5,
-        CODABAR => 6,
-        CODE93  => 7,
-        CODE128 => 8,
-    );
-    $params{system} ||= 'CODE93';
-
-    if(
-        $map{$params{system}} < 9
-    ) {
-        $self->driver->write( _GS . 'k' 
-            . chr( $map{$params{system}} + 65 )
-            . chr( length $params{barcode} )
-            . $params{barcode}
-        );
-    } else {
-        die "Invalid system in barcode";
-    }
-}
-
-# END: BARCODE functions
 
 no Moose;
 __PACKAGE__->meta->make_immutable;

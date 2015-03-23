@@ -9,7 +9,7 @@ use Printer::ESCPOS;
 use Data::Dumper;
 
 my $printer_file = Printer::ESCPOS->new(
-    driverType => 'File',
+    driverType     => 'File',
     deviceFilePath => '/dev/usb/lp0',
 );
 

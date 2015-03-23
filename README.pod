@@ -10,6 +10,8 @@ version 0.005
 
 =head1 SYNOPSIS
 
+If you are just starting up with POS RECEIPT Printers, you must first refer to L<Printer::ESCPOS::Manual> to get started.
+
 Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
 Among these connection types 'Serial', 'Network', 'File' are already implemented in this module. 'USB' type using L<Device::USB> module is under development. In the meantime most of the printing tasks for USB connected printer can be achieved using the 'File' connection mode for usb connected ESCPOS printers.
 
@@ -65,10 +67,10 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
      );
      $device->printer->init(); # This calls the initialization functions for your printer.
  
-     say Dumper $printer_serial->printer->printerStatus();
-     say Dumper $printer_serial->printer->offlineStatus();
-     say Dumper $printer_serial->printer->errorStatus();
-     say Dumper $printer_serial->printer->paperSensorStatus();
+     say Dumper $device->printer->printerStatus();
+     say Dumper $device->printer->offlineStatus();
+     say Dumper $device->printer->errorStatus();
+     say Dumper $device->printer->paperSensorStatus();
  
      $device->printer->bold(1);
      $device->printer->write("Bold Text\n");
@@ -138,6 +140,18 @@ Use this attribute to send commands to the printer
 
     $device->printer->setFont('a');
     $device->printer->write("blah blah blah\n");
+
+=head1 MANUALS
+
+Refer to the following manuals for to get started with L<Printer::ESCPOS>
+
+=over
+
+=item *
+
+L<Printer::ESCPOS::Manual>
+
+=back
 
 =head1 NOTES
 
@@ -220,7 +234,7 @@ Shantanu Bhadoria <shantanu att cpan dott org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Shantanu Bhadoria.
+This software is copyright (c) 2015 by Shantanu Bhadoria (https://www.shantanubhadoria.com).
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
