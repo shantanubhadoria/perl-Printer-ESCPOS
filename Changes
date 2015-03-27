@@ -1,6 +1,11 @@
 Changelog for Printer-ESCPOS
 
-0.009 2015-03-27T04:46:51
+0.010 2015-03-27T06:28:00
+ - converted module names to links in documentation (Shantanu Bhadoria)
+ - More POD fixes (Shantanu Bhadoria)
+
+0.009 2015-03-27T04:49:34
+ - v0.009 (Shantanu Bhadoria)
  - Changed params to 'ro'. This is more appropriate. More documentation
    (Shantanu Bhadoria)
  - Fixed some incorrect info in pod (Shantanu Bhadoria)
