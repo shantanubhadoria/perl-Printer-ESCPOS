@@ -110,22 +110,31 @@ Sends buffer data to the printer.
 =cut
 
 sub print {
-    my ($self,$raw) = @_;
+    my ( $self, $raw ) = @_;
     my @chunks;
-    my $buffer = $self->_buffer;
-    my $n = 8; # Size of each chunk in bytes
-    $n = 64 if($self->serialOverUSB);
 
-    @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
-    for my $chunk( @chunks ){
+    my $buffer = $self->_buffer;
+    if( defined $raw ) {
+        $buffer = $raw;
+    } else {
+        $buffer = $self->_buffer;
+        $self->_buffer('');
+    }
+
+    my $n      = 8;                # Size of each chunk in bytes
+    $n = 64 if ( $self->serialOverUSB );
+
+    @chunks = unpack "a$n" x ( ( length($buffer) / $n ) - 1 ) . "a*", $buffer;
+    for my $chunk (@chunks) {
         $self->_connection->write($chunk);
-        if( $self->serialOverUSB ) {
+        if ( $self->serialOverUSB ) {
             $self->_connection->read();
-        } else {
-            usleep(10000); # Serial Port is annoying, it doesn't tell you when it is ready to get the next chunk
+        }
+        else {
+            usleep(10000)
+              ; # Serial Port is annoying, it doesn't tell you when it is ready to get the next chunk
         }
     }
-    $self->_buffer('');
 }
 
 no Moose;

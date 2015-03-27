@@ -78,25 +78,6 @@ sub read {
     return $data;
 }
 
-=method print
-
-Sends buffer data to the printer.
-
-=cut
-
-sub print {
-    my ($self,$raw) = @_;
-    my @chunks;
-    my $buffer = $self->_buffer;
-    my $n = 64; # Size of each chunk in bytes
-
-    @chunks = unpack "a$n" x ((length($buffer)/$n)-1) . "a*", $buffer;    
-    for my $chunk( @chunks ){
-        $self->_connection->write($chunk);
-    }
-    $self->_buffer('');
-}
-
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
