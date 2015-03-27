@@ -1,7 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.008 2015-03-27T02:37:40
- - No changes found
+0.008 2015-03-27T03:21:26
+ - Fixed Serial Port raw Printing (Shantanu Bhadoria)
 
 0.007 2015-03-23T08:15:14
  - v0.007 (Shantanu Bhadoria)
