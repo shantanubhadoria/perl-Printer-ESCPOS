@@ -43,7 +43,7 @@ L<Printer::ESCPOS::Profiles::SinocanPSeries>
 Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.
 
     use Moose;
-    extends 'Printer::ESCPOS::Roles::Profile';
+    with 'Printer::ESCPOS::Roles::Profile';
 
 =cut
 
