@@ -288,6 +288,6 @@ Note: While you may call print() after every single command code, this is not ad
         deviceFilePath => $path,
         baudrate       => 9600,
     );
-* For ESC-P codes refer the guide from Epson http://support.epson.ru/upload/library_file/14/esc-p.pdf
+* For ESC-P codes refer the guide from Epson [http://support.epson.ru/upload/library_file/14/esc-p.pdf]
 
 =end wikidoc
