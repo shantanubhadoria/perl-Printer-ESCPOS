@@ -703,12 +703,12 @@ sub drawerKickPulse {
 
 Returns printer status in a hashref.
 
-return {
-    drawer_pin3_high            => $flags[5],
-    offline                     => $flags[4],
-    waiting_for_online_recovery => $flags[2],
-    feed_button_pressed         => $flags[1],
-};
+    return {
+        drawer_pin3_high            => $flags[5],
+        offline                     => $flags[4],
+        waiting_for_online_recovery => $flags[2],
+        feed_button_pressed         => $flags[1],
+    };
 
 =cut
 
