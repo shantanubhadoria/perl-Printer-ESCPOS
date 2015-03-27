@@ -1,6 +1,15 @@
 Changelog for Printer-ESCPOS
 
-0.008 2015-03-27T03:21:26
+0.009 2015-03-27T04:46:51
+ - Changed params to 'ro'. This is more appropriate. More documentation
+   (Shantanu Bhadoria)
+ - Fixed some incorrect info in pod (Shantanu Bhadoria)
+ - Fixed more links in documentation (Shantanu Bhadoria)
+ - Making the ESC-P guide link a link in the documentation (Shantanu
+   Bhadoria)
+
+0.008 2015-03-27T03:22:21
+ - v0.008 (Shantanu Bhadoria)
  - Fixed Serial Port raw Printing (Shantanu Bhadoria)
 
 0.007 2015-03-23T08:15:14
