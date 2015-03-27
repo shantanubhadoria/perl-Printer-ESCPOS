@@ -35,10 +35,10 @@ has driverType => (
 
 =attr profile
 
-There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( [Printer::ESCPOS::Profiles::Generic] ).
+There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( L<Printer::ESCPOS::Profiles::Generic> ).
 Use the following classes as examples.
-[Printer::ESCPOS::Profiles::Generic]
-[Printer::ESCPOS::Profiles::SinocanPSeries]
+L<Printer::ESCPOS::Profiles::Generic>
+L<Printer::ESCPOS::Profiles::SinocanPSeries>
 
 Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.
 
