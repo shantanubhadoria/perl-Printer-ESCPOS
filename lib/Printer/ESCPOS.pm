@@ -22,13 +22,39 @@ use Printer::ESCPOS::Connections::USB;
 
 =attr driverType
 
-"Required attribute". The driver type to use for your printer. This can be "File", "Network" or "Serial". "USB" driver is not implemented yet.
-If you choose "File" or "Serial" driver, you must provide the deviceFilePath, for "Network" driver you must provide the printerIp and printerPort.
+"Required attribute". The driver type to use for your printer. This can be B<File>, B<Network> or B<Serial>. B<USB> driver is not implemented yet.
+If you choose B<File> or B<Serial> driver, you must provide the I<deviceFilePath>, for B<Network> driver you must provide the I<printerIp> and I<printerPort>.
+
+Network driver type:
+
+    my $printer_id = '192.168.0.10';
+    my $port       = '9100';
+    my $device = Printer::ESCPOS->new(
+        driverType => 'Network',
+        deviceIp   => $printer_ip,
+        devicePort => $port,
+    );
+
+Serial driver type:
+
+    my $path = '/dev/ttyACM0';
+    $device = Printer::ESCPOS->new(
+        driverType     => 'Serial',
+        deviceFilePath => $path,
+    );
+
+File driver type:
+
+    my $path = '/dev/usb/lp0';
+    $device = Printer::ESCPOS->new(
+        driverType     => 'File',
+        deviceFilePath => $path,
+    );
 
 =cut
 
 has driverType => (
-    is       => 'rw',
+    is       => 'ro',
     isa      => enum( [qw[ File Network Serial USB ]] ),
     required => 1,
 );
@@ -45,27 +71,38 @@ Note that your driver class will have to implement the Printer::ESCPOS::Roles::P
     use Moose;
     with 'Printer::ESCPOS::Roles::Profile';
 
+By default the generic profile is loaded but if you have written your own Printer::ESCPOS::Profile::* class and want to override the generic class pass the I<profile> Param during object creation.
+
+    my $device = Printer::ESCPOS->new(
+        driverType => 'Network',
+        deviceIp   => $printer_ip,
+        devicePort => $port,
+        profile    => 'USERCUSTOM'
+    );
+
+The above $device object will use the Printer::ESCPOS::Profile::USERCUSTOM profile.
+
 =cut
 
 has profile => (
-    is      => 'rw',
+    is      => 'ro',
     default => 'Generic',
 );
 
 =attr deviceFilePath
 
-File path for UNIX device file. e.g. "/dev/ttyACM0"
+File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory parameter if you are using B<File> or B<Serial> I<driverType>.
 
 =cut
 
 has deviceFilePath => (
-    is  => 'rw',
+    is  => 'ro',
     isa => 'Str',
 );
 
 =attr deviceIP
 
-Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+Contains the IP address of the device when its a network printer. The module creates L<IO:Socket::INET> object to connect to the printer. This can be passed in the constructor.
 
 =cut
 
@@ -76,7 +113,7 @@ has deviceIP => (
 
 =attr devicePort
 
-Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+Contains the network port of the device when its a network printer. The module creates L<IO:Socket::INET> object to connect to the printer. This can be passed in the constructor.
 
 =cut
 
@@ -88,7 +125,7 @@ has devicePort => (
 
 =attr baudrate
 
-When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but not always. 
+When used as a local serial device you can set the I<baudrate> of the printer too. Default (38400) will usually work, but not always. 
 
 =cut
 
@@ -100,12 +137,12 @@ has baudrate => (
 
 =attr serialOverUSB
 
-Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the 'Serial' driver.
+Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the B<Serial> driver.
 
 =cut
 
 has serialOverUSB => (
-  is      => 'rw',
+  is      => 'ro',
   isa     => 'Bool',
   default => '1',
 );
@@ -196,6 +233,8 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     #########################################################
     # For Network Printers $port is 9100 in most cases but might differ depending on how 
     # you have configured your printer
+    my $printer_id = '192.168.0.10';
+    my $port       = '9100';
     my $device = Printer::ESCPOS->new(
         driverType => 'Network',
         deviceIp   => $printer_ip,
@@ -257,6 +296,7 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     # A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
     # doesn't support the status functions for the printer. i.e. you will not be able to use 
     # printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
+    my $path = '/dev/usb/lp0';
     $device = Printer::ESCPOS->new(
         driverType     => 'File',
         deviceFilePath => $path,
