@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Roles::Profile;
 
 # PODNAME: Printer::ESCPOS::Roles::Profile
-# ABSTRACT: Role for all Printer Profiles for Printer::ESCPOS 
+# ABSTRACT: Role for all Printer Profiles for L<Printer::ESCPOS> 
 # COPYRIGHT
 # VERSION
 

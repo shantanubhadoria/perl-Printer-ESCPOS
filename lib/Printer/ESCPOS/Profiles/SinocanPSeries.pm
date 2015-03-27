@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Profiles::SinocanPSeries;
 
 # PODNAME: Printer::ESCPOS::Profiles::SinocanPSeries
-# ABSTRACT: Sinocan P Series Profile for Printers for Printer::ESCPOS. 
+# ABSTRACT: Sinocan P Series Profile for Printers for L<Printer::ESCPOS>.
 # COPYRIGHT
 # VERSION
 

@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Connections::Network;
 
 # PODNAME: Printer::ESCPOS::Connections::Network
-# ABSTRACT: Network Connection Interface for Printer::ESCPOS 
+# ABSTRACT: Network Connection Interface for L<Printer::ESCPOS>
 # COPYRIGHT
 # VERSION
 

@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Profiles::Generic;
 
 # PODNAME: Printer::ESCPOS::Profiles::Generic
-# ABSTRACT: Generic Profile for Printers for Printer::ESCPOS. Most common functions are included here.
+# ABSTRACT: Generic Profile for Printers for L<Printer::ESCPOS>. Most common functions are included here.
 # COPYRIGHT
 # VERSION
 

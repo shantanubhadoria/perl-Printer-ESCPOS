@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Connections::USB;
 
 # PODNAME: Printer::ESCPOS::Connections::USB
-# ABSTRACT: USB Connection Interface for Printer::ESCPOS 
+# ABSTRACT: USB Connection Interface for L<Printer::ESCPOS>
 # COPYRIGHT
 # VERSION
 

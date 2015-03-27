@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Connections::Serial;
 
 # PODNAME: Printer::ESCPOS::Connections::Serial
-# ABSTRACT: Serial Connection Interface for Printer::ESCPOS (supports status commands) 
+# ABSTRACT: Serial Connection Interface for L<Printer::ESCPOS> (supports status commands) 
 # COPYRIGHT
 # VERSION
 

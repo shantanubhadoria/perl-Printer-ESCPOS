@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Connections::File;
 
 # PODNAME: Printer::ESCPOS::Connections::File
-# ABSTRACT: Bare Device File Connection Interface for Printer::ESCPOS 
+# ABSTRACT: Bare Device File Connection Interface for L<Printer::ESCPOS>
 # COPYRIGHT
 # VERSION
 

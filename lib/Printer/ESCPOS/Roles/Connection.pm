@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Roles::Connection;
 
 # PODNAME: Printer::ESCPOS::Roles::Connection
-# ABSTRACT: Role for Connection Classes for Printer::ESCPOS
+# ABSTRACT: Role for Connection Classes for L<Printer::ESCPOS>
 # COPYRIGHT
 # VERSION
 

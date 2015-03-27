@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Manual;
 
 # PODNAME: Printer::ESCPOS::Manual
-# ABSTRACT: Manual for Printing POS Receipts using Printer::ESCPOS
+# ABSTRACT: Manual for Printing POS Receipts using L<Printer::ESCPOS>
 # COPYRIGHT
 # VERSION
 
