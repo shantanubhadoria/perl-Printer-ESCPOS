@@ -95,13 +95,15 @@ has underlineStatus => (
   default => 0,
 );
 
-=method write
+=method text 
 
-Sends raw data to the local buffer ready for sending this to the printer. This would contain a set of strings to print or ESCPOS Codes.
+Sends raw text to the local buffer ready for sending this to the printer. This would contain a set of strings to print or ESCPOS Codes.
+
+    $device->printer->text("Hello World\n");
 
 =cut
 
-sub write {
+sub text {
     my ( $self, $text ) = @_;
     $self->driver->write( $text );
 }

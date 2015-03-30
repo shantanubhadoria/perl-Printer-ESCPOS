@@ -35,10 +35,10 @@ __END__
     # Prepare some data to send to the printer using
     # formatting and text commands
     $device->printer->bold(1);
-    $device->printer->write("Heading text\n");
+    $device->printer->text("Heading text\n");
     $device->printer->bold(0);
-    $device->printer->write("Content here\n");
-    $device->printer->write(". . .\n");
+    $device->printer->text("Content here\n");
+    $device->printer->text(". . .\n");
 
 
     # Add a cut paper command at the end to cut the receipt
@@ -100,7 +100,7 @@ This is a ~driverType~ for printers connected over a network.
 === BASIC DEVICE FILE Driver
 
 The Mandatory parameters for a *File* ~driverType~ are ~driverType~( *File* ) and ~deviceFilePath~
-This Driver is included for those instances when your printing needs are simple(You don't want to check the printer for printer status etc. and are only interested in pushing data to the printer for printing) and *Serial* driver type is just refusing to work altogether. In this ~driverType~ the data is written directly to the printer device file and from there sent to the printer. This is the basic write method for ESCPOS printers and it almost always works but it doesn't allow you to read Printer Status which might not be a deal breaker for most people. This ~driverType~ can also be used for Printers which connect on USB ports but don't show up as Serial devices in syslog
+This Driver is included for those instances when your printing needs are simple(You don't want to check the printer for printer status etc. and are only interested in pushing data to the printer for printing) and *Serial* driver type is just refusing to work altogether. In this ~driverType~ the data is written directly to the printer device file and from there sent to the printer. This is the basic text method for ESCPOS printers and it almost always works but it doesn't allow you to read Printer Status which might not be a deal breaker for most people. This ~driverType~ can also be used for Printers which connect on USB ports but don't show up as Serial devices in syslog
 
     my $device = Printer::ESCPOS->new(
         driverType     => 'File',
@@ -112,11 +112,11 @@ This Driver is included for those instances when your printing needs are simple(
 In all the methods described below its assumed that variable {$device} has been initialized using the appropriate connection to the printer with one of the driverTypes mentioned above.
 The following methods prepare the text and text formatting data to be sent to the printer.
 
-=== write
+=== text
 
 Sends raw text to the printer.
 
-    $device->printer->write("Hello Printer::ESCPOS\n")
+    $device->printer->text("Hello Printer::ESCPOS\n")
 
 === printAreaWidth
 
@@ -141,74 +141,74 @@ moves the cursor to next horizontal tab position like a {"\t"}. This command is 
 
 This
 
-    $device->printer->write("blah blah");
+    $device->printer->text("blah blah");
     $device->printer->tab();
-    $device->printer->write("blah2 blah2");
+    $device->printer->text("blah2 blah2");
 
 is same as this
 
-    $device->printer->write("blah blah\tblah2 blah2");
+    $device->printer->text("blah blah\tblah2 blah2");
 
 === lf
 
-line feed. Moves to the next line. You can substitute this method with {"\n"} in your print or write method e.g. :
+line feed. Moves to the next line. You can substitute this method with {"\n"} in your print or text method e.g. :
 
 This
 
-    $device->printer->write("blah blah");
+    $device->printer->text("blah blah");
     $device->printer->lf();
-    $device->printer->write("blah2 blah2");
+    $device->printer->text("blah2 blah2");
 
 is same as this
 
-    $device->printer->write("blah blah\nblah2 blah2");
+    $device->printer->text("blah blah\nblah2 blah2");
 
 === font
 
 Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style *c* and only have two supported styles.
 
     $device->printer->font('a');
-    $device->printer->write('Writing in Font A');
+    $device->printer->text('Writing in Font A');
     $device->printer->font('b');
-    $device->printer->write('Writing in Font B');
+    $device->printer->text('Writing in Font B');
 
 === bold 
 
 Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals 
 
     $device->printer->bold(1);
-    $device->printer->write("This is Bold Text\n");
+    $device->printer->text("This is Bold Text\n");
     $device->printer->bold(0);
-    $device->printer->write("This is not Bold Text\n");
+    $device->printer->text("This is not Bold Text\n");
 
 === doubleStrike 
 
 Set double-strike mode *0* for off and *1* for on
 
     $device->printer->doubleStrike(1);
-    $device->printer->write("This is Double Striked Text\n");
+    $device->printer->text("This is Double Striked Text\n");
     $device->printer->doubleStrike(0);
-    $device->printer->write("This is not Double Striked  Text\n");
+    $device->printer->text("This is not Double Striked  Text\n");
 
 === underline
 
 set underline, *0* for off, *1* for on and *2* for double thickness 
 
     $device->printer->underline(1);
-    $device->printer->write("This is Underlined Text\n");
+    $device->printer->text("This is Underlined Text\n");
     $device->printer->underline(2);
-    $device->printer->write("This is Underlined Text with thicker underline\n");
+    $device->printer->text("This is Underlined Text with thicker underline\n");
     $device->printer->underline(0);
-    $device->printer->write("This is not Underlined Text\n");
+    $device->printer->text("This is not Underlined Text\n");
 
 === invert
 
 Reverse white/black printing mode pass *0* for off and *1* for on
 
     $device->printer->invert(1);
-    $device->printer->write("This is Inverted Text\n");
+    $device->printer->text("This is Inverted Text\n");
     $device->printer->invert(0);
-    $device->printer->write("This is not Inverted Text\n");
+    $device->printer->text("This is not Inverted Text\n");
 
 === color
 
@@ -216,10 +216,10 @@ Most thermal printers support just one color, black. Some ESCPOS printers(especi
 
     $device->printer->lf();
     $device->printer->color(0); #black
-    $device->printer->write("black"); 
+    $device->printer->text("black"); 
     $device->printer->lf();
     $device->printer->color(1); #red
-    $device->printer->write("Red"); 
+    $device->printer->text("Red"); 
     $device->printer->print();
 
 === justify 
@@ -227,25 +227,25 @@ Most thermal printers support just one color, black. Some ESCPOS printers(especi
 Set Justification. Options *left*, *right* and *center*
 
     $device->printer->justify( 'right' );
-    $device->printer->write("This is right justified"); 
+    $device->printer->text("This is right justified"); 
 
 === upsideDown
 
 Sets Upside Down Printing on/off (pass *0* or *1*)
 
     $device->printer->upsideDownPrinting(1);
-    $device->printer->write("This text is upside down"); 
+    $device->printer->text("This text is upside down"); 
 
 === fontHeight 
 
 Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
 
     $device->printer->fontHeight(1);
-    $device->printer->write("double height\n");
+    $device->printer->text("double height\n");
     $device->printer->fontHeight(2);
-    $device->printer->write("triple height\n");
+    $device->printer->text("triple height\n");
     $device->printer->fontHeight(3);
-    $device->printer->write("quadruple height\n");
+    $device->printer->text("quadruple height\n");
     . . .
 
 === fontWidth 
@@ -253,11 +253,11 @@ Set font height. Only supports *0* or *1* for printmode set to 1, supports value
 Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
 
     $device->printer->fontWidth(1);
-    $device->printer->write("double width\n");
+    $device->printer->text("double width\n");
     $device->printer->fontWidth(2);
-    $device->printer->write("triple width\n");
+    $device->printer->text("triple width\n");
     $device->printer->fontWidth(3);
-    $device->printer->write("quadruple width\n");
+    $device->printer->text("quadruple width\n");
     . . .
 
 === charSpacing
@@ -265,7 +265,7 @@ Set font width. Only supports *0* or *1* for printmode set to 1, supports values
 Sets character spacing. Takes a value between 0 and 255
 
     $device->printer->charSpacing(5);
-    $device->printer->write("Blah Blah Blah\n");
+    $device->printer->text("Blah Blah Blah\n");
     $device->printer->print();
 
 === lineSpacing 

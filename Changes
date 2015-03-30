@@ -1,6 +1,10 @@
 Changelog for Printer-ESCPOS
 
-0.010 2015-03-27T06:28:00
+0.011 2015-03-30T04:33:49
+ - adding markdown file for github pages (Shantanu Bhadoria)
+
+0.010 2015-03-27T07:33:54
+ - v0.010 (Shantanu Bhadoria)
  - converted module names to links in documentation (Shantanu Bhadoria)
  - More POD fixes (Shantanu Bhadoria)
 
