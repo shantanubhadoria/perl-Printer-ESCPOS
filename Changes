@@ -1,6 +1,9 @@
 Changelog for Printer-ESCPOS
 
-0.011 2015-03-30T04:33:49
+0.011 2015-03-30T05:08:35
+ - README.md Changes (Shantanu Bhadoria)
+ - Changed write() to text(), better representation. apologies to early
+   adopters of this module (Shantanu Bhadoria)
  - adding markdown file for github pages (Shantanu Bhadoria)
 
 0.010 2015-03-27T07:33:54
