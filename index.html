@@ -1,44 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Perl-printer-escpos by shantanubhadoria</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Perl-printer-escpos : Module for universal support of all Dot Matrix, Thermal POS printers supporting ESCPOS Specification">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Perl-printer-escpos</title>
   </head>
+
   <body>
 
-      <header>
-        <h1>Perl-printer-escpos</h1>
-        <p>Module for universal support of all Dot Matrix, Thermal POS printers supporting ESCPOS Specification</p>
-      </header>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS">View on GitHub</a>
 
-      <div id="banner">
-        <span id="logo"></span>
+          <h1 id="project_title">Perl-printer-escpos</h1>
+          <h2 id="project_tagline">Module for universal support of all Dot Matrix, Thermal POS printers supporting ESCPOS Specification</h2>
 
-        <a href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
 
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
-      <section>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
         <h1>
 <a id="name" class="anchor" href="#name" aria-hidden="true"><span class="octicon octicon-link"></span></a>NAME</h1>
 
@@ -79,22 +71,22 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     # These commands won't actually send anything to the printer but will store all the 
     # merged data including control codes to module buffer.
     $device-&gt;printer-&gt;printAreaWidth( nL =&gt; 0, nH =&gt; 1);
-    $device-&gt;printer-&gt;write("Print Area Width Modified\n");
+    $device-&gt;printer-&gt;text("Print Area Width Modified\n");
     $device-&gt;printer-&gt;printAreaWidth(); # Reset to default
-    $device-&gt;printer-&gt;write("print area width reset\n");
+    $device-&gt;printer-&gt;text("print area width reset\n");
     $device-&gt;printer-&gt;tab();
     $device-&gt;printer-&gt;underline(1);
-    $device-&gt;printer-&gt;write("underline on\n");
+    $device-&gt;printer-&gt;text("underline on\n");
     $device-&gt;printer-&gt;invert(1);
-    $device-&gt;printer-&gt;write("Inverted Text\n");
+    $device-&gt;printer-&gt;text("Inverted Text\n");
     $device-&gt;printer-&gt;justification('right');
-    $device-&gt;printer-&gt;write("Right Justified\n");
+    $device-&gt;printer-&gt;text("Right Justified\n");
     $device-&gt;printer-&gt;upsideDown(1);
-    $device-&gt;printer-&gt;write("Upside Down\n");
+    $device-&gt;printer-&gt;text("Upside Down\n");
     $device-&gt;printer-&gt;cutPaper();
 
     $device-&gt;printer-&gt;print(); # Dispatch the above commands from module buffer to the Printer. 
-                               # This command takes care of read write buffers for the printer.
+                               # This command takes care of read text buffers for the printer.
 
 
     #########################################################
@@ -117,9 +109,9 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     say Dumper $device-&gt;printer-&gt;paperSensorStatus();
 
     $device-&gt;printer-&gt;bold(1);
-    $device-&gt;printer-&gt;write("Bold Text\n");
+    $device-&gt;printer-&gt;text("Bold Text\n");
     $device-&gt;printer-&gt;bold(0);
-    $device-&gt;printer-&gt;write("Bold Text Off\n");
+    $device-&gt;printer-&gt;text("Bold Text Off\n");
 
     $device-&gt;printer-&gt;print();
 
@@ -237,7 +229,7 @@ with 'Printer::ESCPOS::Roles::Profile';
 <p>Use this attribute to send commands to the printer</p>
 
 <pre><code>$device-&gt;printer-&gt;setFont('a');
-$device-&gt;printer-&gt;write("blah blah blah\n");
+$device-&gt;printer-&gt;text("blah blah blah\n");
 </code></pre>
 
 <h1>
@@ -254,7 +246,7 @@ $device-&gt;printer-&gt;write("blah blah blah\n");
 
 <ol>
 <li>Create a device object $device by providing parameters for one of the supported printer types. Call $device-&gt;printer-&gt;init to initialize the printer.</li>
-<li>call write() and other Text formatting functions on $device-&gt;printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device-&gt;printer-&gt;lf().</li>
+<li>call text() and other Text formatting functions on $device-&gt;printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device-&gt;printer-&gt;lf().</li>
 <li>
 <p>Then call the print() method to dispatch the sequences from the module buffer to the printer</p>
 
@@ -262,7 +254,7 @@ $device-&gt;printer-&gt;write("blah blah blah\n");
 </li>
 </ol>
 
-<p>Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many print commands in quick succession. To avoid this, aggregate the data to be sent to the printer with write() and other text formatting functions and then send it all in one go using print() at the very end.</p>
+<p>Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many print commands in quick succession. To avoid this, aggregate the data to be sent to the printer with text() and other text formatting functions and then send it all in one go using print() at the very end.</p>
 
 <h1>
 <a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>NOTES</h1>
@@ -319,12 +311,17 @@ public review and contribution under the terms of the license.</p>
 <p>This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.</p>
       </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/shantanubhadoria">shantanubhadoria</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Perl-printer-escpos maintained by <a href="https://github.com/shantanubhadoria">shantanubhadoria</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+
     
+
   </body>
 </html>
