@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Perl-printer-escpos : Module for universal support of all Dot Matrix, Thermal POS printers supporting ESCPOS Specification">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Perl-printer-escpos</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS">View on GitHub</a>
+
+          <h1 id="project_title">Perl-printer-escpos</h1>
+          <h2 id="project_tagline">Module for universal support of all Dot Matrix, Thermal POS printers supporting ESCPOS Specification</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/shantanubhadoria/perl-Printer-ESCPOS/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="name" class="anchor" href="#name" aria-hidden="true"><span class="octicon octicon-link"></span></a>NAME</h1>
+
+<p>Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printers that support ESC-POS specification.</p>
+
+<h1>
+<a id="version" class="anchor" href="#version" aria-hidden="true"><span class="octicon octicon-link"></span></a>VERSION</h1>
+
+<p>version 0.011</p>
+
+<h1>
+<a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span class="octicon octicon-link"></span></a>SYNOPSIS</h1>
+
+<p>If you are just starting up with POS RECEIPT Printers, you must first refer to <a href="https://metacpan.org/pod/Printer::ESCPOS::Manual">Printer::ESCPOS::Manual</a> to get started.</p>
+
+<p>Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
+Among these connection types 'Serial', 'Network', 'File' are already implemented in this module. 'USB' type using <a href="https://metacpan.org/pod/Device::USB">Device::USB</a> module is under development. In the meantime most of the printing tasks for USB connected printer can be achieved using the 'File' connection mode for usb connected ESCPOS printers.</p>
+
+<pre><code>    use Printer::ESCPOS;
+
+    use Data::Dumper; # Just to get dumps of status functions.
+
+
+    #########################################################
+    BEGIN: Network Printer
+    #########################################################
+    # For Network Printers $port is 9100 in most cases but might differ depending on how 
+    # you have configured your printer
+    my $printer_id = '192.168.0.10';
+    my $port       = '9100';
+    my $device = Printer::ESCPOS-&gt;new(
+        driverType =&gt; 'Network',
+        deviceIp   =&gt; $printer_ip,
+        devicePort =&gt; $port,
+    );
+    $device-&gt;printer-&gt;init(); # This calls the initialization functions for your printer.
+
+    # These commands won't actually send anything to the printer but will store all the 
+    # merged data including control codes to module buffer.
+    $device-&gt;printer-&gt;printAreaWidth( nL =&gt; 0, nH =&gt; 1);
+    $device-&gt;printer-&gt;write("Print Area Width Modified\n");
+    $device-&gt;printer-&gt;printAreaWidth(); # Reset to default
+    $device-&gt;printer-&gt;write("print area width reset\n");
+    $device-&gt;printer-&gt;tab();
+    $device-&gt;printer-&gt;underline(1);
+    $device-&gt;printer-&gt;write("underline on\n");
+    $device-&gt;printer-&gt;invert(1);
+    $device-&gt;printer-&gt;write("Inverted Text\n");
+    $device-&gt;printer-&gt;justification('right');
+    $device-&gt;printer-&gt;write("Right Justified\n");
+    $device-&gt;printer-&gt;upsideDown(1);
+    $device-&gt;printer-&gt;write("Upside Down\n");
+    $device-&gt;printer-&gt;cutPaper();
+
+    $device-&gt;printer-&gt;print(); # Dispatch the above commands from module buffer to the Printer. 
+                               # This command takes care of read write buffers for the printer.
+
+
+    #########################################################
+    BEGIN: Serial Printer
+    #########################################################
+    # Use the Serial mode for local printer connected on serial port(or a printer connected via 
+    # a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
+    # for what device file was created for your printer when you connect it to your system(For 
+    # plug and play printers).
+    my $path = '/dev/ttyACM0';
+    $device = Printer::ESCPOS-&gt;new(
+        driverType     =&gt; 'Serial',
+        deviceFilePath =&gt; $path,
+    );
+    $device-&gt;printer-&gt;init(); # This calls the initialization functions for your printer.
+
+    say Dumper $device-&gt;printer-&gt;printerStatus();
+    say Dumper $device-&gt;printer-&gt;offlineStatus();
+    say Dumper $device-&gt;printer-&gt;errorStatus();
+    say Dumper $device-&gt;printer-&gt;paperSensorStatus();
+
+    $device-&gt;printer-&gt;bold(1);
+    $device-&gt;printer-&gt;write("Bold Text\n");
+    $device-&gt;printer-&gt;bold(0);
+    $device-&gt;printer-&gt;write("Bold Text Off\n");
+
+    $device-&gt;printer-&gt;print();
+
+
+    #########################################################
+    BEGIN: File(Direct to Device File) Printer
+    #########################################################
+    # A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
+    # doesn't support the status functions for the printer. i.e. you will not be able to use 
+    # printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
+    my $path = '/dev/usb/lp0';
+    $device = Printer::ESCPOS-&gt;new(
+        driverType     =&gt; 'File',
+        deviceFilePath =&gt; $path,
+    );
+</code></pre>
+
+<h1>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>DESCRIPTION</h1>
+
+<p>You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you may extend this module by adding specialized funtions for your printer in it's own subclass. Refer to <a href="https://metacpan.org/pod/Printer::ESCPOS::Roles::Profile">Printer::ESCPOS::Roles::Profile</a> and <a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic">Printer::ESCPOS::Profiles::Generic</a></p>
+
+<h1>
+<a id="attributes" class="anchor" href="#attributes" aria-hidden="true"><span class="octicon octicon-link"></span></a>ATTRIBUTES</h1>
+
+<h2>
+<a id="drivertype" class="anchor" href="#drivertype" aria-hidden="true"><span class="octicon octicon-link"></span></a>driverType</h2>
+
+<p>"Required attribute". The driver type to use for your printer. This can be <strong>File</strong>, <strong>Network</strong> or <strong>Serial</strong>. <strong>USB</strong> driver is not implemented yet.
+If you choose <strong>File</strong> or <strong>Serial</strong> driver, you must provide the <em>deviceFilePath</em>, for <strong>Network</strong> driver you must provide the <em>printerIp</em> and <em>printerPort</em>.</p>
+
+<p>Network driver type:</p>
+
+<pre><code>my $printer_id = '192.168.0.10';
+my $port       = '9100';
+my $device = Printer::ESCPOS-&gt;new(
+    driverType =&gt; 'Network',
+    deviceIp   =&gt; $printer_ip,
+    devicePort =&gt; $port,
+);
+</code></pre>
+
+<p>Serial driver type:</p>
+
+<pre><code>my $path = '/dev/ttyACM0';
+$device = Printer::ESCPOS-&gt;new(
+    driverType     =&gt; 'Serial',
+    deviceFilePath =&gt; $path,
+);
+</code></pre>
+
+<p>File driver type:</p>
+
+<pre><code>my $path = '/dev/usb/lp0';
+$device = Printer::ESCPOS-&gt;new(
+    driverType     =&gt; 'File',
+    deviceFilePath =&gt; $path,
+);
+</code></pre>
+
+<h2>
+<a id="profile" class="anchor" href="#profile" aria-hidden="true"><span class="octicon octicon-link"></span></a>profile</h2>
+
+<p>There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( <a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic">Printer::ESCPOS::Profiles::Generic</a> ).
+Use the following classes as examples.
+<a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic">Printer::ESCPOS::Profiles::Generic</a>
+<a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::SinocanPSeries">Printer::ESCPOS::Profiles::SinocanPSeries</a></p>
+
+<p>Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.</p>
+
+<pre><code>use Moose;
+with 'Printer::ESCPOS::Roles::Profile';
+</code></pre>
+
+<p>By default the generic profile is loaded but if you have written your own Printer::ESCPOS::Profile::* class and want to override the generic class pass the <em>profile</em> Param during object creation.</p>
+
+<pre><code>my $device = Printer::ESCPOS-&gt;new(
+    driverType =&gt; 'Network',
+    deviceIp   =&gt; $printer_ip,
+    devicePort =&gt; $port,
+    profile    =&gt; 'USERCUSTOM'
+);
+</code></pre>
+
+<p>The above $device object will use the Printer::ESCPOS::Profile::USERCUSTOM profile.</p>
+
+<h2>
+<a id="devicefilepath" class="anchor" href="#devicefilepath" aria-hidden="true"><span class="octicon octicon-link"></span></a>deviceFilePath</h2>
+
+<p>File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory parameter if you are using <strong>File</strong> or <strong>Serial</strong> <em>driverType</em>.</p>
+
+<h2>
+<a id="deviceip" class="anchor" href="#deviceip" aria-hidden="true"><span class="octicon octicon-link"></span></a>deviceIP</h2>
+
+<p>Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.</p>
+
+<h2>
+<a id="deviceport" class="anchor" href="#deviceport" aria-hidden="true"><span class="octicon octicon-link"></span></a>devicePort</h2>
+
+<p>Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.</p>
+
+<h2>
+<a id="baudrate" class="anchor" href="#baudrate" aria-hidden="true"><span class="octicon octicon-link"></span></a>baudrate</h2>
+
+<p>When used as a local serial device you can set the <em>baudrate</em> of the printer too. Default (38400) will usually work, but not always. </p>
+
+<h2>
+<a id="serialoverusb" class="anchor" href="#serialoverusb" aria-hidden="true"><span class="octicon octicon-link"></span></a>serialOverUSB</h2>
+
+<p>Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the <strong>Serial</strong> driver.</p>
+
+<h2>
+<a id="printer" class="anchor" href="#printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>printer</h2>
+
+<p>Use this attribute to send commands to the printer</p>
+
+<pre><code>$device-&gt;printer-&gt;setFont('a');
+$device-&gt;printer-&gt;write("blah blah blah\n");
+</code></pre>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>USAGE</h1>
+
+<p>Refer to the following manual to get started with <a href="https://metacpan.org/pod/Printer::ESCPOS">Printer::ESCPOS</a></p>
+
+<ul>
+<li><a href="https://metacpan.org/pod/Printer::ESCPOS::Manual">Printer::ESCPOS::Manual</a></li>
+</ul>
+
+<h2>
+<a id="quick-usage-summary-in-steps" class="anchor" href="#quick-usage-summary-in-steps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick usage summary in steps:</h2>
+
+<ol>
+<li>Create a device object $device by providing parameters for one of the supported printer types. Call $device-&gt;printer-&gt;init to initialize the printer.</li>
+<li>call write() and other Text formatting functions on $device-&gt;printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device-&gt;printer-&gt;lf().</li>
+<li>
+<p>Then call the print() method to dispatch the sequences from the module buffer to the printer</p>
+
+<p>$device-&gt;printer-&gt;print()</p>
+</li>
+</ol>
+
+<p>Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many print commands in quick succession. To avoid this, aggregate the data to be sent to the printer with write() and other text formatting functions and then send it all in one go using print() at the very end.</p>
+
+<h1>
+<a id="notes" class="anchor" href="#notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>NOTES</h1>
+
+<ul>
+<li>
+<p>In Serial mode if the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when you create the printer object. The default baudrate is set at 38400</p>
+
+<p>$device = Printer::ESCPOS-&gt;new(
+     driverType     =&gt; 'Serial',
+     deviceFilePath =&gt; $path,
+     baudrate       =&gt; 9600,
+ );</p>
+</li>
+<li><p>For ESC-P codes refer the guide from Epson <a href="http://support.epson.ru/upload/library_file/14/esc-p.pdf">http://support.epson.ru/upload/library_file/14/esc-p.pdf</a></p></li>
+</ul>
+
+<h1>
+<a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>SUPPORT</h1>
+
+<h2>
+<a id="bugs--feature-requests" class="anchor" href="#bugs--feature-requests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bugs / Feature Requests</h2>
+
+<p>Please report any bugs or feature requests through github at 
+<a href="https://github.com/shantanubhadoria/perl-printer-escpos/issues">https://github.com/shantanubhadoria/perl-printer-escpos/issues</a>.
+You will be notified automatically of any progress on your issue.</p>
+
+<h2>
+<a id="source-code" class="anchor" href="#source-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Source Code</h2>
+
+<p>This is open source software.  The code repository is available for
+public review and contribution under the terms of the license.</p>
+
+<p><a href="https://github.com/shantanubhadoria/perl-printer-escpos">https://github.com/shantanubhadoria/perl-printer-escpos</a></p>
+
+<pre><code>git clone git://github.com/shantanubhadoria/perl-printer-escpos.git
+</code></pre>
+
+<h1>
+<a id="author" class="anchor" href="#author" aria-hidden="true"><span class="octicon octicon-link"></span></a>AUTHOR</h1>
+
+<p>Shantanu Bhadoria <a href="mailto:shantanu@cpan.org">shantanu@cpan.org</a> <a href="https://www.shantanubhadoria.com">https://www.shantanubhadoria.com</a></p>
+
+<h1>
+<a id="contributor" class="anchor" href="#contributor" aria-hidden="true"><span class="octicon octicon-link"></span></a>CONTRIBUTOR</h1>
+
+<p>Shantanu Bhadoria </p>
+
+<h1>
+<a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>COPYRIGHT AND LICENSE</h1>
+
+<p>This software is copyright (c) 2015 by Shantanu Bhadoria.</p>
+
+<p>This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Perl-printer-escpos maintained by <a href="https://github.com/shantanubhadoria">shantanubhadoria</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
