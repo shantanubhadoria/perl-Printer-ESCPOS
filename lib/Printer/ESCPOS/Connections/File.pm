@@ -11,7 +11,7 @@ package Printer::ESCPOS::Connections::File;
 # Dependencies
 
 use 5.010;
-use Moose;
+use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
@@ -25,12 +25,10 @@ This variable contains the path for the printer device file on UNIX-like systems
 
 has deviceFilePath => (
   is => 'ro',
-  isa => 'Str',
 );
 
 has _connection => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
     init_arg   => undef,
 );
 
@@ -43,7 +41,7 @@ sub _build__connection {
     return $printer;
 }
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;

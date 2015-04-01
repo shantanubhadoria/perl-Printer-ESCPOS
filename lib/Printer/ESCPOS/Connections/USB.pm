@@ -11,7 +11,7 @@ package Printer::ESCPOS::Connections::USB;
 # Dependencies
 
 use 5.010;
-use Moose;
+use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
 
 use Device::USB;
@@ -63,8 +63,7 @@ has timeout => (
 );
 
 has _connection => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
     init_arg   => undef,
 );
 
@@ -104,7 +103,7 @@ sub print {
 
 }
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;
@@ -139,7 +138,7 @@ My printer shows up at the second to last line in the list.
 
 The ~vendorId~ and ~productId~ for my printer is 0x1504 and 0x0006 respectively
 
-Now to ge the ~endPoint~ value for my printer I use this command:
+Now to get the ~endPoint~ value for my printer I use this command:
 
     shantanu@shantanu-G41M-ES2L:~/test$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
             bEndpointAddress     0x01  EP 1 OUT
