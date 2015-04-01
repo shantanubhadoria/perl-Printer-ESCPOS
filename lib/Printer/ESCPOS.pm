@@ -155,7 +155,6 @@ USB Printers VendorId. use lsusb command to get this value
 
 has vendorId => (
     is         => 'ro',
-    required => 1,
 );
 
 =attr productId
@@ -166,7 +165,6 @@ USB Printers product Id. use lsusb command to get this value
 
 has productId => (
     is         => 'ro',
-    required => 1,
 );
 
 =attr endPoint
@@ -177,7 +175,6 @@ USB endPoint to write to.
 
 has endPoint => (
     is       => 'ro',
-    required => 1,
     default  => 0x01,
 );
 

@@ -74,7 +74,11 @@ sub _build__connection {
     my $usb = Device::USB->new();
     my $device = $usb->find_device( $self->vendorId, $self->productId );
 
+    if( $device->get_driver_np(0) ) {
+        $device->detach_kernel_driver_np();
+    }
     $device->open();
+    $device->reset();
 
     return $device;
 }
