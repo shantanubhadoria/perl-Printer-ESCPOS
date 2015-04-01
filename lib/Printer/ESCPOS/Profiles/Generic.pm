@@ -10,7 +10,7 @@ package Printer::ESCPOS::Profiles::Generic;
 
 # Dependencies
 use 5.010;
-use Moose;
+use Moo;
 with 'Printer::ESCPOS::Roles::Profile';
 use namespace::autoclean;
 
@@ -865,7 +865,7 @@ sub inkStatusB {
 
 # END: Printer STATUS methods 
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;

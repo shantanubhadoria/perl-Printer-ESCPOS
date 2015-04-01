@@ -11,7 +11,7 @@ package Printer::ESCPOS::Connections::Network;
 # Dependencies
 
 use 5.010;
-use Moose;
+use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
@@ -25,7 +25,6 @@ Contains the IP address of the device when its a network printer. The module cre
 
 has deviceIP => (
   is  => 'ro',
-  isa => 'Str',
 );
 
 =attr devicePort
@@ -36,13 +35,11 @@ Contains the network port of the device when its a network printer. The module c
 
 has devicePort => (
   is      => 'ro',
-  isa     => 'Int',
   default => '9100',
 );
 
 has _connection => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
     init_arg   => undef,
 );
 
@@ -78,7 +75,7 @@ sub read {
     return $data;
 }
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;

@@ -11,7 +11,7 @@ package Printer::ESCPOS::Connections::Serial;
 # Dependencies
 
 use 5.010;
-use Moose;
+use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
 use namespace::autoclean;
 
@@ -26,7 +26,6 @@ This variable contains the path for the printer device file when connected as a 
 
 has deviceFilePath => (
     is  => 'ro',
-    isa => 'Str',
 );
 
 =attr baudrate
@@ -41,7 +40,6 @@ $printer = Printer::Thermal->new(deviceFilePath => '/dev/ttyACM0', baudrate => 9
 
 has baudrate => (
     is      => 'ro',
-    isa     => 'Int',
     default => 38400,
 );
 
@@ -53,7 +51,6 @@ Seconds per unfulfilled read call, default 150
 
 has readConstTime => (
     is      => 'ro',
-    isa     => 'Int',
     default => 150,
 );
 
@@ -65,13 +62,11 @@ Set this value to 1 if you are connecting your printer using the USB Cable but i
 
 has serialOverUSB => (
   is      => 'rw',
-  isa     => 'Bool',
   default => '0',
 );
 
 has _connection => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
     init_arg   => undef,
 );
 
@@ -136,7 +131,7 @@ sub print {
     }
 }
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;

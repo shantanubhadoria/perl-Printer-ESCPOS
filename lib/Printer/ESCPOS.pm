@@ -10,8 +10,9 @@ package Printer::ESCPOS;
 
 # Dependencies
 use 5.010;
-use Moose;
-use Moose::Util::TypeConstraints;
+use Moo;
+use Carp;
+use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
 use namespace::autoclean;
 
@@ -55,7 +56,6 @@ File driver type:
 
 has driverType => (
     is       => 'ro',
-    isa      => enum( [qw[ File Network Serial USB ]] ),
     required => 1,
 );
 
@@ -97,7 +97,6 @@ File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory paramete
 
 has deviceFilePath => (
     is  => 'ro',
-    isa => 'Str',
 );
 
 =attr deviceIP
@@ -108,7 +107,6 @@ Contains the IP address of the device when its a network printer. The module cre
 
 has deviceIP => (
   is  => 'ro',
-  isa => 'Str',
 );
 
 =attr devicePort
@@ -119,7 +117,6 @@ Contains the network port of the device when its a network printer. The module c
 
 has devicePort => (
   is      => 'ro',
-  isa     => 'Int',
   default => '9100',
 );
 
@@ -131,7 +128,6 @@ When used as a local serial device you can set the I<baudrate> of the printer to
 
 has baudrate => (
   is      => 'ro',
-  isa     => 'Int',
   default => 38400,
 );
 
@@ -143,7 +139,6 @@ Set this value to 1 if you are connecting your printer using the USB Cable but i
 
 has serialOverUSB => (
   is      => 'ro',
-  isa     => 'Bool',
   default => '1',
 );
 
@@ -191,8 +186,7 @@ has timeout => (
 );
 
 has _driver => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
     init_arg   => undef,
 );
 
@@ -234,8 +228,7 @@ Use this attribute to send commands to the printer
 =cut
 
 has printer => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
 );
 
 sub _build_printer {
@@ -257,7 +250,7 @@ sub _build_printer {
     return $object;
 }
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;

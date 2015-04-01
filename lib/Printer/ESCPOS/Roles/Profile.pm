@@ -10,7 +10,7 @@ package Printer::ESCPOS::Roles::Profile;
 
 # Dependencies
 use 5.010;
-use Moose::Role;
+use Moo::Role;
 requires 'init';
 
 =attr driver
@@ -32,7 +32,6 @@ Use Print mode to set font, underline, double width, double height and emphasize
 
 has usePrintMode => (
   is      => 'rw',
-  isa     => 'Bool',
   default => '0',
 );
 
@@ -55,7 +54,6 @@ Set/unset emphasized property
 
 has emphasizedStatus => (
   is      => 'rw',
-  isa     => 'Bool',
   default => 0,
 );
 
@@ -67,7 +65,6 @@ set unset double height property
 
 has heightStatus => (
   is      => 'rw',
-  isa     => 'Int',
   default => 0,
 );
 
@@ -79,7 +76,6 @@ set unset double width property
 
 has widthStatus => (
   is      => 'rw',
-  isa     => 'Int',
   default => 0,
 );
 
@@ -91,7 +87,6 @@ Set/unset underline property
 
 has underlineStatus => (
   is      => 'rw',
-  isa     => 'Int',
   default => 0,
 );
 

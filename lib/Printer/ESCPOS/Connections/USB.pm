@@ -11,7 +11,7 @@ package Printer::ESCPOS::Connections::USB;
 # Dependencies
 
 use 5.010;
-use Moose;
+use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
 
 use Device::USB;
@@ -63,8 +63,7 @@ has timeout => (
 );
 
 has _connection => (
-    is         => 'ro',
-    lazy_build => 1,
+    is         => 'lazy',
     init_arg   => undef,
 );
 
@@ -104,7 +103,7 @@ sub print {
 
 }
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;

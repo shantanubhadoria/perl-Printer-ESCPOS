@@ -11,7 +11,7 @@ package Printer::ESCPOS::Roles::Connection;
 # Dependencies
 
 use 5.010;
-use Moose::Role;
+use Moo::Role;
 
 
 has _buffer => (

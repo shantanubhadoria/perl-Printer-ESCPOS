@@ -10,12 +10,12 @@ package Printer::ESCPOS::Profiles::SinocanPSeries;
 
 # Dependencies
 use 5.010;
-use Moose;
+use Moo;
 extends 'Printer::ESCPOS::Profiles::Generic';
 with 'Printer::ESCPOS::Roles::Profile';
 use namespace::autoclean;
 
-no Moose;
+no Moo;
 __PACKAGE__->meta->make_immutable;
 
 1;
