@@ -117,7 +117,6 @@ sub print {
     if( defined $raw ) {
         $buffer = $raw;
     } else {
-        $buffer = $self->_buffer;
         $self->_buffer('');
     }
 

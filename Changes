@@ -1,6 +1,10 @@
 Changelog for Printer-ESCPOS
 
-0.011 2015-03-30T05:08:35
+0.012 2015-03-30T06:32:53
+ - No changes found
+
+0.011 2015-03-30T05:10:21
+ - v0.011 (Shantanu Bhadoria)
  - README.md Changes (Shantanu Bhadoria)
  - Changed write() to text(), better representation. apologies to early
    adopters of this module (Shantanu Bhadoria)

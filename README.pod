@@ -6,7 +6,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 =head1 VERSION
 
-version 0.011
+version 0.012
 
 =head1 SYNOPSIS
 
@@ -173,6 +173,22 @@ When used as a local serial device you can set the I<baudrate> of the printer to
 =head2 serialOverUSB
 
 Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the B<Serial> driver.
+
+=head2 vendorId
+
+USB Printers VendorId. use lsusb command to get this value
+
+=head2 productId
+
+USB Printers product Id. use lsusb command to get this value
+
+=head2 endPoint
+
+USB endPoint to write to.
+
+=head2 timeout
+
+Timeout for bulk write functions for the USB printer.
 
 =head2 printer
 

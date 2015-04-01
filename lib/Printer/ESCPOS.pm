@@ -147,6 +147,52 @@ has serialOverUSB => (
   default => '1',
 );
 
+=attr vendorId
+
+USB Printers VendorId. use lsusb command to get this value
+
+=cut
+
+has vendorId => (
+    is         => 'ro',
+    required => 1,
+);
+
+=attr productId
+
+USB Printers product Id. use lsusb command to get this value
+
+=cut
+
+has productId => (
+    is         => 'ro',
+    required => 1,
+);
+
+=attr endPoint
+
+USB endPoint to write to.
+
+=cut
+
+has endPoint => (
+    is       => 'ro',
+    required => 1,
+    default  => 0x01,
+);
+
+=attr timeout
+
+Timeout for bulk write functions for the USB printer.
+
+=cut
+
+has timeout => (
+    is       => 'ro',
+    required => 1,
+    default  => 1000,
+);
+
 has _driver => (
     is         => 'ro',
     lazy_build => 1,
@@ -170,6 +216,13 @@ sub _build__driver {
             deviceFilePath => $self->deviceFilePath,
             baudrate       => $self->baudrate,
             serialOverUSB  => $self->serialOverUSB,
+        );
+    } elsif( $self->driverType eq 'USB' ) {
+        return Printer::ESCPOS::Connections::USB->new(
+            productId => $self->productId,
+            vendorId  => $self->vendorId,
+            endPoint  => $self->endPoint,
+            timeout   => $self->timeout,
         );
     }
 }

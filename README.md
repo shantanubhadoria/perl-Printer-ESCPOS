@@ -4,7 +4,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 # VERSION
 
-version 0.011
+version 0.012
 
 # SYNOPSIS
 
@@ -171,6 +171,22 @@ When used as a local serial device you can set the _baudrate_ of the printer too
 ## serialOverUSB
 
 Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the **Serial** driver.
+
+## vendorId
+
+USB Printers VendorId. use lsusb command to get this value
+
+## productId
+
+USB Printers product Id. use lsusb command to get this value
+
+## endPoint
+
+USB endPoint to write to.
+
+## timeout
+
+Timeout for bulk write functions for the USB printer.
 
 ## printer
 
