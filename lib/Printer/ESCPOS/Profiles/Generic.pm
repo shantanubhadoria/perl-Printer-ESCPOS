@@ -471,7 +471,24 @@ For example, to break the value 520 into two bytes, use the following two equati
 sub leftMargin {
     my ( $self, %params ) = @_;
 
-    $self->driver->write( _GS . 'L' . chr( $params{nL} )  . chr( $params{nH} ) );
+    $self->driver->write( _GS . 'L' . chr( $params{nL} ) . chr( $params{nH} ) );
+}
+
+=method rot90
+
+Rotate printout by 90 degrees
+
+    $device->printer->rot90(1);
+    $device->printer->text("This is rotated 90 degrees\n");
+    $device->printer->rot90(0);
+    $device->printer->text("This is not rotated 90 degrees\n");
+
+=cut
+
+sub rot90 {
+    my ( $self, $rot ) = @_;
+
+    $self->driver->write( _ESC . 'V' . chr( $rot ) );
 }
 
 # This is a redundant function in ESCPOS which updates the printer

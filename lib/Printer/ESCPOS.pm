@@ -26,7 +26,7 @@ use Printer::ESCPOS::Connections::USB;
 "Required attribute". The driver type to use for your printer. This can be B<File>, B<Network>, B<USB> or B<Serial>. 
 If you choose B<File> or B<Serial> driver, you must provide the I<deviceFilePath>, 
 for B<Network> I<driverType> you must provide the I<printerIp> and I<printerPort>,
-For USB I<driverType> you must provide I<vendorId> and I<productId>.
+For B<USB> I<driverType> you must provide I<vendorId> and I<productId>.
 
 USB driver type:
 
