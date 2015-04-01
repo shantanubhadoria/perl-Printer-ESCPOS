@@ -56,6 +56,42 @@ __END__
 
 == INITIALIZATION
 
+=== USB PRINTER
+
+The *USB* ~driverType~ allows you to talk to a printer using its vendorId and productId as params.
+
+    my $device = Printer::ESCPOS->new(
+        driverType => 'USB',
+        vendorId   => 0x1504,
+        productId  => 0x0006,
+    );
+
+Optional parameters:
+
+The driver uses a default ~endPoint~ value of 0x01. To get valid values for ~endPoint~ for your printer use the following command:
+
+    shantanu@shantanu-G41M-ES2L:~$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
+            bEndpointAddress     0x01  EP 1 OUT
+
+Replace 1504:0006 with your own printer's vendor id and product id in the above command
+.
+    my $device = Printer::ESCPOS->new(
+        driverType => 'USB',
+        vendorId   => 0x1504,
+        productId  => 0x0006,
+        endPoint   => 0x01,
+    );
+
+You may also specify USB device timeout, although default value(1000 ms) should be sufficient in most cases:
+
+    my $device = Printer::ESCPOS->new(
+        driverType => 'USB',
+        vendorId   => 0x1504,
+        productId  => 0x0006,
+        endPoint   => 0x01,
+        timeout    => 500,
+    );
+
 === SERIAL PRINTER
 
 The Mandatory parameters for a *Serial* ~driverType~ are ~driverType~( *Serial* ) and ~deviceFilePath~

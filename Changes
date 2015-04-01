@@ -1,7 +1,15 @@
 Changelog for Printer-ESCPOS
 
-0.012 2015-03-30T06:32:53
+0.013 2015-04-01T05:49:36
  - No changes found
+
+0.012 2015-04-01T05:13:31
+ - v0.012 (Shantanu Bhadoria)
+ - fixes #1 Switched from Moose to Moo/Moo::Role/Type::Tiny
+   https://github.com/shantanubhadoria/perl-Printer-ESCPOS/issues/1
+   suggested by tehmoth (Shantanu Bhadoria)
+ - Added detaching of kernel driver to usb type (Shantanu Bhadoria)
+ - Added USB driver functionality (Shantanu Bhadoria)
 
 0.011 2015-03-30T05:10:21
  - v0.011 (Shantanu Bhadoria)
