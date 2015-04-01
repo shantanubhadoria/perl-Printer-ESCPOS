@@ -438,4 +438,16 @@ Note: While you may call print() after every single command code, this is not ad
     );
 * For ESC-P codes refer the guide from Epson [http://support.epson.ru/upload/library_file/14/esc-p.pdf]
 
+= SEE ALSO
+
+* [Printer::ESCPOS::Manual]
+* [Printer::ESCPOS::Profiles::Generic]
+* [Printer::ESCPOS::Profiles::SinocanPSeries]
+* [Printer::ESCPOS::Roles::Profile]
+* [Printer::ESCPOS::Roles::Connection]
+* [Printer::ESCPOS::Connections::USB]
+* [Printer::ESCPOS::Connections::Serial]
+* [Printer::ESCPOS::Connections::Network]
+* [Printer::ESCPOS::Connections::File]
+
 =end wikidoc
