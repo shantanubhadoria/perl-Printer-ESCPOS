@@ -156,7 +156,7 @@ has serialOverUSB => (
 
 =attr vendorId
 
-This is a required param for *USB* ~driverType~. It contains the USB printer's Vendor ID when using *USB* ~driverType~. Use lsusb command to get this value for your printer.
+This is a required param for B<USB> I<driverType>. It contains the USB printer's Vendor ID when using B<USB> I<driverType>. Use lsusb command to get this value for your printer.
 
 =cut
 
@@ -166,7 +166,7 @@ has vendorId => (
 
 =attr productId
 
-This is a required param for *USB* ~driverType~. It contains the USB printer's product Id when using *USB* ~driverType~. Use lsusb command to get this value for your printer.
+This is a required param for B<USB> I<driverType>. It contains the USB printer's product Id when using B<USB> I<driverType>. Use lsusb command to get this value for your printer.
 
 =cut
 
@@ -176,7 +176,7 @@ has productId => (
 
 =attr endPoint
 
-This is a optional param for *USB* ~driverType. It contains the USB endPoint for L<Device::USB> to write to if the value is not 0x01 for your printer. Get it using the following command:
+This is a optional param for B<USB> I<driverType>. It contains the USB endPoint for L<Device::USB> to write to if the value is not 0x01 for your printer. Get it using the following command:
 
     shantanu@shantanu-G41M-ES2L:~$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
             bEndpointAddress     0x01  EP 1 OUT
@@ -281,7 +281,7 @@ __END__
 If you are just starting up with POS RECEIPT Printers, you must first refer to [Printer::ESCPOS::Manual] to get started.
 
 Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
-As of v0.012 ~driverTypes~ *Serial*, *Network*, *File* and *USB* are all implemented in this module. 'USB' driverType is not supported prior to v0.012. 
+As of v0.012 ~driverType~ *Serial*, *Network*, *File* and *USB* are all implemented in this module. *USB* ~driverType~ is not supported prior to v0.012. 
 
 == USB Printer
 
