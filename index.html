@@ -39,7 +39,7 @@
 <h1>
 <a id="version" class="anchor" href="#version" aria-hidden="true"><span class="octicon octicon-link"></span></a>VERSION</h1>
 
-<p>version 0.011</p>
+<p>version 0.013</p>
 
 <h1>
 <a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span class="octicon octicon-link"></span></a>SYNOPSIS</h1>
@@ -47,18 +47,60 @@
 <p>If you are just starting up with POS RECEIPT Printers, you must first refer to <a href="https://metacpan.org/pod/Printer::ESCPOS::Manual">Printer::ESCPOS::Manual</a> to get started.</p>
 
 <p>Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
-Among these connection types 'Serial', 'Network', 'File' are already implemented in this module. 'USB' type using <a href="https://metacpan.org/pod/Device::USB">Device::USB</a> module is under development. In the meantime most of the printing tasks for USB connected printer can be achieved using the 'File' connection mode for usb connected ESCPOS printers.</p>
+As of v0.012 <em>driverTypes</em> <strong>Serial</strong>, <strong>Network</strong>, <strong>File</strong> and <strong>USB</strong> are all implemented in this module. 'USB' driverType is not supported prior to v0.012. </p>
+
+<h2>
+<a id="usb-printer" class="anchor" href="#usb-printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>USB Printer</h2>
+
+<p><strong>USB</strong> <em>driverType</em> allows you to talk to your Printer using the <em>vendorId</em> and <em>productId</em> values for your printer. These can be retrieved using lsusb command</p>
+
+<pre><code> shantanu@shantanu-G41M-ES2L:~/github$ lsusb
+ . . .
+ Bus 003 Device 002: ID 1504:0006  
+ . . .
+</code></pre>
+
+<p>The output gives us the <em>vendorId</em> 0x1504 and <em>productId</em> 0x0006</p>
+
+<p>For USB Printers <a href="https://metacpan.org/pod/Printer::ESCPOS">Printer::ESCPOS</a> uses a default <em>endPoint</em> of 0x01 and a default <em>timeout</em> of
+1000, however these can be specified manually in case your printer requires a different value.</p>
 
 <pre><code>    use Printer::ESCPOS;
 
-    use Data::Dumper; # Just to get dumps of status functions.
+    my $vendorId  = 0x1504;
+    my $productId = 0x0006;
+    my $device = Printer::ESCPOS-&gt;new(
+        driverType     =&gt; 'USB',
+        vendorId       =&gt; $vendorId,
+        productId      =&gt; $productId,
+    );
 
+    $device-&gt;printer-&gt;printAreaWidth( nL =&gt; 0, nH =&gt; 1);
+    $device-&gt;printer-&gt;text("Print Area Width Modified\n");
+    $device-&gt;printer-&gt;printAreaWidth(); # Reset to default
+    $device-&gt;printer-&gt;text("print area width reset\n");
+    $device-&gt;printer-&gt;tab();
+    $device-&gt;printer-&gt;underline(1);
+    $device-&gt;printer-&gt;text("underline on\n");
+    $device-&gt;printer-&gt;invert(1);
+    $device-&gt;printer-&gt;text("Inverted Text\n");
+    $device-&gt;printer-&gt;justification('right');
+    $device-&gt;printer-&gt;text("Right Justified\n");
+    $device-&gt;printer-&gt;upsideDown(1);
+    $device-&gt;printer-&gt;text("Upside Down\n");
+    $device-&gt;printer-&gt;cutPaper();
 
-    #########################################################
-    BEGIN: Network Printer
-    #########################################################
-    # For Network Printers $port is 9100 in most cases but might differ depending on how 
-    # you have configured your printer
+    $device-&gt;printer-&gt;print(); # Dispatch the above commands from module buffer to the Printer. 
+</code></pre>
+
+<h2>
+<a id="network-printer" class="anchor" href="#network-printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Network Printer</h2>
+
+<p>For Network Printers $port is 9100 in most cases but might differ depending on how 
+you have configured your printer</p>
+
+<pre><code>    use Printer::ESCPOS;
+
     my $printer_id = '192.168.0.10';
     my $port       = '9100';
     my $device = Printer::ESCPOS-&gt;new(
@@ -66,7 +108,6 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
         deviceIp   =&gt; $printer_ip,
         devicePort =&gt; $port,
     );
-    $device-&gt;printer-&gt;init(); # This calls the initialization functions for your printer.
 
     # These commands won't actually send anything to the printer but will store all the 
     # merged data including control codes to module buffer.
@@ -87,21 +128,24 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 
     $device-&gt;printer-&gt;print(); # Dispatch the above commands from module buffer to the Printer. 
                                # This command takes care of read text buffers for the printer.
+</code></pre>
 
+<h2>
+<a id="serial-printer" class="anchor" href="#serial-printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Serial Printer</h2>
 
-    #########################################################
-    BEGIN: Serial Printer
-    #########################################################
-    # Use the Serial mode for local printer connected on serial port(or a printer connected via 
-    # a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
-    # for what device file was created for your printer when you connect it to your system(For 
-    # plug and play printers).
+<p>Use the Serial mode for local printer connected on serial port(or a printer connected via 
+a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
+for what device file was created for your printer when you connect it to your system(For 
+plug and play printers).</p>
+
+<pre><code>    use Printer::ESCPOS;
+    use Data::Dumper; # Just to get dumps of status functions supported for Serial driverType.
+
     my $path = '/dev/ttyACM0';
     $device = Printer::ESCPOS-&gt;new(
         driverType     =&gt; 'Serial',
         deviceFilePath =&gt; $path,
     );
-    $device-&gt;printer-&gt;init(); # This calls the initialization functions for your printer.
 
     say Dumper $device-&gt;printer-&gt;printerStatus();
     say Dumper $device-&gt;printer-&gt;offlineStatus();
@@ -114,19 +158,29 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
     $device-&gt;printer-&gt;text("Bold Text Off\n");
 
     $device-&gt;printer-&gt;print();
+</code></pre>
 
+<h2>
+<a id="filedirect-to-device-file-printer" class="anchor" href="#filedirect-to-device-file-printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>File(Direct to Device File) Printer</h2>
 
-    #########################################################
-    BEGIN: File(Direct to Device File) Printer
-    #########################################################
-    # A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
-    # doesn't support the status functions for the printer. i.e. you will not be able to use 
-    # printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
+<p>A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
+doesn't support the status functions for the printer. i.e. you will not be able to use 
+printerStatus, offlineStatus, errorStatus or paperSensorStatus functions</p>
+
+<pre><code>    use Printer::ESCPOS;
+
     my $path = '/dev/usb/lp0';
     $device = Printer::ESCPOS-&gt;new(
         driverType     =&gt; 'File',
         deviceFilePath =&gt; $path,
     );
+
+    $device-&gt;printer-&gt;bold(1);
+    $device-&gt;printer-&gt;text("Bold Text\n");
+    $device-&gt;printer-&gt;bold(0);
+    $device-&gt;printer-&gt;text("Bold Text Off\n");
+
+    $device-&gt;printer-&gt;print();
 </code></pre>
 
 <h1>
@@ -140,8 +194,21 @@ Among these connection types 'Serial', 'Network', 'File' are already implemented
 <h2>
 <a id="drivertype" class="anchor" href="#drivertype" aria-hidden="true"><span class="octicon octicon-link"></span></a>driverType</h2>
 
-<p>"Required attribute". The driver type to use for your printer. This can be <strong>File</strong>, <strong>Network</strong> or <strong>Serial</strong>. <strong>USB</strong> driver is not implemented yet.
-If you choose <strong>File</strong> or <strong>Serial</strong> driver, you must provide the <em>deviceFilePath</em>, for <strong>Network</strong> driver you must provide the <em>printerIp</em> and <em>printerPort</em>.</p>
+<p>"Required attribute". The driver type to use for your printer. This can be <strong>File</strong>, <strong>Network</strong>, <strong>USB</strong> or <strong>Serial</strong>. 
+If you choose <strong>File</strong> or <strong>Serial</strong> driver, you must provide the <em>deviceFilePath</em>, 
+for <strong>Network</strong> <em>driverType</em> you must provide the <em>printerIp</em> and <em>printerPort</em>,
+For USB <em>driverType</em> you must provide <em>vendorId</em> and <em>productId</em>.</p>
+
+<p>USB driver type:</p>
+
+<pre><code>my $vendorId  = 0x1504;
+my $productId = 0x0006;
+my $device = Printer::ESCPOS-&gt;new(
+    driverType =&gt; 'USB'
+    vendorId   =&gt; $vendorId,
+    productId  =&gt; $productId,
+);
+</code></pre>
 
 <p>Network driver type:</p>
 
@@ -175,14 +242,14 @@ $device = Printer::ESCPOS-&gt;new(
 <h2>
 <a id="profile" class="anchor" href="#profile" aria-hidden="true"><span class="octicon octicon-link"></span></a>profile</h2>
 
-<p>There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( <a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic">Printer::ESCPOS::Profiles::Generic</a> ).
+<p>There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending the Generic Profile( <a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic">Printer::ESCPOS::Profiles::Generic</a> ).
 Use the following classes as examples.
 <a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic">Printer::ESCPOS::Profiles::Generic</a>
 <a href="https://metacpan.org/pod/Printer::ESCPOS::Profiles::SinocanPSeries">Printer::ESCPOS::Profiles::SinocanPSeries</a></p>
 
-<p>Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.</p>
+<p>Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a <a href="https://metacpan.org/pod/Moo::Role">Moo::Role</a> and can be included in your class with the following line.</p>
 
-<pre><code>use Moose;
+<pre><code>use Moo;
 with 'Printer::ESCPOS::Roles::Profile';
 </code></pre>
 
@@ -222,6 +289,32 @@ with 'Printer::ESCPOS::Roles::Profile';
 <a id="serialoverusb" class="anchor" href="#serialoverusb" aria-hidden="true"><span class="octicon octicon-link"></span></a>serialOverUSB</h2>
 
 <p>Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the <strong>Serial</strong> driver.</p>
+
+<h2>
+<a id="vendorid" class="anchor" href="#vendorid" aria-hidden="true"><span class="octicon octicon-link"></span></a>vendorId</h2>
+
+<p>This is a required param for *USB* ~driverType~. It contains the USB printer's Vendor ID when using *USB* ~driverType~. Use lsusb command to get this value for your printer.</p>
+
+<h2>
+<a id="productid" class="anchor" href="#productid" aria-hidden="true"><span class="octicon octicon-link"></span></a>productId</h2>
+
+<p>This is a required param for *USB* ~driverType~. It contains the USB printer's product Id when using *USB* ~driverType~. Use lsusb command to get this value for your printer.</p>
+
+<h2>
+<a id="endpoint" class="anchor" href="#endpoint" aria-hidden="true"><span class="octicon octicon-link"></span></a>endPoint</h2>
+
+<p>This is a optional param for *USB* ~driverType. It contains the USB endPoint for <a href="https://metacpan.org/pod/Device::USB">Device::USB</a> to write to if the value is not 0x01 for your printer. Get it using the following command:</p>
+
+<pre><code>shantanu@shantanu-G41M-ES2L:~$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
+        bEndpointAddress     0x01  EP 1 OUT
+</code></pre>
+
+<p>Replace 1504:0006 with your own printer's vendor id and product id in the above command.</p>
+
+<h2>
+<a id="timeout" class="anchor" href="#timeout" aria-hidden="true"><span class="octicon octicon-link"></span></a>timeout</h2>
+
+<p>Timeout for bulk write functions for the USB printer. Optional param.</p>
 
 <h2>
 <a id="printer" class="anchor" href="#printer" aria-hidden="true"><span class="octicon octicon-link"></span></a>printer</h2>
