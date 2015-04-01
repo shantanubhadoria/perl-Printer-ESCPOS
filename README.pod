@@ -17,7 +17,7 @@ As of v0.012 I<driverTypes> B<Serial>, B<Network>, B<File> and B<USB> are all im
 
 =head2 USB Printer
 
-USB driverType allows you to talk to your Printer using the vendorId and ProductId values for your printer. These can be retrieved using lsusb command
+B<USB> I<driverType> allows you to talk to your Printer using the I<vendorId> and I<productId> values for your printer. These can be retrieved using lsusb command
 
      shantanu@shantanu-G41M-ES2L:~/github$ lsusb
      . . .
@@ -27,7 +27,7 @@ USB driverType allows you to talk to your Printer using the vendorId and Product
 The output gives us the I<vendorId> 0x1504 and I<productId> 0x0006
 
 For USB Printers L<Printer::ESCPOS> uses a default I<endPoint> of 0x01 and a default I<timeout> of
-1000, however these can be overriden in case your printer requires a different value.
+1000, however these can be specified manually in case your printer requires a different value.
 
      use Printer::ESCPOS;
  
@@ -191,14 +191,14 @@ File driver type:
 
 =head2 profile
 
-There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending  Generic ( L<Printer::ESCPOS::Profiles::Generic> ).
+There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending the Generic Profile( L<Printer::ESCPOS::Profiles::Generic> ).
 Use the following classes as examples.
 L<Printer::ESCPOS::Profiles::Generic>
 L<Printer::ESCPOS::Profiles::SinocanPSeries>
 
-Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.
+Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a L<Moo::Role> and can be included in your class with the following line.
 
-    use Moose;
+    use Moo;
     with 'Printer::ESCPOS::Roles::Profile';
 
 By default the generic profile is loaded but if you have written your own Printer::ESCPOS::Profile::* class and want to override the generic class pass the I<profile> Param during object creation.

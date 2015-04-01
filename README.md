@@ -15,7 +15,7 @@ As of v0.012 _driverTypes_ **Serial**, **Network**, **File** and **USB** are all
 
 ## USB Printer
 
-USB driverType allows you to talk to your Printer using the vendorId and ProductId values for your printer. These can be retrieved using lsusb command
+**USB** _driverType_ allows you to talk to your Printer using the _vendorId_ and _productId_ values for your printer. These can be retrieved using lsusb command
 
      shantanu@shantanu-G41M-ES2L:~/github$ lsusb
      . . .
@@ -25,7 +25,7 @@ USB driverType allows you to talk to your Printer using the vendorId and Product
 The output gives us the _vendorId_ 0x1504 and _productId_ 0x0006
 
 For USB Printers [Printer::ESCPOS](https://metacpan.org/pod/Printer::ESCPOS) uses a default _endPoint_ of 0x01 and a default _timeout_ of
-1000, however these can be overriden in case your printer requires a different value.
+1000, however these can be specified manually in case your printer requires a different value.
 
         use Printer::ESCPOS;
     
@@ -189,14 +189,14 @@ File driver type:
 
 ## profile
 
-There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::\* and load your profile here. I would recommend extending  Generic ( [Printer::ESCPOS::Profiles::Generic](https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic) ).
+There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::\* and load your profile here. I would recommend extending the Generic Profile( [Printer::ESCPOS::Profiles::Generic](https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic) ).
 Use the following classes as examples.
 [Printer::ESCPOS::Profiles::Generic](https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic)
 [Printer::ESCPOS::Profiles::SinocanPSeries](https://metacpan.org/pod/Printer::ESCPOS::Profiles::SinocanPSeries)
 
-Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a Moose Role and can be included in your class with the following line.
+Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a [Moo::Role](https://metacpan.org/pod/Moo::Role) and can be included in your class with the following line.
 
-    use Moose;
+    use Moo;
     with 'Printer::ESCPOS::Roles::Profile';
 
 By default the generic profile is loaded but if you have written your own Printer::ESCPOS::Profile::\* class and want to override the generic class pass the _profile_ Param during object creation.
