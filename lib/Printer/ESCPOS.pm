@@ -285,7 +285,7 @@ As of v0.012 ~driverTypes~ *Serial*, *Network*, *File* and *USB* are all impleme
 
 == USB Printer
 
-USB driverType allows you to talk to your Printer using the vendorId and ProductId values for your printer. These can be retrieved using lsusb command
+*USB* ~driverType~ allows you to talk to your Printer using the ~vendorId~ and ~productId~ values for your printer. These can be retrieved using lsusb command
 
     shantanu@shantanu-G41M-ES2L:~/github$ lsusb
     . . .
@@ -295,7 +295,7 @@ USB driverType allows you to talk to your Printer using the vendorId and Product
 The output gives us the ~vendorId~ 0x1504 and ~productId~ 0x0006
 
 For USB Printers [Printer::ESCPOS] uses a default ~endPoint~ of 0x01 and a default ~timeout~ of
-1000, however these can be overriden in case your printer requires a different value.
+1000, however these can be specified manually in case your printer requires a different value.
 
     use Printer::ESCPOS;
 
