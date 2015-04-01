@@ -20,6 +20,11 @@ say Dumper $printer_usb->printer->offlineStatus();
 say Dumper $printer_usb->printer->errorStatus();
 say Dumper $printer_usb->printer->paperSensorStatus();
 
+$printer_usb->printer->rot90(49);
+$printer_usb->printer->text("Rotated 90 degrees\n");
+$printer_usb->printer->rot90(0);
+$printer_usb->printer->text("Not rotated 90 degrees\n");
+
 $printer_usb->printer->barcode(
     barcode     => 'SHANTANU BHADORIA',
 );

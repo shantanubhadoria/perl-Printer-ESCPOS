@@ -339,6 +339,15 @@ For example, to break the value 520 into two bytes, use the following two equati
 
     $device->printer->leftMargin(nL => $nl, nH => $nh);
 
+=== rot90
+
+Rotate printout by 90 degrees
+
+    $device->printer->rot90(1);
+    $device->printer->text("This is rotated 90 degrees\n");
+    $device->printer->rot90(0);
+    $device->printer->text("This is not rotated 90 degrees\n");
+
 === barcode
 
 This method prints a barcode to the printer. This can be bundled with other text formatting commands at the appropriate point where you would like to print a barcode on your print out. takes argument ~barcode~ as the barcode value.
