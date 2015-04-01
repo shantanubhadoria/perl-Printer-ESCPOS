@@ -13,8 +13,6 @@ my $printer_serial = Printer::ESCPOS->new(
     deviceFilePath => '/dev/ttyACM0',
 );
 
-$printer_serial->printer->init();
-
 say Dumper $printer_serial->printer->printerStatus();
 say Dumper $printer_serial->printer->offlineStatus();
 say Dumper $printer_serial->printer->errorStatus();

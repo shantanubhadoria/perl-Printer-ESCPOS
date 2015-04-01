@@ -82,6 +82,23 @@ sub _build__connection {
     return $device;
 }
 
+=method read
+
+Read Data from the printer 
+
+=cut
+
+sub read {
+    my ( $self, $question, $bytes ) = @_;
+    my $data;
+    $bytes |= 1024;
+
+    $self->_connection->bulk_write( $self->endPoint, $question, $self->timeout );
+    $self->_connection->bulk_read( $self->endPoint, $data, $bytes, $self->timeout );
+
+    return $data;
+}
+
 =method print
 
 Sends buffer data to the printer.

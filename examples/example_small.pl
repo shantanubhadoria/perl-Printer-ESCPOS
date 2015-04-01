@@ -9,13 +9,16 @@ use Printer::ESCPOS;
 use Data::Dumper;
 
 my $printer_usb = Printer::ESCPOS->new(
-    driverType     => 'USB',
-    vendorId       => 0x1504,
-    productId      => 0x0006,
+    driverType => 'USB',
+    vendorId   => 0x1cbe,
+    productId  => 0x0002,
+    endPoint   => 0x02
 );
 
-$printer_usb->printer->init();
-
+say Dumper $printer_usb->printer->printerStatus();
+say Dumper $printer_usb->printer->offlineStatus();
+say Dumper $printer_usb->printer->errorStatus();
+say Dumper $printer_usb->printer->paperSensorStatus();
 
 $printer_usb->printer->barcode(
     barcode     => 'SHANTANU BHADORIA',

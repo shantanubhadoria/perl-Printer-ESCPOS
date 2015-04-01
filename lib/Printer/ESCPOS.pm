@@ -361,7 +361,7 @@ you have configured your printer
 
 == Serial Printer
 
-Use the Serial mode for local printer connected on serial port(or a printer connected via 
+Use the *Serial* ~driverType~ for local printer connected on serial port(or a printer connected via 
 a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
 for what device file was created for your printer when you connect it to your system(For 
 plug and play printers).
@@ -390,7 +390,7 @@ plug and play printers).
 
 == File(Direct to Device File) Printer
 
-A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
+A *File* ~driverType~ is similar to the *Serial* ~driverType~ in all functionality except that it 
 doesn't support the status functions for the printer. i.e. you will not be able to use 
 printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
 
