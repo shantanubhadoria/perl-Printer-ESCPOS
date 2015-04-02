@@ -6,14 +6,14 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 =head1 VERSION
 
-version 0.013
+version 0.014
 
 =head1 SYNOPSIS
 
 If you are just starting up with POS RECEIPT Printers, you must first refer to L<Printer::ESCPOS::Manual> to get started.
 
 Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
-As of v0.012 I<driverTypes> B<Serial>, B<Network>, B<File> and B<USB> are all implemented in this module. 'USB' driverType is not supported prior to v0.012. 
+As of v0.012 I<driverType> B<Serial>, B<Network>, B<File> and B<USB> are all implemented in this module. B<USB> I<driverType> is not supported prior to v0.012. 
 
 =head2 USB Printer
 
@@ -93,7 +93,7 @@ you have configured your printer
 
 =head2 Serial Printer
 
-Use the Serial mode for local printer connected on serial port(or a printer connected via 
+Use the B<Serial> I<driverType> for local printer connected on serial port(or a printer connected via 
 a physical USB port in USB to Serial mode), check syslog(Usually under E<sol>varE<sol>logE<sol>syslog) 
 for what device file was created for your printer when you connect it to your system(For 
 plug and play printers).
@@ -121,7 +121,7 @@ plug and play printers).
 
 =head2 File(Direct to Device File) Printer
 
-A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
+A B<File> I<driverType> is similar to the B<Serial> I<driverType> in all functionality except that it 
 doesn't support the status functions for the printer. i.e. you will not be able to use 
 printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
 
@@ -151,7 +151,7 @@ You can use this module for all your ESC-POS Printing needs. If some of your pri
 "Required attribute". The driver type to use for your printer. This can be B<File>, B<Network>, B<USB> or B<Serial>. 
 If you choose B<File> or B<Serial> driver, you must provide the I<deviceFilePath>, 
 for B<Network> I<driverType> you must provide the I<printerIp> and I<printerPort>,
-For USB I<driverType> you must provide I<vendorId> and I<productId>.
+For B<USB> I<driverType> you must provide I<vendorId> and I<productId>.
 
 USB driver type:
 
@@ -234,15 +234,15 @@ Set this value to 1 if you are connecting your printer using the USB Cable but i
 
 =head2 vendorId
 
-This is a required param for *USB* ~driverType~. It contains the USB printer's Vendor ID when using *USB* ~driverType~. Use lsusb command to get this value for your printer.
+This is a required param for B<USB> I<driverType>. It contains the USB printer's Vendor ID when using B<USB> I<driverType>. Use lsusb command to get this value for your printer.
 
 =head2 productId
 
-This is a required param for *USB* ~driverType~. It contains the USB printer's product Id when using *USB* ~driverType~. Use lsusb command to get this value for your printer.
+This is a required param for B<USB> I<driverType>. It contains the USB printer's product Id when using B<USB> I<driverType>. Use lsusb command to get this value for your printer.
 
 =head2 endPoint
 
-This is a optional param for *USB* ~driverType. It contains the USB endPoint for L<Device::USB> to write to if the value is not 0x01 for your printer. Get it using the following command:
+This is a optional param for B<USB> I<driverType>. It contains the USB endPoint for L<Device::USB> to write to if the value is not 0x01 for your printer. Get it using the following command:
 
     shantanu@shantanu-G41M-ES2L:~$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
             bEndpointAddress     0x01  EP 1 OUT
@@ -315,6 +315,48 @@ In Serial mode if the printer prints out garbled characters instead of proper te
 =item *
 
 For ESC-P codes refer the guide from Epson L<http://support.epson.ru/upload/library_file/14/esc-p.pdf>
+
+=back
+
+=head1 SEE ALSO
+
+=over
+
+=item *
+
+L<Printer::ESCPOS::Manual>
+
+=item *
+
+L<Printer::ESCPOS::Profiles::Generic>
+
+=item *
+
+L<Printer::ESCPOS::Profiles::SinocanPSeries>
+
+=item *
+
+L<Printer::ESCPOS::Roles::Profile>
+
+=item *
+
+L<Printer::ESCPOS::Roles::Connection>
+
+=item *
+
+L<Printer::ESCPOS::Connections::USB>
+
+=item *
+
+L<Printer::ESCPOS::Connections::Serial>
+
+=item *
+
+L<Printer::ESCPOS::Connections::Network>
+
+=item *
+
+L<Printer::ESCPOS::Connections::File>
 
 =back
 

@@ -4,14 +4,14 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 # VERSION
 
-version 0.013
+version 0.014
 
 # SYNOPSIS
 
 If you are just starting up with POS RECEIPT Printers, you must first refer to [Printer::ESCPOS::Manual](https://metacpan.org/pod/Printer::ESCPOS::Manual) to get started.
 
 Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
-As of v0.012 _driverTypes_ **Serial**, **Network**, **File** and **USB** are all implemented in this module. 'USB' driverType is not supported prior to v0.012. 
+As of v0.012 _driverType_ **Serial**, **Network**, **File** and **USB** are all implemented in this module. **USB** _driverType_ is not supported prior to v0.012. 
 
 ## USB Printer
 
@@ -91,7 +91,7 @@ you have configured your printer
 
 ## Serial Printer
 
-Use the Serial mode for local printer connected on serial port(or a printer connected via 
+Use the **Serial** _driverType_ for local printer connected on serial port(or a printer connected via 
 a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
 for what device file was created for your printer when you connect it to your system(For 
 plug and play printers).
@@ -119,7 +119,7 @@ plug and play printers).
 
 ## File(Direct to Device File) Printer
 
-A 'File' driver is similar to the 'Serial' driver in all functionality except that it 
+A **File** _driverType_ is similar to the **Serial** _driverType_ in all functionality except that it 
 doesn't support the status functions for the printer. i.e. you will not be able to use 
 printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
 
@@ -149,7 +149,7 @@ You can use this module for all your ESC-POS Printing needs. If some of your pri
 "Required attribute". The driver type to use for your printer. This can be **File**, **Network**, **USB** or **Serial**. 
 If you choose **File** or **Serial** driver, you must provide the _deviceFilePath_, 
 for **Network** _driverType_ you must provide the _printerIp_ and _printerPort_,
-For USB _driverType_ you must provide _vendorId_ and _productId_.
+For **USB** _driverType_ you must provide _vendorId_ and _productId_.
 
 USB driver type:
 
@@ -232,15 +232,15 @@ Set this value to 1 if you are connecting your printer using the USB Cable but i
 
 ## vendorId
 
-This is a required param for \*USB\* ~driverType~. It contains the USB printer's Vendor ID when using \*USB\* ~driverType~. Use lsusb command to get this value for your printer.
+This is a required param for **USB** _driverType_. It contains the USB printer's Vendor ID when using **USB** _driverType_. Use lsusb command to get this value for your printer.
 
 ## productId
 
-This is a required param for \*USB\* ~driverType~. It contains the USB printer's product Id when using \*USB\* ~driverType~. Use lsusb command to get this value for your printer.
+This is a required param for **USB** _driverType_. It contains the USB printer's product Id when using **USB** _driverType_. Use lsusb command to get this value for your printer.
 
 ## endPoint
 
-This is a optional param for \*USB\* ~driverType. It contains the USB endPoint for [Device::USB](https://metacpan.org/pod/Device::USB) to write to if the value is not 0x01 for your printer. Get it using the following command:
+This is a optional param for **USB** _driverType_. It contains the USB endPoint for [Device::USB](https://metacpan.org/pod/Device::USB) to write to if the value is not 0x01 for your printer. Get it using the following command:
 
     shantanu@shantanu-G41M-ES2L:~$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
             bEndpointAddress     0x01  EP 1 OUT
@@ -285,6 +285,18 @@ Note: While you may call print() after every single command code, this is not ad
      );
 
 - For ESC-P codes refer the guide from Epson [http://support.epson.ru/upload/library\_file/14/esc-p.pdf](http://support.epson.ru/upload/library_file/14/esc-p.pdf)
+
+# SEE ALSO
+
+- [Printer::ESCPOS::Manual](https://metacpan.org/pod/Printer::ESCPOS::Manual)
+- [Printer::ESCPOS::Profiles::Generic](https://metacpan.org/pod/Printer::ESCPOS::Profiles::Generic)
+- [Printer::ESCPOS::Profiles::SinocanPSeries](https://metacpan.org/pod/Printer::ESCPOS::Profiles::SinocanPSeries)
+- [Printer::ESCPOS::Roles::Profile](https://metacpan.org/pod/Printer::ESCPOS::Roles::Profile)
+- [Printer::ESCPOS::Roles::Connection](https://metacpan.org/pod/Printer::ESCPOS::Roles::Connection)
+- [Printer::ESCPOS::Connections::USB](https://metacpan.org/pod/Printer::ESCPOS::Connections::USB)
+- [Printer::ESCPOS::Connections::Serial](https://metacpan.org/pod/Printer::ESCPOS::Connections::Serial)
+- [Printer::ESCPOS::Connections::Network](https://metacpan.org/pod/Printer::ESCPOS::Connections::Network)
+- [Printer::ESCPOS::Connections::File](https://metacpan.org/pod/Printer::ESCPOS::Connections::File)
 
 # SUPPORT
 
