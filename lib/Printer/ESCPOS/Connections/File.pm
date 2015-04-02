@@ -13,7 +13,6 @@ package Printer::ESCPOS::Connections::File;
 use 5.010;
 use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
-use namespace::autoclean;
 
 use IO::File;
 

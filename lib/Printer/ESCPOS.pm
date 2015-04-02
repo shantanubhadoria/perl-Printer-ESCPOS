@@ -14,7 +14,6 @@ use Moo;
 use Carp;
 use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
-use namespace::autoclean;
 
 use Printer::ESCPOS::Connections::File;
 use Printer::ESCPOS::Connections::Network;

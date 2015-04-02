@@ -12,7 +12,6 @@ package Printer::ESCPOS::Profiles::Generic;
 use 5.010;
 use Moo;
 with 'Printer::ESCPOS::Roles::Profile';
-use namespace::autoclean;
 
 use constant {
     _ESC => "\x1b",

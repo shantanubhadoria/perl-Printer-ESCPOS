@@ -74,7 +74,7 @@ The driver uses a default ~endPoint~ value of 0x01. To get valid values for ~end
             bEndpointAddress     0x01  EP 1 OUT
 
 Replace 1504:0006 with your own printer's vendor id and product id in the above command
-.
+
     my $device = Printer::ESCPOS->new(
         driverType => 'USB',
         vendorId   => 0x1504,

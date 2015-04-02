@@ -13,7 +13,6 @@ package Printer::ESCPOS::Connections::Serial;
 use 5.010;
 use Moo;
 with 'Printer::ESCPOS::Roles::Connection';
-use namespace::autoclean;
 
 use Device::SerialPort;
 use Time::HiRes qw(usleep);
