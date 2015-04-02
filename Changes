@@ -1,6 +1,10 @@
 Changelog for Printer-ESCPOS
 
-0.014 2015-04-02T03:13:51
+0.015 2015-04-02T08:31:20
+ - Removed namespace::autoclean fixed wikidoc error. (Shantanu Bhadoria)
+
+0.014 2015-04-02T03:16:21
+ - v0.014 (Shantanu Bhadoria)
  - Added rotate 90 function (Shantanu Bhadoria)
  - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
