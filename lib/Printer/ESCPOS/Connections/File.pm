@@ -13,7 +13,7 @@ package Printer::ESCPOS::Connections::File;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.016'; # VERSION
+our $VERSION = '0.017'; # VERSION
 
 # Dependencies
 
@@ -55,7 +55,7 @@ Printer::ESCPOS::Connections::File - Bare Device File Connection Interface for L
 
 =head1 VERSION
 
-version 0.016
+version 0.017
 
 =head1 ATTRIBUTES
 
