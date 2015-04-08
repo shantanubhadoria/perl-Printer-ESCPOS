@@ -10,7 +10,7 @@
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : "2"
+      "version" : 2
    },
    "name" : "Printer-ESCPOS",
    "no_index" : {
@@ -79,43 +79,43 @@
    "provides" : {
       "Printer::ESCPOS" : {
          "file" : "lib/Printer/ESCPOS.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Connections::File" : {
          "file" : "lib/Printer/ESCPOS/Connections/File.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Connections::Network" : {
          "file" : "lib/Printer/ESCPOS/Connections/Network.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Connections::Serial" : {
          "file" : "lib/Printer/ESCPOS/Connections/Serial.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Connections::USB" : {
          "file" : "lib/Printer/ESCPOS/Connections/USB.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Manual" : {
          "file" : "lib/Printer/ESCPOS/Manual.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Profiles::Generic" : {
          "file" : "lib/Printer/ESCPOS/Profiles/Generic.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Profiles::SinocanPSeries" : {
          "file" : "lib/Printer/ESCPOS/Profiles/SinocanPSeries.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Roles::Connection" : {
          "file" : "lib/Printer/ESCPOS/Roles/Connection.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       },
       "Printer::ESCPOS::Roles::Profile" : {
          "file" : "lib/Printer/ESCPOS/Roles/Profile.pm",
-         "version" : "0.019"
+         "version" : "0.020"
       }
    },
    "release_status" : "stable",
@@ -130,7 +130,7 @@
          "web" : "https://github.com/shantanubhadoria/perl-printer-escpos"
       }
    },
-   "version" : "0.019",
+   "version" : "0.020",
    "x_contributors" : [
       "Shantanu Bhadoria <shantanu att cpan dott org>"
    ]
