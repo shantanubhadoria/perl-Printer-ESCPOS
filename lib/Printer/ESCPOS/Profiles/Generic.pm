@@ -13,7 +13,7 @@ package Printer::ESCPOS::Profiles::Generic;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.017'; # VERSION
+our $VERSION = '0.018'; # VERSION
 
 # Dependencies
 use 5.010;
@@ -486,7 +486,7 @@ Printer::ESCPOS::Profiles::Generic - Generic Profile for Printers for L<Printer:
 
 =head1 VERSION
 
-version 0.017
+version 0.018
 
 =head1 METHODS
 

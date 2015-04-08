@@ -13,7 +13,7 @@ package Printer::ESCPOS::Manual;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.017'; # VERSION
+our $VERSION = '0.018'; # VERSION
 
 1;
 
@@ -27,7 +27,7 @@ Printer::ESCPOS::Manual - Manual for Printing POS Receipts using L<Printer::ESCP
 
 =head1 VERSION
 
-version 0.017
+version 0.018
 
 =head1 SYNOPSIS 
 
