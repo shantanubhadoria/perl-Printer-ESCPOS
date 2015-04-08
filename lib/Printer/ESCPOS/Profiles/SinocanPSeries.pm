@@ -13,7 +13,7 @@ package Printer::ESCPOS::Profiles::SinocanPSeries;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.018'; # VERSION
+our $VERSION = '0.019'; # VERSION
 
 # Dependencies
 use 5.010;
@@ -36,7 +36,7 @@ Printer::ESCPOS::Profiles::SinocanPSeries - Sinocan P Series Profile for Printer
 
 =head1 VERSION
 
-version 0.018
+version 0.019
 
 =head1 AUTHOR
 
