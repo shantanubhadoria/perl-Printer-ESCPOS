@@ -13,6 +13,8 @@ MANIFEST.bak
 MYMETA.yml
 META.json
 META.yml
+Changes
+README.pod
 nytprof.out
 pm_to_blib
 Printer-ESCPOS*
