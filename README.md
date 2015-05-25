@@ -4,7 +4,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 # VERSION
 
-version 0.020
+version 0.021
 
 # SYNOPSIS
 
@@ -213,6 +213,10 @@ The above $device object will use the Printer::ESCPOS::Profile::USERCUSTOM profi
 ## deviceFilePath
 
 File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory parameter if you are using **File** or **Serial** _driverType_.
+
+## portName
+
+Win32 serial port name
 
 ## deviceIP
 
