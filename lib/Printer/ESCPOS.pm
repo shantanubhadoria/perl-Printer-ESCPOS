@@ -15,11 +15,6 @@ use Carp;
 use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
 
-use Printer::ESCPOS::Connections::File;
-use Printer::ESCPOS::Connections::Network;
-use Printer::ESCPOS::Connections::Serial;
-use Printer::ESCPOS::Connections::USB;
-
 =attr driverType
 
 "Required attribute". The driver type to use for your printer. This can be B<File>, B<Network>, B<USB> or B<Serial>. 
@@ -107,6 +102,16 @@ File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory paramete
 =cut
 
 has deviceFilePath => (
+    is  => 'ro',
+);
+
+=attr portName
+
+Win32 serial port name
+
+=cut
+
+has portName => (
     is  => 'ro',
 );
 
@@ -210,26 +215,37 @@ sub _build__driver {
     my ( $self ) = @_;
 
     if( $self->driverType eq 'File' ) {
+        Class::Load::load_class( 'Printer::ESCPOS::Connections::File' );
         return Printer::ESCPOS::Connections::File->new(
             deviceFilePath => $self->deviceFilePath,
         );
     } elsif( $self->driverType eq 'Network' ) {
+        Class::Load::load_class( 'Printer::ESCPOS::Connections::Network' );
         return Printer::ESCPOS::Connections::Network->new(
             deviceIP   => $self->deviceIP,
             devicePort => $self->devicePort,
         );
     } elsif( $self->driverType eq 'Serial' ) {
+        Class::Load::load_class( 'Printer::ESCPOS::Connections::Serial' );
         return Printer::ESCPOS::Connections::Serial->new(
             deviceFilePath => $self->deviceFilePath,
             baudrate       => $self->baudrate,
             serialOverUSB  => $self->serialOverUSB,
         );
     } elsif( $self->driverType eq 'USB' ) {
+        Class::Load::load_class( 'Printer::ESCPOS::Connections::USB' );
         return Printer::ESCPOS::Connections::USB->new(
             productId => $self->productId,
             vendorId  => $self->vendorId,
             endPoint  => $self->endPoint,
             timeout   => $self->timeout,
+        );
+    } elsif( $self->driverType eq 'Win32Serial' ) {
+        Class::Load::load_class( 'Printer::ESCPOS::Connections::Win32Serial' );
+        return Printer::ESCPOS::Connections::Win32Serial->new(
+            productId     => $self->portName,
+            baudrate      => $self->baudrate,
+            serialOverUSB => $self->serialOverUSB,
         );
     }
 }
