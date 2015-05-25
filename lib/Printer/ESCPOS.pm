@@ -13,7 +13,7 @@ package Printer::ESCPOS;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.020'; # VERSION
+our $VERSION = '0.021'; # TRIAL VERSION
 
 # Dependencies
 use 5.010;
@@ -26,6 +26,7 @@ use Printer::ESCPOS::Connections::File;
 use Printer::ESCPOS::Connections::Network;
 use Printer::ESCPOS::Connections::Serial;
 use Printer::ESCPOS::Connections::USB;
+use Printer::ESCPOS::Connections::Win32Serial;
 
 
 has driverType => (
@@ -41,6 +42,9 @@ has profile => (
 
 
 has deviceFilePath => ( is => 'ro', );
+
+
+has portName => ( is => 'ro', );
 
 
 has deviceIP => ( is => 'ro', );
@@ -115,6 +119,13 @@ sub _build__driver {
             timeout   => $self->timeout,
         );
     }
+    elsif ( $self->driverType eq 'Win32Serial' ) {
+        return Printer::ESCPOS::Connections::Win32Serial->new(
+            productId     => $self->portName,
+            baudrate      => $self->baudrate,
+            serialOverUSB => $self->serialOverUSB,
+        );
+    }
 }
 
 
@@ -153,7 +164,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 =head1 VERSION
 
-version 0.020
+version 0.021
 
 =head1 SYNOPSIS
 
@@ -362,6 +373,10 @@ The above $device object will use the Printer::ESCPOS::Profile::USERCUSTOM profi
 =head2 deviceFilePath
 
 File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory parameter if you are using B<File> or B<Serial> I<driverType>.
+
+=head2 portName
+
+Win32 serial port name
 
 =head2 deviceIP
 

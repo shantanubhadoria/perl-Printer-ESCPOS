@@ -27,6 +27,7 @@ my %WriteMakefileArgs = (
     "IO::Socket" => 0,
     "Moo" => 0,
     "Moo::Role" => 0,
+    "Printer::ESCPOS::Connections::Win32Serial" => 0,
     "Time::HiRes" => 0,
     "Type::Tiny" => 0,
     "aliased" => 0,
@@ -42,7 +43,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.020",
+  "VERSION" => "0.021",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -61,6 +62,7 @@ my %FallbackPrereqs = (
   "IPC::Open3" => 0,
   "Moo" => 0,
   "Moo::Role" => 0,
+  "Printer::ESCPOS::Connections::Win32Serial" => 0,
   "Test::More" => 0,
   "Time::HiRes" => 0,
   "Type::Tiny" => 0,

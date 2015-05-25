@@ -5,7 +5,7 @@ NAME
 
 VERSION
 
-    version 0.020
+    version 0.021
 
 SYNOPSIS
 
@@ -237,6 +237,10 @@ ATTRIBUTES
 
     File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory
     parameter if you are using File or Serial driverType.
+
+ portName
+
+    Win32 serial port name
 
  deviceIP
 
