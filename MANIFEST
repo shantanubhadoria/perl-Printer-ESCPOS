@@ -23,7 +23,6 @@ lib/Printer/ESCPOS/Profiles/Generic.pm
 lib/Printer/ESCPOS/Profiles/SinocanPSeries.pm
 lib/Printer/ESCPOS/Roles/Connection.pm
 lib/Printer/ESCPOS/Roles/Profile.pm
-t/00-compile-unix.t
 t/00-compile.t
 t/00-report-prereqs.dd
 t/00-report-prereqs.t
