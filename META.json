@@ -119,7 +119,7 @@
          "version" : "0.021"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/shantanubhadoria/perl-printer-escpos/issues"
