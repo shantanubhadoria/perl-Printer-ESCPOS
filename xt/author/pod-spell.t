@@ -98,7 +98,6 @@ File
 Network
 Serial
 USB
-Win32Serial
 Manual
 Profiles
 Generic

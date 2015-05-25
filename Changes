@@ -1,6 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.021 2015-05-25T05:20:35
+0.021 2015-05-25T05:49:05
+ - Testing removal of win32 portions of code (Shantanu Bhadoria)
  - Adding OS specific tests for some modules to pass kwalitee tests
    (Shantanu Bhadoria)
  - Trial Run for win32 support (Shantanu Bhadoria)
@@ -29,8 +30,8 @@ Changelog for Printer-ESCPOS
 
 0.014 2015-04-02T03:16:21
  - v0.014 (Shantanu Bhadoria)
- - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added rotate 90 function (Shantanu Bhadoria)
+ - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
  - Added USB read functionality (Shantanu Bhadoria)
  - POD Fixes (Shantanu Bhadoria)

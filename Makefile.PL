@@ -21,6 +21,7 @@ my %WriteMakefileArgs = (
   "NAME" => "Printer::ESCPOS",
   "PREREQ_PM" => {
     "Carp" => 0,
+    "Device::SerialPort" => 0,
     "Device::USB" => 0,
     "IO::File" => 0,
     "IO::Socket" => 0,
@@ -49,6 +50,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Carp" => 0,
+  "Device::SerialPort" => 0,
   "Device::USB" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,

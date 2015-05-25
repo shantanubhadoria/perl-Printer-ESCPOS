@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Test::More;
-if ( $^O eq 'Win32' || $^O 'MacOS' )
+if ( $^O eq 'Win32' )
   plan skip_all => 'Test relevant only on UNIX based systems';
 else plan tests => 1 + ( $ENV{AUTHOR_TESTING} ? 1 : 0 );
 

@@ -46,6 +46,7 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
+            "Device::SerialPort" : "0",
             "Device::USB" : "0",
             "IO::File" : "0",
             "IO::Socket" : "0",
@@ -96,10 +97,6 @@
          "file" : "lib/Printer/ESCPOS/Connections/USB.pm",
          "version" : "0.021"
       },
-      "Printer::ESCPOS::Connections::Win32Serial" : {
-         "file" : "lib/Printer/ESCPOS/Connections/Win32Serial.pm",
-         "version" : "0.021"
-      },
       "Printer::ESCPOS::Manual" : {
          "file" : "lib/Printer/ESCPOS/Manual.pm",
          "version" : "0.021"
@@ -121,7 +118,7 @@
          "version" : "0.021"
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/shantanubhadoria/perl-printer-escpos/issues"

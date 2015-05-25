@@ -19,6 +19,7 @@ do { my $x = {
        'runtime' => {
                       'requires' => {
                                       'Carp' => '0',
+                                      'Device::SerialPort' => '0',
                                       'Device::USB' => '0',
                                       'IO::File' => '0',
                                       'IO::Socket' => '0',

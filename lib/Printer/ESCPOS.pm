@@ -13,7 +13,7 @@ package Printer::ESCPOS;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.021'; # VERSION
+our $VERSION = '0.021'; # TRIAL VERSION
 
 # Dependencies
 use 5.010;
@@ -120,7 +120,7 @@ sub _build__driver {
     elsif ( $self->driverType eq 'Win32Serial' ) {
         Class::Load::load_class('Printer::ESCPOS::Connections::Win32Serial');
         return Printer::ESCPOS::Connections::Win32Serial->new(
-            productId     => $self->portName,
+            portName      => $self->portName,
             baudrate      => $self->baudrate,
             serialOverUSB => $self->serialOverUSB,
         );
