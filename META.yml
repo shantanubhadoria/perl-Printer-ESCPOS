@@ -65,7 +65,6 @@ provides:
     version: 0.021
 requires:
   Carp: 0
-  Device::SerialPort: 0
   Device::USB: 0
   IO::File: 0
   IO::Socket: 0
@@ -73,7 +72,6 @@ requires:
   Moo::Role: 0
   Time::HiRes: 0
   Type::Tiny: 0
-  Win32::SerialPort: 0
   aliased: 0
   constant: 0
   perl: 5.010
