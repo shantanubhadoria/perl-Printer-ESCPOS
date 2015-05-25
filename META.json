@@ -52,9 +52,9 @@
             "IO::Socket" : "0",
             "Moo" : "0",
             "Moo::Role" : "0",
-            "Printer::ESCPOS::Connections::Win32Serial" : "0",
             "Time::HiRes" : "0",
             "Type::Tiny" : "0",
+            "Win32::SerialPort" : "0",
             "aliased" : "0",
             "constant" : "0",
             "perl" : "5.010",
@@ -96,6 +96,10 @@
       },
       "Printer::ESCPOS::Connections::USB" : {
          "file" : "lib/Printer/ESCPOS/Connections/USB.pm",
+         "version" : "0.021"
+      },
+      "Printer::ESCPOS::Connections::Win32Serial" : {
+         "file" : "lib/Printer/ESCPOS/Connections/Win32Serial.pm",
          "version" : "0.021"
       },
       "Printer::ESCPOS::Manual" : {

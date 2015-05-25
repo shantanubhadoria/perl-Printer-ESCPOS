@@ -18,6 +18,7 @@ lib/Printer/ESCPOS/Connections/File.pm
 lib/Printer/ESCPOS/Connections/Network.pm
 lib/Printer/ESCPOS/Connections/Serial.pm
 lib/Printer/ESCPOS/Connections/USB.pm
+lib/Printer/ESCPOS/Connections/Win32Serial.pm
 lib/Printer/ESCPOS/Manual.pm
 lib/Printer/ESCPOS/Profiles/Generic.pm
 lib/Printer/ESCPOS/Profiles/SinocanPSeries.pm
