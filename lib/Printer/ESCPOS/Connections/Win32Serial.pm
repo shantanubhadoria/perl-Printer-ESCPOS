@@ -13,7 +13,7 @@ package Printer::ESCPOS::Connections::Win32Serial;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.021'; # VERSION
+our $VERSION = '0.021'; # TRIAL VERSION
 
 # Dependencies
 
