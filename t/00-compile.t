@@ -6,13 +6,12 @@ use warnings;
 
 use Test::More;
 
-plan tests => 10 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
+plan tests => 9 + ($ENV{AUTHOR_TESTING} ? 1 : 0);
 
 my @module_files = (
     'Printer/ESCPOS.pm',
     'Printer/ESCPOS/Connections/File.pm',
     'Printer/ESCPOS/Connections/Network.pm',
-    'Printer/ESCPOS/Connections/Serial.pm',
     'Printer/ESCPOS/Connections/USB.pm',
     'Printer/ESCPOS/Manual.pm',
     'Printer/ESCPOS/Profiles/Generic.pm',
