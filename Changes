@@ -1,7 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.021 2015-05-25T04:27:38
- - No changes found
+0.021 2015-05-25T04:28:39
+ - Trial Run for win32 support (Shantanu Bhadoria)
 
 0.020 2015-04-08T09:59:57
  - v0.020 (Shantanu Bhadoria)
