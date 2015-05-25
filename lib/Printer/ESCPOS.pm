@@ -22,12 +22,6 @@ use Carp;
 use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
 
-use Printer::ESCPOS::Connections::File;
-use Printer::ESCPOS::Connections::Network;
-use Printer::ESCPOS::Connections::Serial;
-use Printer::ESCPOS::Connections::USB;
-use Printer::ESCPOS::Connections::Win32Serial;
-
 
 has driverType => (
     is       => 'ro',
@@ -95,16 +89,19 @@ sub _build__driver {
     my ($self) = @_;
 
     if ( $self->driverType eq 'File' ) {
+        Class::Load::load_class('Printer::ESCPOS::Connections::File');
         return Printer::ESCPOS::Connections::File->new(
             deviceFilePath => $self->deviceFilePath, );
     }
     elsif ( $self->driverType eq 'Network' ) {
+        Class::Load::load_class('Printer::ESCPOS::Connections::Network');
         return Printer::ESCPOS::Connections::Network->new(
             deviceIP   => $self->deviceIP,
             devicePort => $self->devicePort,
         );
     }
     elsif ( $self->driverType eq 'Serial' ) {
+        Class::Load::load_class('Printer::ESCPOS::Connections::Serial');
         return Printer::ESCPOS::Connections::Serial->new(
             deviceFilePath => $self->deviceFilePath,
             baudrate       => $self->baudrate,
@@ -112,6 +109,7 @@ sub _build__driver {
         );
     }
     elsif ( $self->driverType eq 'USB' ) {
+        Class::Load::load_class('Printer::ESCPOS::Connections::USB');
         return Printer::ESCPOS::Connections::USB->new(
             productId => $self->productId,
             vendorId  => $self->vendorId,
@@ -120,6 +118,7 @@ sub _build__driver {
         );
     }
     elsif ( $self->driverType eq 'Win32Serial' ) {
+        Class::Load::load_class('Printer::ESCPOS::Connections::Win32Serial');
         return Printer::ESCPOS::Connections::Win32Serial->new(
             productId     => $self->portName,
             baudrate      => $self->baudrate,
