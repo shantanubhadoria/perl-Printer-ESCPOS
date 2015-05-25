@@ -243,7 +243,7 @@ sub _build__driver {
     } elsif( $self->driverType eq 'Win32Serial' ) {
         Class::Load::load_class( 'Printer::ESCPOS::Connections::Win32Serial' );
         return Printer::ESCPOS::Connections::Win32Serial->new(
-            productId     => $self->portName,
+            portName     => $self->portName,
             baudrate      => $self->baudrate,
             serialOverUSB => $self->serialOverUSB,
         );
