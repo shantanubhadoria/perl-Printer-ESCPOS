@@ -83,6 +83,7 @@ optimizations
 VendorId
 endPoint
 lsusb
+portName
 Shantanu
 Bhadoria
 shantanu
