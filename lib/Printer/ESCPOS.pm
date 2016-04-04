@@ -21,7 +21,6 @@ use Moo;
 use Carp;
 use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
-use Class::Load;
 
 
 has driverType => (

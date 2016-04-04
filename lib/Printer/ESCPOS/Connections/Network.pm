@@ -55,13 +55,11 @@ sub _build__connection {
 sub read {
     my ( $self, $question, $bytes ) = @_;
     my $data;
-    $bytes ||= 4;
+    $bytes ||= 2;
 
     say unpack( "H*", $question );
     $self->_connection->write($question);
-    say "waiting for reply";
-    $self->_connection->read( $data, 4096 );
-    say $data;
+    $self->_connection->read( $data, $bytes );
 
     return $data;
 }
