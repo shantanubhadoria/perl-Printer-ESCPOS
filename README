@@ -25,7 +25,7 @@ SYNOPSIS
 
          shantanu@shantanu-G41M-ES2L:~/github$ lsusb
          . . .
-         Bus 003 Device 002: ID 1504:0006  
+         Bus 003 Device 002: ID 1504:0006
          . . .
 
     The output gives us the vendorId 0x1504 and productId 0x0006
@@ -59,7 +59,7 @@ SYNOPSIS
          $device->printer->text("Upside Down\n");
          $device->printer->cutPaper();
      
-         $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+         $device->printer->print(); # Dispatch the above commands from module buffer to the Printer.
 
  Network Printer
 
@@ -76,7 +76,7 @@ SYNOPSIS
              devicePort => $port,
          );
      
-         # These commands won't actually send anything to the printer but will store all the 
+         # These commands won't actually send anything to the printer but will store all the
          # merged data including control codes to module buffer.
          $device->printer->printAreaWidth( nL => 0, nH => 1);
          $device->printer->text("Print Area Width Modified\n");
@@ -93,7 +93,7 @@ SYNOPSIS
          $device->printer->text("Upside Down\n");
          $device->printer->cutPaper();
      
-         $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+         $device->printer->print(); # Dispatch the above commands from module buffer to the Printer.
                                     # This command takes care of read text buffers for the printer.
 
  Serial Printer
