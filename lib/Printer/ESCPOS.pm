@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS;
 
 # PODNAME: Printer::ESCPOS
-# ABSTRACT: Interface for all thermal, dot-matrix and other receipt printers that support ESC-POS specification.  
+# ABSTRACT: Interface for all thermal, dot-matrix and other receipt printers that support ESC-POS specification.
 # COPYRIGHT
 # VERSION
 
@@ -17,8 +17,8 @@ use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
 
 =attr driverType
 
-"Required attribute". The driver type to use for your printer. This can be B<File>, B<Network>, B<USB> or B<Serial>. 
-If you choose B<File> or B<Serial> driver, you must provide the I<deviceFilePath>, 
+"Required attribute". The driver type to use for your printer. This can be B<File>, B<Network>, B<USB> or B<Serial>.
+If you choose B<File> or B<Serial> driver, you must provide the I<deviceFilePath>,
 for B<Network> I<driverType> you must provide the I<printerIp> and I<printerPort>,
 For B<USB> I<driverType> you must provide I<vendorId> and I<productId>.
 
@@ -138,7 +138,7 @@ has devicePort => (
 
 =attr baudrate
 
-When used as a local serial device you can set the I<baudrate> of the printer too. Default (38400) will usually work, but not always. 
+When used as a local serial device you can set the I<baudrate> of the printer too. Default (38400) will usually work, but not always.
 
 =cut
 
@@ -240,20 +240,13 @@ sub _build__driver {
             endPoint  => $self->endPoint,
             timeout   => $self->timeout,
         );
-    } elsif( $self->driverType eq 'Win32Serial' ) {
-        Class::Load::load_class( 'Printer::ESCPOS::Connections::Win32Serial' );
-        return Printer::ESCPOS::Connections::Win32Serial->new(
-            portName     => $self->portName,
-            baudrate      => $self->baudrate,
-            serialOverUSB => $self->serialOverUSB,
-        );
     }
 }
 
 =attr printer
 
 Use this attribute to send commands to the printer
-    
+
     $device->printer->setFont('a');
     $device->printer->text("blah blah blah\n");
 
@@ -265,7 +258,7 @@ has printer => (
 
 sub _build_printer {
     my ( $self ) = @_;
-   
+
     my $base  = __PACKAGE__ . "::Profiles::";
     my $class = $base . $self->profile;
 
@@ -295,8 +288,8 @@ __END__
 
 If you are just starting up with POS RECEIPT Printers, you must first refer to [Printer::ESCPOS::Manual] to get started.
 
-Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
-As of v0.012 ~driverType~ *Serial*, *Network*, *File* and *USB* are all implemented in this module. *USB* ~driverType~ is not supported prior to v0.012. 
+Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer.
+As of v0.012 ~driverType~ *Serial*, *Network*, *File* and *USB* are all implemented in this module. *USB* ~driverType~ is not supported prior to v0.012.
 
 == USB Printer
 
@@ -304,7 +297,7 @@ As of v0.012 ~driverType~ *Serial*, *Network*, *File* and *USB* are all implemen
 
     shantanu@shantanu-G41M-ES2L:~/github$ lsusb
     . . .
-    Bus 003 Device 002: ID 1504:0006  
+    Bus 003 Device 002: ID 1504:0006
     . . .
 
 The output gives us the ~vendorId~ 0x1504 and ~productId~ 0x0006
@@ -337,11 +330,11 @@ For USB Printers [Printer::ESCPOS] uses a default ~endPoint~ of 0x01 and a defau
     $device->printer->text("Upside Down\n");
     $device->printer->cutPaper();
 
-    $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+    $device->printer->print(); # Dispatch the above commands from module buffer to the Printer.
 
 == Network Printer
 
-For Network Printers $port is 9100 in most cases but might differ depending on how 
+For Network Printers $port is 9100 in most cases but might differ depending on how
 you have configured your printer
 
     use Printer::ESCPOS;
@@ -354,7 +347,7 @@ you have configured your printer
         devicePort => $port,
     );
 
-    # These commands won't actually send anything to the printer but will store all the 
+    # These commands won't actually send anything to the printer but will store all the
     # merged data including control codes to module buffer.
     $device->printer->printAreaWidth( nL => 0, nH => 1);
     $device->printer->text("Print Area Width Modified\n");
@@ -371,14 +364,14 @@ you have configured your printer
     $device->printer->text("Upside Down\n");
     $device->printer->cutPaper();
 
-    $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+    $device->printer->print(); # Dispatch the above commands from module buffer to the Printer.
                                # This command takes care of read text buffers for the printer.
 
 == Serial Printer
 
-Use the *Serial* ~driverType~ for local printer connected on serial port(or a printer connected via 
-a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
-for what device file was created for your printer when you connect it to your system(For 
+Use the *Serial* ~driverType~ for local printer connected on serial port(or a printer connected via
+a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog)
+for what device file was created for your printer when you connect it to your system(For
 plug and play printers).
 
     use Printer::ESCPOS;
@@ -405,8 +398,8 @@ plug and play printers).
 
 == File(Direct to Device File) Printer
 
-A *File* ~driverType~ is similar to the *Serial* ~driverType~ in all functionality except that it 
-doesn't support the status functions for the printer. i.e. you will not be able to use 
+A *File* ~driverType~ is similar to the *Serial* ~driverType~ in all functionality except that it
+doesn't support the status functions for the printer. i.e. you will not be able to use
 printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
 
     use Printer::ESCPOS;
