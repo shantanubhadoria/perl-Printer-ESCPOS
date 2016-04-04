@@ -1,6 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.022 2016-04-04T09:06:45
+0.022 2016-04-04T09:07:19
+ - Network Example (Shantanu Bhadoria)
  - travis pre install device usb (Shantanu Bhadoria)
 
 0.021 2015-05-25T05:56:36
