@@ -8,12 +8,12 @@ package Printer::ESCPOS;
 #
 # This file is part of Printer-ESCPOS
 #
-# This software is copyright (c) 2015 by Shantanu Bhadoria.
+# This software is copyright (c) 2016 by Shantanu Bhadoria.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.021'; # TRIAL VERSION
+our $VERSION = '0.022'; # VERSION
 
 # Dependencies
 use 5.010;
@@ -21,6 +21,7 @@ use Moo;
 use Carp;
 use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
+use Class::Load;
 
 
 has driverType => (
@@ -161,9 +162,23 @@ __END__
 
 Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printers that support ESC-POS specification.
 
+
+
+=begin html
+
+<p>
+<img src="https://img.shields.io/badge/perl-5.10+-brightgreen.svg" alt="Requires Perl 5.10+" />
+<a href="https://travis-ci.org/shantanubhadoria/perl-Printer-ESCPOS"><img src="https://api.travis-ci.org/shantanubhadoria/perl-Printer-ESCPOS.svg?branch=build/master" alt="Travis status" /></a>
+<a href="http://matrix.cpantesters.org/?dist=Printer-ESCPOS%200.022"><img src="https://badgedepot.code301.com/badge/cpantesters/Printer-ESCPOS/0.022" alt="CPAN Testers result" /></a>
+<a href="http://cpants.cpanauthors.org/dist/Printer-ESCPOS-0.022"><img src="https://badgedepot.code301.com/badge/kwalitee/Printer-ESCPOS/0.022" alt="Distribution kwalitee" /></a>
+<a href="https://gratipay.com/shantanubhadoria"><img src="https://img.shields.io/gratipay/shantanubhadoria.svg" alt="Gratipay" /></a>
+</p>
+
+=end html
+
 =head1 VERSION
 
-version 0.021
+version 0.022
 
 =head1 SYNOPSIS
 
@@ -552,7 +567,7 @@ Shantanu Bhadoria <shantanu att cpan dott org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Shantanu Bhadoria.
+This software is copyright (c) 2016 by Shantanu Bhadoria.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

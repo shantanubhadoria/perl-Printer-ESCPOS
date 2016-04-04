@@ -8,12 +8,12 @@ package Printer::ESCPOS::Connections::File;
 #
 # This file is part of Printer-ESCPOS
 #
-# This software is copyright (c) 2015 by Shantanu Bhadoria.
+# This software is copyright (c) 2016 by Shantanu Bhadoria.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.021'; # TRIAL VERSION
+our $VERSION = '0.022'; # VERSION
 
 # Dependencies
 
@@ -55,7 +55,7 @@ Printer::ESCPOS::Connections::File - Bare Device File Connection Interface for L
 
 =head1 VERSION
 
-version 0.021
+version 0.022
 
 =head1 ATTRIBUTES
 
@@ -69,7 +69,7 @@ Shantanu Bhadoria <shantanu@cpan.org> L<https://www.shantanubhadoria.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Shantanu Bhadoria.
+This software is copyright (c) 2016 by Shantanu Bhadoria.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

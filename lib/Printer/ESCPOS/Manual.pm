@@ -8,12 +8,12 @@ package Printer::ESCPOS::Manual;
 #
 # This file is part of Printer-ESCPOS
 #
-# This software is copyright (c) 2015 by Shantanu Bhadoria.
+# This software is copyright (c) 2016 by Shantanu Bhadoria.
 #
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.021'; # TRIAL VERSION
+our $VERSION = '0.022'; # VERSION
 
 1;
 
@@ -27,7 +27,7 @@ Printer::ESCPOS::Manual - Manual for Printing POS Receipts using L<Printer::ESCP
 
 =head1 VERSION
 
-version 0.021
+version 0.022
 
 =head1 SYNOPSIS 
 
@@ -634,7 +634,7 @@ Shantanu Bhadoria <shantanu@cpan.org> L<https://www.shantanubhadoria.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Shantanu Bhadoria.
+This software is copyright (c) 2016 by Shantanu Bhadoria.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
