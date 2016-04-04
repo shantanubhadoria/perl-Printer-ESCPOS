@@ -1,6 +1,10 @@
 Changelog for Printer-ESCPOS
 
-0.022 2016-04-04T09:19:39
+0.023 2016-04-04T09:26:35
+ - Editing travis.yml (Shantanu Bhadoria)
+
+0.022 2016-04-04T09:20:16
+ - v0.022 (Shantanu Bhadoria)
  - removed missing win32 code (Shantanu Bhadoria)
  - Network Example (Shantanu Bhadoria)
  - travis pre install device usb (Shantanu Bhadoria)
