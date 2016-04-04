@@ -2,16 +2,26 @@
 
 Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printers that support ESC-POS specification.
 
+<div>
+    <p>
+    <img src="https://img.shields.io/badge/perl-5.10+-brightgreen.svg" alt="Requires Perl 5.10+" />
+    <a href="https://travis-ci.org/shantanubhadoria/perl-Printer-ESCPOS"><img src="https://api.travis-ci.org/shantanubhadoria/perl-Printer-ESCPOS.svg?branch=build/master" alt="Travis status" /></a>
+    <a href="http://matrix.cpantesters.org/?dist=Printer-ESCPOS%200.022"><img src="https://badgedepot.code301.com/badge/cpantesters/Printer-ESCPOS/0.022" alt="CPAN Testers result" /></a>
+    <a href="http://cpants.cpanauthors.org/dist/Printer-ESCPOS-0.022"><img src="https://badgedepot.code301.com/badge/kwalitee/Printer-ESCPOS/0.022" alt="Distribution kwalitee" /></a>
+    <a href="https://gratipay.com/shantanubhadoria"><img src="https://img.shields.io/gratipay/shantanubhadoria.svg" alt="Gratipay" /></a>
+    </p>
+</div>
+
 # VERSION
 
-version 0.021
+version 0.022
 
 # SYNOPSIS
 
 If you are just starting up with POS RECEIPT Printers, you must first refer to [Printer::ESCPOS::Manual](https://metacpan.org/pod/Printer::ESCPOS::Manual) to get started.
 
-Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer. 
-As of v0.012 _driverType_ **Serial**, **Network**, **File** and **USB** are all implemented in this module. **USB** _driverType_ is not supported prior to v0.012. 
+Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer.
+As of v0.012 _driverType_ **Serial**, **Network**, **File** and **USB** are all implemented in this module. **USB** _driverType_ is not supported prior to v0.012.
 
 ## USB Printer
 
@@ -19,7 +29,7 @@ As of v0.012 _driverType_ **Serial**, **Network**, **File** and **USB** are all 
 
      shantanu@shantanu-G41M-ES2L:~/github$ lsusb
      . . .
-     Bus 003 Device 002: ID 1504:0006  
+     Bus 003 Device 002: ID 1504:0006
      . . .
 
 The output gives us the _vendorId_ 0x1504 and _productId_ 0x0006
@@ -52,11 +62,11 @@ For USB Printers [Printer::ESCPOS](https://metacpan.org/pod/Printer::ESCPOS) use
         $device->printer->text("Upside Down\n");
         $device->printer->cutPaper();
     
-        $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+        $device->printer->print(); # Dispatch the above commands from module buffer to the Printer.
 
 ## Network Printer
 
-For Network Printers $port is 9100 in most cases but might differ depending on how 
+For Network Printers $port is 9100 in most cases but might differ depending on how
 you have configured your printer
 
         use Printer::ESCPOS;
@@ -69,7 +79,7 @@ you have configured your printer
             devicePort => $port,
         );
     
-        # These commands won't actually send anything to the printer but will store all the 
+        # These commands won't actually send anything to the printer but will store all the
         # merged data including control codes to module buffer.
         $device->printer->printAreaWidth( nL => 0, nH => 1);
         $device->printer->text("Print Area Width Modified\n");
@@ -86,14 +96,14 @@ you have configured your printer
         $device->printer->text("Upside Down\n");
         $device->printer->cutPaper();
     
-        $device->printer->print(); # Dispatch the above commands from module buffer to the Printer. 
+        $device->printer->print(); # Dispatch the above commands from module buffer to the Printer.
                                    # This command takes care of read text buffers for the printer.
 
 ## Serial Printer
 
-Use the **Serial** _driverType_ for local printer connected on serial port(or a printer connected via 
-a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog) 
-for what device file was created for your printer when you connect it to your system(For 
+Use the **Serial** _driverType_ for local printer connected on serial port(or a printer connected via
+a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog)
+for what device file was created for your printer when you connect it to your system(For
 plug and play printers).
 
         use Printer::ESCPOS;
@@ -119,8 +129,8 @@ plug and play printers).
 
 ## File(Direct to Device File) Printer
 
-A **File** _driverType_ is similar to the **Serial** _driverType_ in all functionality except that it 
-doesn't support the status functions for the printer. i.e. you will not be able to use 
+A **File** _driverType_ is similar to the **Serial** _driverType_ in all functionality except that it
+doesn't support the status functions for the printer. i.e. you will not be able to use
 printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
 
         use Printer::ESCPOS;
@@ -146,8 +156,8 @@ You can use this module for all your ESC-POS Printing needs. If some of your pri
 
 ## driverType
 
-"Required attribute". The driver type to use for your printer. This can be **File**, **Network**, **USB** or **Serial**. 
-If you choose **File** or **Serial** driver, you must provide the _deviceFilePath_, 
+"Required attribute". The driver type to use for your printer. This can be **File**, **Network**, **USB** or **Serial**.
+If you choose **File** or **Serial** driver, you must provide the _deviceFilePath_,
 for **Network** _driverType_ you must provide the _printerIp_ and _printerPort_,
 For **USB** _driverType_ you must provide _vendorId_ and _productId_.
 
@@ -228,7 +238,7 @@ Contains the network port of the device when its a network printer. The module c
 
 ## baudrate
 
-When used as a local serial device you can set the _baudrate_ of the printer too. Default (38400) will usually work, but not always. 
+When used as a local serial device you can set the _baudrate_ of the printer too. Default (38400) will usually work, but not always.
 
 ## serialOverUSB
 
@@ -325,11 +335,11 @@ Shantanu Bhadoria <shantanu@cpan.org> [https://www.shantanubhadoria.com](https:/
 
 # CONTRIBUTOR
 
-Shantanu Bhadoria <shantanu att cpan dott org>
+Shantanu Bhadoria &lt;shantanu att cpan dott org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Shantanu Bhadoria.
+This software is copyright (c) 2016 by Shantanu Bhadoria.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
