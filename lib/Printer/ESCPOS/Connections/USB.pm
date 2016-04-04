@@ -13,7 +13,7 @@ package Printer::ESCPOS::Connections::USB;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.023'; # VERSION
+our $VERSION = '0.024'; # VERSION
 
 # Dependencies
 
@@ -115,7 +115,7 @@ Printer::ESCPOS::Connections::USB - USB Connection Interface for L<Printer::ESCP
 
 =head1 VERSION
 
-version 0.023
+version 0.024
 
 =head1 SYNOPSIS
 
