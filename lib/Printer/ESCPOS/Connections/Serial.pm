@@ -13,7 +13,7 @@ package Printer::ESCPOS::Connections::Serial;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.024'; # VERSION
+our $VERSION = '0.025'; # VERSION
 
 # Dependencies
 
@@ -118,7 +118,7 @@ Printer::ESCPOS::Connections::Serial - Serial Connection Interface for L<Printer
 
 =head1 VERSION
 
-version 0.024
+version 0.025
 
 =head1 ATTRIBUTES
 
