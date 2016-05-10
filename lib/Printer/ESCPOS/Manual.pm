@@ -14,7 +14,7 @@ __END__
 
 =begin wikidoc
 
-= SYNOPSIS 
+= SYNOPSIS
 
 == BASIC USAGE
 
@@ -26,8 +26,8 @@ __END__
         deviceFilePath => '/dev/ttyACM0'
     );
 
-    # All Printers have their own initialization 
-    # recommendations(Cleaning buffers etc.). Run 
+    # All Printers have their own initialization
+    # recommendations(Cleaning buffers etc.). Run
     # this command to let the module do this for you.
     $device->printer->init();
 
@@ -42,11 +42,11 @@ __END__
 
 
     # Add a cut paper command at the end to cut the receipt
-    # This command will be ignored by your printer if it 
-    # doesn't have a paper cutter on it 
-    $device->printer->cutPaper(); 
+    # This command will be ignored by your printer if it
+    # doesn't have a paper cutter on it
+    $device->printer->cutPaper();
 
-    
+
     # Send the Prepared data to the printer.
     $device->printer->print();
 
@@ -118,7 +118,7 @@ If your printer is not printing properly when connected on physical serial port 
         driverType     => 'Serial',
         deviceFilePath => '/dev/ttyACM0',
         baudrate       => 9600,
-        serialOverUSB  => 0 
+        serialOverUSB  => 0
     );
 
 === NETWORK PRINTER
@@ -148,6 +148,15 @@ This Driver is included for those instances when your printing needs are simple(
 In all the methods described below its assumed that variable {$device} has been initialized using the appropriate connection to the printer with one of the driverTypes mentioned above.
 The following methods prepare the text and text formatting data to be sent to the printer.
 
+=== image
+
+Prints a GD image object to the printer
+
+    use GD;
+
+    my $img = newFromGif GD::Image('header.gif') || die "Error $!";
+    $device->printer->image($img);
+
 === text
 
 Sends raw text to the printer.
@@ -156,9 +165,9 @@ Sends raw text to the printer.
 
 === printAreaWidth
 
-Sets the Print area width specified by ~nL~ and ~NH~. The width is calculated as 
-    ( nL + nH * 256 ) * horiz_motion_unit 
-    
+Sets the Print area width specified by ~nL~ and ~NH~. The width is calculated as
+    ( nL + nH * 256 ) * horiz_motion_unit
+
 A pre-requisite line feed is automatically executed before printAreaWidth method.
 
     $device->printer->printAreaWidth( nL => 0, nH =>0 );
@@ -171,7 +180,7 @@ Sets horizontal tab positions for tab stops. Upto 32 tab positions can be set in
 
 * Default tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
 
-=== tab 
+=== tab
 
 moves the cursor to next horizontal tab position like a {"\t"}. This command is ignored unless the next horizontal tab position has been set. You may substitute this command with a {"\t"} as well.
 
@@ -208,16 +217,16 @@ Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style 
     $device->printer->font('b');
     $device->printer->text('Writing in Font B');
 
-=== bold 
+=== bold
 
-Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals 
+Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals
 
     $device->printer->bold(1);
     $device->printer->text("This is Bold Text\n");
     $device->printer->bold(0);
     $device->printer->text("This is not Bold Text\n");
 
-=== doubleStrike 
+=== doubleStrike
 
 Set double-strike mode *0* for off and *1* for on
 
@@ -228,7 +237,7 @@ Set double-strike mode *0* for off and *1* for on
 
 === underline
 
-set underline, *0* for off, *1* for on and *2* for double thickness 
+set underline, *0* for off, *1* for on and *2* for double thickness
 
     $device->printer->underline(1);
     $device->printer->text("This is Underlined Text\n");
@@ -252,29 +261,29 @@ Most thermal printers support just one color, black. Some ESCPOS printers(especi
 
     $device->printer->lf();
     $device->printer->color(0); #black
-    $device->printer->text("black"); 
+    $device->printer->text("black");
     $device->printer->lf();
     $device->printer->color(1); #red
-    $device->printer->text("Red"); 
+    $device->printer->text("Red");
     $device->printer->print();
 
-=== justify 
+=== justify
 
 Set Justification. Options *left*, *right* and *center*
 
     $device->printer->justify( 'right' );
-    $device->printer->text("This is right justified"); 
+    $device->printer->text("This is right justified");
 
 === upsideDown
 
 Sets Upside Down Printing on/off (pass *0* or *1*)
 
     $device->printer->upsideDownPrinting(1);
-    $device->printer->text("This text is upside down"); 
+    $device->printer->text("This text is upside down");
 
-=== fontHeight 
+=== fontHeight
 
-Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
+Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default)
 
     $device->printer->fontHeight(1);
     $device->printer->text("double height\n");
@@ -284,9 +293,9 @@ Set font height. Only supports *0* or *1* for printmode set to 1, supports value
     $device->printer->text("quadruple height\n");
     . . .
 
-=== fontWidth 
+=== fontWidth
 
-Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
+Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default)
 
     $device->printer->fontWidth(1);
     $device->printer->text("double width\n");
@@ -304,7 +313,7 @@ Sets character spacing. Takes a value between 0 and 255
     $device->printer->text("Blah Blah Blah\n");
     $device->printer->print();
 
-=== lineSpacing 
+=== lineSpacing
 
 Sets the line spacing i.e the spacing between each line of printout.
 
@@ -312,7 +321,7 @@ Sets the line spacing i.e the spacing between each line of printout.
 
 * 0 <= $spacing <= 255
 
-=== selectDefaultLineSpacing 
+=== selectDefaultLineSpacing
 
 Reverts to default line spacing for the printer
 
@@ -372,7 +381,7 @@ However there are several customizations available including barcode ~system~, ~
         height      => $height,        # no of dots in vertical direction
         system      => $system,        # Barcode system
         width       => 2               # 2:0.25mm, 3:0.375mm, 4:0.5mm, 5:0.625mm, 6:0.75mm
-        barcode     => '123456789012', # Check barcode system you are using for allowed 
+        barcode     => '123456789012', # Check barcode system you are using for allowed
                                        # characters in barcode
     );
     $device->printer->barcode(
@@ -395,12 +404,12 @@ Available barcode ~systems~:
 * CODE39
 * ITF
 * CODABAR
-* CODE93  
-* CODE128 
+* CODE93
+* CODE128
 
 === printNVImage
 
-Prints bit image stored in Non-Volatile (NV) memory of the printer. 
+Prints bit image stored in Non-Volatile (NV) memory of the printer.
 
     $device->printer->printNVImage($flag);
 
@@ -411,7 +420,7 @@ Prints bit image stored in Non-Volatile (NV) memory of the printer.
 
 === printImage
 
-Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset. 
+Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset.
 
     $device->printer->printImage($flag);
 
@@ -448,7 +457,7 @@ Again like cutPaper command this is obviously not a text formatting command but 
 === print
 
 Once Initialization is done and the formatted text for printing is prepared using the above commands, its time to send these commands to printer. This is a single easy step.
-    
+
     $device->printer->print();
 
 Why an extra print step to send this data to the printer?
@@ -456,7 +465,7 @@ This is necessary because many printers have difficulty handling large amount of
 
 == GETTING PRINTER HEALTH STATUS
 
-The *Serial* ~driverType~ allows reading of printer health, paper and other status parameters from the printer. 
+The *Serial* ~driverType~ allows reading of printer health, paper and other status parameters from the printer.
 At the moment there are following commands available for getting printer status.
 
 === printerStatus

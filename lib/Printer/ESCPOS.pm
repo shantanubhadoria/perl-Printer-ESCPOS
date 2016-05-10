@@ -316,6 +316,10 @@ For USB Printers [Printer::ESCPOS] uses a default ~endPoint~ of 0x01 and a defau
         productId      => $productId,
     );
 
+    use GD;
+    my $img = newFromGif GD::Image('header.gif') || die "Error $!";
+    $device->printer->image($img); # Takes a GD image object
+    
     $device->printer->printAreaWidth( nL => 0, nH => 1);
     $device->printer->text("Print Area Width Modified\n");
     $device->printer->printAreaWidth(); # Reset to default
