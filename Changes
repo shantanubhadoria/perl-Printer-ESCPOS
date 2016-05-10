@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-0.025 2016-05-10T04:03:58
+0.025 2016-05-10T04:04:26
  - remove binary files to avoid dzil issues (Shantanu Bhadoria)
  - Added direct image printing functionality with GD. Fixed
    Class:Load::load_class error thanks to William Barrett for feedback
@@ -56,8 +56,8 @@ Changelog for Printer-ESCPOS
 
 0.014 2015-04-02T03:16:21
  - v0.014 (Shantanu Bhadoria)
- - Added rotate 90 function (Shantanu Bhadoria)
  - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
+ - Added rotate 90 function (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
  - Added USB read functionality (Shantanu Bhadoria)
  - POD Fixes (Shantanu Bhadoria)
