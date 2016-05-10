@@ -49,6 +49,7 @@
       "runtime" : {
          "requires" : {
             "Carp" : "0",
+            "Class::Load" : "0",
             "Device::SerialPort" : "0",
             "Device::USB" : "0",
             "IO::File" : "0",

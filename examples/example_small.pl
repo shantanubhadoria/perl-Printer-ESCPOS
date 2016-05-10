@@ -10,9 +10,9 @@ use Data::Dumper;
 
 my $printer_usb = Printer::ESCPOS->new(
     driverType => 'USB',
-    vendorId   => 0x1cbe,
-    productId  => 0x0002,
-    endPoint   => 0x02
+    vendorId   => 0x1504,
+    productId  => 0x0006,
+    endPoint   => 0x01
 );
 
 say Dumper $printer_usb->printer->printerStatus();

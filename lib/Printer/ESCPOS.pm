@@ -18,6 +18,7 @@ our $VERSION = '0.025'; # VERSION
 # Dependencies
 use 5.010;
 use Moo;
+use Class::Load;
 use Carp;
 use Type::Tiny;
 use aliased 'Printer::ESCPOS::Roles::Profile' => 'ESCPOSProfile';
