@@ -1,6 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.025 2016-04-07T04:30:23
+0.025 2016-05-10T03:24:50
+ - skip compile tests for USB Device::USB bug (Shantanu Bhadoria)
  - overriding compile tests (Shantanu Bhadoria)
  - Added Device::USB (Shantanu Bhadoria)
  - updating README (Shantanu Bhadoria)
