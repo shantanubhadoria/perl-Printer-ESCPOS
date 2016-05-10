@@ -18,7 +18,7 @@ our $VERSION = '0.025'; # VERSION
 # Dependencies
 use 5.010;
 use Moo;
-with 'Printer::ESCPOS::Roles::Profile';
+use Carp with 'Printer::ESCPOS::Roles::Profile';
 
 use constant {
     _ESC => "\x1b",
