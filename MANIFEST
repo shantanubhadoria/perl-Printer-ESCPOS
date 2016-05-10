@@ -8,6 +8,7 @@ META.yml
 Makefile.PL
 README
 examples/example_file.pl
+examples/example_image.pl
 examples/example_network.pl
 examples/example_network_read.pl
 examples/example_serial.pl

@@ -1,6 +1,10 @@
 Changelog for Printer-ESCPOS
 
-0.025 2016-05-10T03:55:42
+0.025 2016-05-10T03:58:44
+ - remove binary files to avoid dzil issues (Shantanu Bhadoria)
+ - Added direct image printing functionality with GD. Fixed
+   Class:Load::load_class error thanks to William Barrett for feedback
+   (Shantanu Bhadoria)
  - skip compile tests for USB Device::USB bug (Shantanu Bhadoria)
  - overriding compile tests (Shantanu Bhadoria)
  - Added Device::USB (Shantanu Bhadoria)
