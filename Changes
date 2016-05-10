@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-0.025 2016-05-10T04:04:26
+0.025 2016-05-10T04:18:32
  - remove binary files to avoid dzil issues (Shantanu Bhadoria)
  - Added direct image printing functionality with GD. Fixed
    Class:Load::load_class error thanks to William Barrett for feedback
