@@ -12,6 +12,7 @@ package Printer::ESCPOS::Profiles::Generic;
 use 5.010;
 use Moo;
 with 'Printer::ESCPOS::Roles::Profile';
+use Carp;
 
 use constant {
     _ESC => "\x1b",
@@ -37,11 +38,11 @@ sub init {
     $self->driver->print( _ESC . '@' );
 }
 
-=method enable 
+=method enable
 
 Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all commands except enable() or other real-time commands.
 Pass 1 to enable, pass 0 to disable
-    
+
     $device->printer->enable(0) # disabled
     $device->printer->enable(1) # enabled
 
@@ -57,11 +58,118 @@ sub enable {
     }
 }
 
+=method image
+
+Prints a image to the printer. Takes a L<GD> Image object as input. <Maximum printable image dimensions are 512x255
+
+    use GD;
+
+    my $img = newFromGif GD::Image('header.gif') || die "Error $!";
+    $device->printer->image($img);
+
+=cut
+
+sub image {
+    my ($self, $img) = @_;
+    my $paddingLeft = '';
+    my $paddingRight = '';
+
+    if($img->width > 512) {
+        croak 'Width is greater than 512 pixels and could be truncated at print time';
+    }
+    if($img->height > 255) {
+        croak 'Height is greated than 255 pixels';
+    }
+
+    my @padding = $self->_pad_image_size( $img->width );
+    for (1 .. $padding[0]) {
+        $paddingLeft .= '0';
+    }
+    for (1 .. $padding[1]) {
+        $paddingRight .= '0';
+    }
+
+    my $pixelLine = '';
+    my $switch = 0;
+    my @imageSize = (0,0);
+    for my $y(0 .. $img->height - 1) {
+        $imageSize[1]++;
+        $pixelLine .= $paddingLeft;
+        $imageSize[0] += $padding[0];
+        for my $x(0 .. $img->width - 1) {
+            $imageSize[0]++;
+            my $index = $img->getPixel($x, $y);
+            my @rgb = $img->rgb($index);
+            my $imageColour = $rgb[0] + $rgb[1] + $rgb[2];
+            my $imagePattern = "1X0";
+            my $patternLength = length $imagePattern;
+            $switch = ($switch - 1) * (-1);
+            for my $x(1 .. $patternLength) {
+                if($imageColour <= (255 * 3 / $patternLength * $x)) {
+                    my $patternAtX = substr($imagePattern, $x - 1, 1);
+                    if($patternAtX eq 'X') {
+                        $pixelLine .= $switch;
+                    } else {
+                        $pixelLine .= $patternAtX;
+                    }
+                    last;
+                } elsif($imageColour > (255 * 3 / $patternLength * $patternLength) and $imageColour <= (255 * 3)) {
+                    $pixelLine .= substr($imagePattern, -1, 1);
+                    last;
+                }
+            }
+      }
+      $pixelLine .= $paddingRight;
+      $imageSize[0] += $padding[1];
+    }
+    $self->_print_image($pixelLine, \@imageSize);
+}
+
+
+sub _pad_image_size {
+    my($self, $width) = @_;
+
+    if($width % 32 == 0) {
+        return (0,0);
+    } else {
+        my $border = 32 - ($width % 32);
+        if( $border % 2 == 0 ) {
+            return ($border/2, $border/2);
+        } else {
+            return ($border/2 - .5, $border/2 + .5);
+        }
+    }
+}
+
+
+sub _print_image {
+    my ($self, $pixelLine, $imageSize) = @_;
+
+    $self->driver->write("\x1d\x76\x30\x00");
+    my $buffer = sprintf("%02X%02X%02X%02X", ((($imageSize->[0] / $imageSize->[1]) / 8), 0, $imageSize->[1], 0));
+    $self->driver->write(pack("H*", $buffer));
+
+    $buffer = "";
+    my $i = 0;
+    my $count = 0;
+    while($i < length($pixelLine)) {
+        my $octalString = oct("0b" . substr($pixelLine, $i, 8));
+        $buffer .= sprintf("%02X", $octalString);
+        $i += 8;
+        $count++;
+        if($count % 4 == 0) {
+            $self->driver->write(pack("H*", $buffer));
+            $buffer = "";
+            $count = 0;
+        }
+    }
+}
+
 =method printAreaWidth
 
-Sets the Print area width specified by nL and NH. The width is calculated as 
-    ( nL + nH * 256 ) * horiz_motion_unit 
-    
+Sets the Print area width specified by nL and NH. The width is calculated as
+    ( nL + nH * 256 ) * horiz_motion_unit
+
 A pre-requisite line feed is automatically executed before printAreaWidth method.
 
     $device->printer->printAreaWidth( nL => 0, nH =>0 );
@@ -95,7 +203,7 @@ sub tabPositions {
     $self->driver->write( _ESC . 'D' . $pos . chr(0) );
 }
 
-=method tab 
+=method tab
 
 moves the cursor to next horizontal tab position like a "\t". This command is ignored unless the next horizontal tab position has been set. You may substitute this command with a "\t" as well.
 
@@ -205,9 +313,9 @@ sub font {
     }
 }
 
-=method bold 
+=method bold
 
-Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals 
+Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals
 
     $device->printer->bold(1);
     $device->printer->text("This is Bold Text\n");
@@ -227,7 +335,7 @@ sub bold {
     }
 }
 
-=method doubleStrike 
+=method doubleStrike
 
 Set double-strike mode *0* for off and *1* for on
 
@@ -246,7 +354,7 @@ sub doubleStrike {
 
 =method underline
 
-set underline, *0* for off, *1* for on and *2* for double thickness 
+set underline, *0* for off, *1* for on and *2* for double thickness
 
     $device->printer->underline(1);
     $device->printer->text("This is Underlined Text\n");
@@ -290,10 +398,10 @@ Most thermal printers support just one color, black. Some ESCPOS printers(especi
 
     $device->printer->lf();
     $device->printer->color(0); #black
-    $device->printer->text("black"); 
+    $device->printer->text("black");
     $device->printer->lf();
     $device->printer->color(1); #red
-    $device->printer->text("Red"); 
+    $device->printer->text("Red");
     $device->printer->print();
 
 
@@ -305,12 +413,12 @@ sub color {
     $self->driver->write( _ESC . 'r' . chr( $color ) );
 }
 
-=method justify 
+=method justify
 
 Set Justification. Options *left*, *right* and *center*
 
     $device->printer->justify( 'right' );
-    $device->printer->text("This is right justified"); 
+    $device->printer->text("This is right justified");
 
 =cut
 
@@ -331,7 +439,7 @@ sub justify {
 Sets Upside Down Printing on/off (pass *0* or *1*)
 
     $device->printer->upsideDownPrinting(1);
-    $device->printer->text("This text is upside down"); 
+    $device->printer->text("This text is upside down");
 
 =cut
 
@@ -342,9 +450,9 @@ sub upsideDown {
     $self->driver->write( _ESC . '{' . int( $flag ) );
 }
 
-=method fontHeight 
+=method fontHeight
 
-Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
+Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default)
 
     $device->printer->fontHeight(1);
     $device->printer->text("double height\n");
@@ -368,9 +476,9 @@ sub fontHeight {
     }
 }
 
-=method fontWidth 
+=method fontWidth
 
-Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default) 
+Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and *7* for non-printmode state (default)
 
     $device->printer->fontWidth(1);
     $device->printer->text("double width\n");
@@ -409,7 +517,7 @@ sub charSpacing {
     $self->driver->write( _ESC . _SP . chr( $spacing ) );
 }
 
-=method lineSpacing 
+=method lineSpacing
 
 Sets the line spacing i.e the spacing between each line of printout.
 
@@ -424,7 +532,7 @@ sub lineSpacing {
     $self->driver->write( _ESC . '3' . chr( $spacing ) );
 }
 
-=method selectDefaultLineSpacing 
+=method selectDefaultLineSpacing
 
 Reverts to default line spacing for the printer
 
@@ -499,7 +607,7 @@ sub _updatePrintMode {
     );
 
     my $value = $fontMap{ $self->fontStyle }
-    . '00' 
+    . '00'
     . $self->emphasizedStatus
     . ( $self->heightStatus?'1':'0' )
     . ( $self->widthStatus?'1':'0' )
@@ -534,7 +642,7 @@ However there are several customizations available including barcode ~system~, ~
         height      => $height,        # no of dots in vertical direction
         system      => $system,        # Barcode system
         width       => 2               # 2:0.25mm, 3:0.375mm, 4:0.5mm, 5:0.625mm, 6:0.75mm
-        barcode     => '123456789012', # Check barcode system you are using for allowed 
+        barcode     => '123456789012', # Check barcode system you are using for allowed
                                        # characters in barcode
     );
     $device->printer->barcode(
@@ -557,8 +665,8 @@ Available barcode ~systems~:
 * CODE39
 * ITF
 * CODABAR
-* CODE93  
-* CODE128 
+* CODE93
+* CODE128
 
 =cut
 
@@ -584,13 +692,13 @@ sub barcode {
         ) );
 
     $self->driver->write( _GS . 'h' . chr(
-            $params{height} || 50 
+            $params{height} || 50
         ) );
 
     $self->driver->write( _GS . 'w' . chr(
-            $params{width} || 2 
+            $params{width} || 2
         ) );
-  
+
     %map = (
         'UPC-A' => 0,
         'UPC-B' => 1,
@@ -607,7 +715,7 @@ sub barcode {
     if(
         $map{$params{system}} < 9
     ) {
-        $self->driver->write( _GS . 'k' 
+        $self->driver->write( _GS . 'k'
             . chr( $map{$params{system}} + 65 )
             . chr( length $params{barcode} )
             . $params{barcode}
@@ -623,7 +731,7 @@ sub barcode {
 
 =method printNVImage
 
-Prints bit image stored in Non-Volatile (NV) memory of the printer. 
+Prints bit image stored in Non-Volatile (NV) memory of the printer.
 
     $device->printer->printNVImage($flag);
 
@@ -642,7 +750,7 @@ sub printNVImage {
 
 =method printImage
 
-Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset. 
+Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset.
 
     $device->printer->printImage($flag);
 
@@ -659,7 +767,7 @@ sub printImage {
     $self->driver->write( _GS . '/' . chr($flag) );
 }
 
-# END: Bitmap printing methods 
+# END: Bitmap printing methods
 
 # BEGIN: Peripheral and cutter Control Commands
 
@@ -713,7 +821,7 @@ sub drawerKickPulse {
 
 # End Peripheral Control Commands
 
-# BEGIN: Printer STATUS methods 
+# BEGIN: Printer STATUS methods
 
 =method printerStatus
 
@@ -730,7 +838,7 @@ Returns printer status in a hashref.
 
 sub printerStatus {
     my ( $self ) = @_;
-    
+
     my @flags = split(
         //,
         unpack( "B*", $self->driver->read( _DLE . _EOT . "\x01", 255 ) )
@@ -758,7 +866,7 @@ Returns a hashref for paper cover closed status, feed button pressed status, pap
 
 sub offlineStatus {
     my ( $self ) = @_;
-    
+
     my @flags = split(
         //,
         unpack( "B*", $self->driver->read( _DLE . _EOT . "\x02", 255 ) )
@@ -785,7 +893,7 @@ Returns hashref with error flags for auto_cutter_error, unrecoverable error and 
 
 sub errorStatus {
     my ( $self ) = @_;
-    
+
     my @flags = split(
         //,
         unpack( "B*", $self->driver->read( _DLE . _EOT . "\x03", 255 ) )
@@ -812,7 +920,7 @@ Gets printer paper Sensor status. Returns a hashref with four sensor statuses. T
 
 sub paperSensorStatus {
     my ( $self ) = @_;
-    
+
     my @flags = split(
         //,
         unpack( "B*", $self->driver->read( _DLE . _EOT . "\x04", 255 ) )
@@ -840,7 +948,7 @@ Only available for dot-matrix and other ink consuming printers. Gets printer ink
 
 sub inkStatusA {
     my ( $self ) = @_;
-    
+
     my @flags = split(
         //,
         unpack( "B*", $self->driver->read( _DLE . _EOT . "\x07" . "\x01", 255 ) )
@@ -867,7 +975,7 @@ Only available for dot-matrix and other ink consuming printers. Gets printer ink
 
 sub inkStatusB {
     my ( $self ) = @_;
-    
+
     my @flags = split(
         //,
         unpack( "B*", $self->driver->read( _DLE . _EOT . "\x07" . "\x02", 255 ) )
@@ -879,7 +987,7 @@ sub inkStatusB {
     };
 }
 
-# END: Printer STATUS methods 
+# END: Printer STATUS methods
 
 no Moo;
 __PACKAGE__->meta->make_immutable;

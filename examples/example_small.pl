@@ -6,13 +6,14 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 
 use Printer::ESCPOS;
+use GD;
 use Data::Dumper;
 
 my $printer_usb = Printer::ESCPOS->new(
     driverType => 'USB',
-    vendorId   => 0x1cbe,
-    productId  => 0x0002,
-    endPoint   => 0x02
+    vendorId   => 0x1504,
+    productId  => 0x0006,
+    endPoint   => 0x01
 );
 
 say Dumper $printer_usb->printer->printerStatus();
@@ -24,7 +25,6 @@ $printer_usb->printer->rot90(49);
 $printer_usb->printer->text("Rotated 90 degrees\n");
 $printer_usb->printer->rot90(0);
 $printer_usb->printer->text("Not rotated 90 degrees\n");
-
 $printer_usb->printer->barcode(
     barcode     => 'SHANTANU BHADORIA',
 );
