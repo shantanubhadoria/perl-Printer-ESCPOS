@@ -18,7 +18,8 @@ our $VERSION = '0.025'; # VERSION
 # Dependencies
 use 5.010;
 use Moo;
-use Carp with 'Printer::ESCPOS::Roles::Profile';
+with 'Printer::ESCPOS::Roles::Profile';
+use Carp;
 
 use constant {
     _ESC => "\x1b",
@@ -136,476 +137,455 @@ sub _pad_image_size {
 sub _print_image {
     my ( $self, $pixelLine, $imageSize ) = @_;
 
-    $self->driver->write("\x1d\x76\x30\x00") my $buffer = sprintf(
+    $self->driver->write("\x1d\x76\x30\x00");
+    my $buffer = sprintf(
         "%02X%02X%02X%02X",
         (
             ( ( $imageSize->[0] / $imageSize->[1] ) / 8 ), 0, $imageSize->[1],
             0
         )
     );
-    $self->write(
-        pack( "H*", $buffer );
+    $self->driver->write( pack( "H*", $buffer ) );
 
-        #say pack("H*", $buffer);
-
-        $buffer = "";
-        my $i     = 0;
-        my $count = 0;
-        while ( $i < length($pixelLine) ) {
-            my $octalString = oct( "0b" . substr( $pixelLine, $i, 8 ) );
-            $buffer .= sprintf( "%02X", $octalString );
-            $i += 8;
-            $count++;
-            if ( $count % 4 == 0 ) {
-                $self->write(
-                    pack( "H*", $buffer ) $buffer = "";
-                    $count = 0;
-                }
-            }
+    $buffer = "";
+    my $i     = 0;
+    my $count = 0;
+    while ( $i < length($pixelLine) ) {
+        my $octalString = oct( "0b" . substr( $pixelLine, $i, 8 ) );
+        $buffer .= sprintf( "%02X", $octalString );
+        $i += 8;
+        $count++;
+        if ( $count % 4 == 0 ) {
+            $self->driver->write( pack( "H*", $buffer ) );
+            $buffer = "";
+            $count  = 0;
         }
+    }
+}
 
 
-        sub printAreaWidth {
-            my ( $self, %params ) = @_;
-            $params{nL} = defined $params{nL} ? $params{nL} : 65;
-            $params{nH} = defined $params{nH} ? $params{nH} : 2;
+sub printAreaWidth {
+    my ( $self, %params ) = @_;
+    $params{nL} = defined $params{nL} ? $params{nL} : 65;
+    $params{nH} = defined $params{nH} ? $params{nH} : 2;
 
-            $self->lf();
-            $self->driver->write(
-                _GS . 'W' . chr( $params{nL} ) . chr( $params{nH} ) );
-        }
+    $self->lf();
+    $self->driver->write( _GS . 'W' . chr( $params{nL} ) . chr( $params{nH} ) );
+}
 
 
-        sub tabPositions {
-            my ( $self, @positions ) = @_;
-            my $pos = '';
+sub tabPositions {
+    my ( $self, @positions ) = @_;
+    my $pos = '';
 
-            $pos .= chr($_) for @positions;
-            $self->driver->write( _ESC . 'D' . $pos . chr(0) );
-        }
+    $pos .= chr($_) for @positions;
+    $self->driver->write( _ESC . 'D' . $pos . chr(0) );
+}
 
 
-        sub tab {
-            my ($self) = @_;
+sub tab {
+    my ($self) = @_;
 
-            $self->driver->write("\t");
-        }
+    $self->driver->write("\t");
+}
 
 
-        sub lf {
-            my ($self) = @_;
+sub lf {
+    my ($self) = @_;
 
-            $self->driver->write("\n");
-        }
+    $self->driver->write("\n");
+}
 
 
-        sub ff {
-            my ($self) = @_;
+sub ff {
+    my ($self) = @_;
 
-            $self->driver->write("\x0c");
-        }
+    $self->driver->write("\x0c");
+}
 
 
-        sub cr {
-            my ($self) = @_;
+sub cr {
+    my ($self) = @_;
 
-            $self->driver->write("\x0d");
-        }
+    $self->driver->write("\x0d");
+}
 
 
-        sub cancel {
-            my ($self) = @_;
+sub cancel {
+    my ($self) = @_;
 
-            $self->driver->write("\x18");
-        }
+    $self->driver->write("\x18");
+}
 
 
-        sub font {
-            my ( $self, $font ) = @_;
+sub font {
+    my ( $self, $font ) = @_;
 
-            $self->fontStyle($font);
-            if ( $self->usePrintMode && $font ne 'c' ) {
-                $self->_updatePrintMode;
-            }
-            else {
-                my %fontMap = (
-                    a => "\x00",
-                    b => "\x01",
-                    c => "\x02",
-                );
+    $self->fontStyle($font);
+    if ( $self->usePrintMode && $font ne 'c' ) {
+        $self->_updatePrintMode;
+    }
+    else {
+        my %fontMap = (
+            a => "\x00",
+            b => "\x01",
+            c => "\x02",
+        );
 
-                $self->driver->write( _ESC . 'M' . $fontMap{$font} );
-            }
-        }
+        $self->driver->write( _ESC . 'M' . $fontMap{$font} );
+    }
+}
 
 
-        sub bold {
-            my ( $self, $emphasized ) = @_;
+sub bold {
+    my ( $self, $emphasized ) = @_;
 
-            $self->emphasizedStatus($emphasized);
-            if ( $self->usePrintMode ) {
-                $self->_updatePrintMode;
-            }
-            else {
-                $self->driver->write( _ESC . 'E' . int($emphasized) );
-            }
-        }
+    $self->emphasizedStatus($emphasized);
+    if ( $self->usePrintMode ) {
+        $self->_updatePrintMode;
+    }
+    else {
+        $self->driver->write( _ESC . 'E' . int($emphasized) );
+    }
+}
 
 
-        sub doubleStrike {
-            my ( $self, $flag ) = @_;
+sub doubleStrike {
+    my ( $self, $flag ) = @_;
 
-            $self->driver->write( _ESC . 'G' . int($flag) );
-        }
+    $self->driver->write( _ESC . 'G' . int($flag) );
+}
 
 
-        sub underline {
-            my ( $self, $underline ) = @_;
+sub underline {
+    my ( $self, $underline ) = @_;
 
-            $self->underlineStatus($underline);
-            if ( $self->usePrintMode ) {
-                $self->_updatePrintMode;
-            }
-            else {
-                $self->driver->write( _ESC . '-' . $underline );
-            }
-        }
+    $self->underlineStatus($underline);
+    if ( $self->usePrintMode ) {
+        $self->_updatePrintMode;
+    }
+    else {
+        $self->driver->write( _ESC . '-' . $underline );
+    }
+}
 
 
-        sub invert {
-            my ( $self, $invert ) = @_;
-            $self->driver->write( _GS . 'B' . chr($invert) );
-        }
+sub invert {
+    my ( $self, $invert ) = @_;
+    $self->driver->write( _GS . 'B' . chr($invert) );
+}
 
 
-        sub color {
-            my ( $self, $color ) = @_;
+sub color {
+    my ( $self, $color ) = @_;
 
-            $self->driver->write( _ESC . 'r' . chr($color) );
-        }
+    $self->driver->write( _ESC . 'r' . chr($color) );
+}
 
 
-        sub justify {
-            my ( $self, $j ) = @_;
+sub justify {
+    my ( $self, $j ) = @_;
 
-            my %jmap = (
-                left   => 0,
-                center => 1,
-                right  => 2,
-            );
-            $self->lf();
-            $self->driver->write( _ESC . 'a' . int( $jmap{ lc $j } ) );
-        }
+    my %jmap = (
+        left   => 0,
+        center => 1,
+        right  => 2,
+    );
+    $self->lf();
+    $self->driver->write( _ESC . 'a' . int( $jmap{ lc $j } ) );
+}
 
 
-        sub upsideDown {
-            my ( $self, $flag ) = @_;
+sub upsideDown {
+    my ( $self, $flag ) = @_;
 
-            $self->lf();
-            $self->driver->write( _ESC . '{' . int($flag) );
-        }
+    $self->lf();
+    $self->driver->write( _ESC . '{' . int($flag) );
+}
 
 
-        sub fontHeight {
-            my ( $self, $height ) = @_;
-            my $width = $self->widthStatus;
+sub fontHeight {
+    my ( $self, $height ) = @_;
+    my $width = $self->widthStatus;
 
-            $self->heightStatus($height);
-            if ( $self->usePrintMode ) {
-                $self->_updatePrintMode;
-            }
-            else {
-                $self->driver->write(
-                    _GS . '!' . chr( $width << 4 | $height ) );
-            }
-        }
+    $self->heightStatus($height);
+    if ( $self->usePrintMode ) {
+        $self->_updatePrintMode;
+    }
+    else {
+        $self->driver->write( _GS . '!' . chr( $width << 4 | $height ) );
+    }
+}
 
 
-        sub fontWidth {
-            my ( $self, $width ) = @_;
-            my $height = $self->heightStatus;
+sub fontWidth {
+    my ( $self, $width ) = @_;
+    my $height = $self->heightStatus;
 
-            $self->widthStatus($width);
-            if ( $self->usePrintMode ) {
-                $self->_updatePrintMode;
-            }
-            else {
-                $self->driver->write(
-                    _GS . '!' . chr( int($width) << 4 | int($height) ) );
-            }
-        }
-
-
-        sub charSpacing {
-            my ( $self, $spacing ) = @_;
-            $self->driver->write( _ESC . _SP . chr($spacing) );
-        }
-
-
-        sub lineSpacing {
-            my ( $self, $spacing ) = @_;
-            $self->driver->write( _ESC . '3' . chr($spacing) );
-        }
+    $self->widthStatus($width);
+    if ( $self->usePrintMode ) {
+        $self->_updatePrintMode;
+    }
+    else {
+        $self->driver->write(
+            _GS . '!' . chr( int($width) << 4 | int($height) ) );
+    }
+}
+
+
+sub charSpacing {
+    my ( $self, $spacing ) = @_;
+    $self->driver->write( _ESC . _SP . chr($spacing) );
+}
+
+
+sub lineSpacing {
+    my ( $self, $spacing ) = @_;
+    $self->driver->write( _ESC . '3' . chr($spacing) );
+}
 
 
-        sub selectDefaultLineSpacing {
-            my ($self) = @_;
-            $self->driver->write( _ESC . '2' );
-        }
+sub selectDefaultLineSpacing {
+    my ($self) = @_;
+    $self->driver->write( _ESC . '2' );
+}
 
 
-        sub printPosition {
-            my ( $self, $length, $height ) = @_;
-            $self->driver->write( _ESC . '$' . chr($length) . chr($height) );
-        }
+sub printPosition {
+    my ( $self, $length, $height ) = @_;
+    $self->driver->write( _ESC . '$' . chr($length) . chr($height) );
+}
 
 
-        sub leftMargin {
-            my ( $self, %params ) = @_;
+sub leftMargin {
+    my ( $self, %params ) = @_;
 
-            $self->driver->write(
-                _GS . 'L' . chr( $params{nL} ) . chr( $params{nH} ) );
-        }
+    $self->driver->write( _GS . 'L' . chr( $params{nL} ) . chr( $params{nH} ) );
+}
 
 
-        sub rot90 {
-            my ( $self, $rot ) = @_;
+sub rot90 {
+    my ( $self, $rot ) = @_;
 
-            $self->driver->write( _ESC . 'V' . chr($rot) );
-        }
+    $self->driver->write( _ESC . 'V' . chr($rot) );
+}
 
-        # This is a redundant function in ESCPOS which updates the printer
-        sub _updatePrintMode {
-            my ($self) = @_;
-            my %fontMap = (
-                a => 0,
-                b => 1,
-            );
+# This is a redundant function in ESCPOS which updates the printer
+sub _updatePrintMode {
+    my ($self) = @_;
+    my %fontMap = (
+        a => 0,
+        b => 1,
+    );
 
-            my $value =
-                $fontMap{ $self->fontStyle } . '00'
-              . $self->emphasizedStatus
-              . ( $self->heightStatus ? '1' : '0' )
-              . ( $self->widthStatus  ? '1' : '0' ) . '0'
-              . $self->underlineStatus;
-            $self->driver->write( _ESC . '!' . pack( "b*", $value ) );
-        }
+    my $value =
+        $fontMap{ $self->fontStyle } . '00'
+      . $self->emphasizedStatus
+      . ( $self->heightStatus ? '1' : '0' )
+      . ( $self->widthStatus  ? '1' : '0' ) . '0'
+      . $self->underlineStatus;
+    $self->driver->write( _ESC . '!' . pack( "b*", $value ) );
+}
 
-        # BEGIN: BARCODE functions
+# BEGIN: BARCODE functions
 
 
-        sub barcode {
-            my ( $self, %params ) = @_;
+sub barcode {
+    my ( $self, %params ) = @_;
 
-            my %map = (
-                none          => 0,
-                above         => 1,
-                below         => 2,
-                aboveandbelow => 3,
-            );
-            $self->driver->write(
-                _GS . 'H' . chr( $map{ $params{HRIPosition} || 'below' } ) );
+    my %map = (
+        none          => 0,
+        above         => 1,
+        below         => 2,
+        aboveandbelow => 3,
+    );
+    $self->driver->write(
+        _GS . 'H' . chr( $map{ $params{HRIPosition} || 'below' } ) );
 
-            %map = (
-                a => 0,
-                b => 1,
-            );
-            $self->driver->write(
-                _GS . 'f' . chr( $map{ $params{font} || 'b' } ) );
+    %map = (
+        a => 0,
+        b => 1,
+    );
+    $self->driver->write( _GS . 'f' . chr( $map{ $params{font} || 'b' } ) );
 
-            $self->driver->write( _GS . 'h' . chr( $params{height} || 50 ) );
+    $self->driver->write( _GS . 'h' . chr( $params{height} || 50 ) );
 
-            $self->driver->write( _GS . 'w' . chr( $params{width} || 2 ) );
+    $self->driver->write( _GS . 'w' . chr( $params{width} || 2 ) );
 
-            %map = (
-                'UPC-A' => 0,
-                'UPC-B' => 1,
-                JAN13   => 2,
-                JAN8    => 3,
-                CODE39  => 4,
-                ITF     => 5,
-                CODABAR => 6,
-                CODE93  => 7,
-                CODE128 => 8,
-            );
-            $params{system} ||= 'CODE93';
+    %map = (
+        'UPC-A' => 0,
+        'UPC-B' => 1,
+        JAN13   => 2,
+        JAN8    => 3,
+        CODE39  => 4,
+        ITF     => 5,
+        CODABAR => 6,
+        CODE93  => 7,
+        CODE128 => 8,
+    );
+    $params{system} ||= 'CODE93';
 
-            if ( $map{ $params{system} } < 9 ) {
-                $self->driver->write( _GS . 'k'
-                      . chr( $map{ $params{system} } + 65 )
-                      . chr( length $params{barcode} )
-                      . $params{barcode} );
-            }
-            else {
-                die "Invalid system in barcode";
-            }
-        }
+    if ( $map{ $params{system} } < 9 ) {
+        $self->driver->write( _GS . 'k'
+              . chr( $map{ $params{system} } + 65 )
+              . chr( length $params{barcode} )
+              . $params{barcode} );
+    }
+    else {
+        die "Invalid system in barcode";
+    }
+}
 
-        # END: BARCODE functions
+# END: BARCODE functions
 
-        # BEGIN: Bitmap printing methods
-
+# BEGIN: Bitmap printing methods
 
-        sub printNVImage {
-            my ( $self, $flag ) = @_;
 
-            $self->driver->write( _FS . 'p' . chr(1) . chr($flag) );
-        }
+sub printNVImage {
+    my ( $self, $flag ) = @_;
 
+    $self->driver->write( _FS . 'p' . chr(1) . chr($flag) );
+}
 
-        sub printImage {
-            my ( $self, $flag ) = @_;
 
-            $self->driver->write( _GS . '/' . chr($flag) );
-        }
-
-        # END: Bitmap printing methods
-
-        # BEGIN: Peripheral and cutter Control Commands
-
-
-        sub cutPaper {
-            my ( $self, %params ) = @_;
-            $params{feed} = defined $params{feed} ? $params{feed} : 0;
+sub printImage {
+    my ( $self, $flag ) = @_;
 
-            $self->lf();
-            if ( $params{feed} == 0 ) {
-                $self->driver->write( _GS . 'V' . chr(1) );
-            }
-            else {
-                $self->driver->write( _GS . 'V' . chr(66) . chr(0) );
-            }
-
-        }
-
-
-        sub drawerKickPulse {
-            my ( $self, $pin, $time ) = @_;
-            $pin  = defined $pin  ? $pin  : 0;
-            $time = defined $time ? $time : 8;
-
-            $self->driver->write(
-                _DLE . _DC4 . "\x01" . chr($pin) . chr($time) );
-        }
-
-        # End Peripheral Control Commands
-
-        # BEGIN: Printer STATUS methods
-
-
-        sub printerStatus {
-            my ($self) = @_;
-
-            my @flags = split(
-                //,
-                unpack(
-                    "B*", $self->driver->read( _DLE . _EOT . "\x01", 255 )
-                )
-            );
-            return {
-                drawer_pin3_high            => $flags[5],
-                offline                     => $flags[4],
-                waiting_for_online_recovery => $flags[2],
-                feed_button_pressed         => $flags[1],
-            };
-        }
-
-
-        sub offlineStatus {
-            my ($self) = @_;
-
-            my @flags = split(
-                //,
-                unpack(
-                    "B*", $self->driver->read( _DLE . _EOT . "\x02", 255 )
-                )
-            );
-            return {
-                cover_is_closed     => $flags[5],
-                feed_button_pressed => $flags[4],
-                paper_end           => $flags[2],
-                error               => $flags[1],
-            };
-        }
-
-
-        sub errorStatus {
-            my ($self) = @_;
-
-            my @flags = split(
-                //,
-                unpack(
-                    "B*", $self->driver->read( _DLE . _EOT . "\x03", 255 )
-                )
-            );
-            return {
-                auto_cutter_error     => $flags[4],
-                unrecoverable_error   => $flags[2],
-                autorecoverable_error => $flags[1],
-            };
-        }
-
-
-        sub paperSensorStatus {
-            my ($self) = @_;
-
-            my @flags = split(
-                //,
-                unpack(
-                    "B*", $self->driver->read( _DLE . _EOT . "\x04", 255 )
-                )
-            );
-            return {
-                paper_roll_near_end_sensor_1 => $flags[5],
-                paper_roll_near_end_sensor_2 => $flags[4],
-                paper_roll_status_sensor_1   => $flags[2],
-                paper_roll_status_sensor_2   => $flags[1],
-            };
-        }
-
-
-        sub inkStatusA {
-            my ($self) = @_;
-
-            my @flags = split(
-                //,
-                unpack(
-                    "B*",
-                    $self->driver->read( _DLE . _EOT . "\x07" . "\x01", 255 )
-                )
-            );
-            return {
-                ink_near_end          => $flags[5],
-                ink_end               => $flags[4],
-                ink_cartridge_missing => $flags[2],
-                cleaning_in_progress  => $flags[1],
-            };
-        }
-
-
-        sub inkStatusB {
-            my ($self) = @_;
-
-            my @flags = split(
-                //,
-                unpack(
-                    "B*",
-                    $self->driver->read( _DLE . _EOT . "\x07" . "\x02", 255 )
-                )
-            );
-            return {
-                ink_near_end          => $flags[5],
-                ink_end               => $flags[4],
-                ink_cartridge_missing => $flags[2],
-            };
-        }
-
-        # END: Printer STATUS methods
-
-        no Moo;
-        __PACKAGE__->meta->make_immutable;
-
-        1;
+    $self->driver->write( _GS . '/' . chr($flag) );
+}
+
+# END: Bitmap printing methods
+
+# BEGIN: Peripheral and cutter Control Commands
+
+
+sub cutPaper {
+    my ( $self, %params ) = @_;
+    $params{feed} = defined $params{feed} ? $params{feed} : 0;
+
+    $self->lf();
+    if ( $params{feed} == 0 ) {
+        $self->driver->write( _GS . 'V' . chr(1) );
+    }
+    else {
+        $self->driver->write( _GS . 'V' . chr(66) . chr(0) );
+    }
+
+}
+
+
+sub drawerKickPulse {
+    my ( $self, $pin, $time ) = @_;
+    $pin  = defined $pin  ? $pin  : 0;
+    $time = defined $time ? $time : 8;
+
+    $self->driver->write( _DLE . _DC4 . "\x01" . chr($pin) . chr($time) );
+}
+
+# End Peripheral Control Commands
+
+# BEGIN: Printer STATUS methods
+
+
+sub printerStatus {
+    my ($self) = @_;
+
+    my @flags =
+      split( //,
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x01", 255 ) ) );
+    return {
+        drawer_pin3_high            => $flags[5],
+        offline                     => $flags[4],
+        waiting_for_online_recovery => $flags[2],
+        feed_button_pressed         => $flags[1],
+    };
+}
+
+
+sub offlineStatus {
+    my ($self) = @_;
+
+    my @flags =
+      split( //,
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x02", 255 ) ) );
+    return {
+        cover_is_closed     => $flags[5],
+        feed_button_pressed => $flags[4],
+        paper_end           => $flags[2],
+        error               => $flags[1],
+    };
+}
+
+
+sub errorStatus {
+    my ($self) = @_;
+
+    my @flags =
+      split( //,
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x03", 255 ) ) );
+    return {
+        auto_cutter_error     => $flags[4],
+        unrecoverable_error   => $flags[2],
+        autorecoverable_error => $flags[1],
+    };
+}
+
+
+sub paperSensorStatus {
+    my ($self) = @_;
+
+    my @flags =
+      split( //,
+        unpack( "B*", $self->driver->read( _DLE . _EOT . "\x04", 255 ) ) );
+    return {
+        paper_roll_near_end_sensor_1 => $flags[5],
+        paper_roll_near_end_sensor_2 => $flags[4],
+        paper_roll_status_sensor_1   => $flags[2],
+        paper_roll_status_sensor_2   => $flags[1],
+    };
+}
+
+
+sub inkStatusA {
+    my ($self) = @_;
+
+    my @flags = split(
+        //,
+        unpack(
+            "B*", $self->driver->read( _DLE . _EOT . "\x07" . "\x01", 255 )
+        )
+    );
+    return {
+        ink_near_end          => $flags[5],
+        ink_end               => $flags[4],
+        ink_cartridge_missing => $flags[2],
+        cleaning_in_progress  => $flags[1],
+    };
+}
+
+
+sub inkStatusB {
+    my ($self) = @_;
+
+    my @flags = split(
+        //,
+        unpack(
+            "B*", $self->driver->read( _DLE . _EOT . "\x07" . "\x02", 255 )
+        )
+    );
+    return {
+        ink_near_end          => $flags[5],
+        ink_end               => $flags[4],
+        ink_cartridge_missing => $flags[2],
+    };
+}
+
+# END: Printer STATUS methods
+
+no Moo;
+__PACKAGE__->meta->make_immutable;
+
+1;
 
 __END__
 

@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-0.025 2016-05-10T03:38:31
+0.025 2016-05-10T03:54:57
  - skip compile tests for USB Device::USB bug (Shantanu Bhadoria)
  - overriding compile tests (Shantanu Bhadoria)
  - Added Device::USB (Shantanu Bhadoria)
@@ -52,8 +52,8 @@ Changelog for Printer-ESCPOS
 
 0.014 2015-04-02T03:16:21
  - v0.014 (Shantanu Bhadoria)
- - Added rotate 90 function (Shantanu Bhadoria)
  - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
+ - Added rotate 90 function (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
  - Added USB read functionality (Shantanu Bhadoria)
  - POD Fixes (Shantanu Bhadoria)
