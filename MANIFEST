@@ -34,5 +34,4 @@ xt/author/pod-spell.t
 xt/author/pod-syntax.t
 xt/author/test-version.t
 xt/release/distmeta.t
-xt/release/kwalitee.t
 xt/release/minimum-version.t
