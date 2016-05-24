@@ -1,6 +1,7 @@
 Changelog for Printer-ESCPOS
 
-0.026 2016-05-24T06:33:47
+0.026 2016-05-24T06:36:19
+ - Adding stopwords to avoid pod spell errors (Shantanu Bhadoria)
  - Removed header.gif to reduce filesize and avoid test croaks (Shantanu
    Bhadoria)
  - moving header to corpus (Shantanu Bhadoria)
@@ -66,8 +67,8 @@ Changelog for Printer-ESCPOS
 
 0.014 2015-04-02T03:16:21
  - v0.014 (Shantanu Bhadoria)
- - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added rotate 90 function (Shantanu Bhadoria)
+ - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
  - Added USB read functionality (Shantanu Bhadoria)
  - POD Fixes (Shantanu Bhadoria)

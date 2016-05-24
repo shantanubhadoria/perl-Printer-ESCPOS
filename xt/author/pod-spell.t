@@ -84,6 +84,8 @@ VendorId
 endPoint
 lsusb
 portName
+Ecc
+moduleSize
 Shantanu
 Bhadoria
 shantanu
