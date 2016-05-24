@@ -164,7 +164,7 @@ implementation may be created using a printer model specific profile.
     $device->printer->qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
 
 You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
-at http://www.qrcode.com/en/about/version.html.
+at [http://www.qrcode.com/en/about/version.html].
 
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
