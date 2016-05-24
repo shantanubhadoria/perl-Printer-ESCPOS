@@ -11,6 +11,7 @@ examples/example_file.pl
 examples/example_image.pl
 examples/example_network.pl
 examples/example_network_read.pl
+examples/example_qr.pl
 examples/example_serial.pl
 examples/example_small.pl
 examples/example_usb.pl

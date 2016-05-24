@@ -1,6 +1,12 @@
 Changelog for Printer-ESCPOS
 
-0.026 2016-05-24T06:15:55
+0.026 2016-05-24T06:33:30
+ - Removed header.gif to reduce filesize and avoid test croaks (Shantanu
+   Bhadoria)
+ - moving header to corpus (Shantanu Bhadoria)
+ - newlines on lines exceeding line limits, QR code function for printing
+   qr codes. Added documentation with under test Win32 serial port support.
+   (Shantanu Bhadoria)
  - Added documentation (Shantanu Bhadoria)
 
 0.025 2016-05-10T04:27:08
