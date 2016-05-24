@@ -639,13 +639,15 @@ implementation may be created using a printer model specific profile.
     $device->printer->qr('Print this QR Code');
     $device->printer->qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
 
-You may also pass in additional QR Code format params like Ecc, Version and moduleSize
-L<http://www.qrcode.com/en/about/version.html>
+You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
+at L<http://www.qrcode.com/en/about/version.html>.
 
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
     my $moduleSize = 3; # Default value
-    $device->printer->qr('Print this QR Code', $ecc, $version, $moduleSize);
+    $device->printer->qr("Don't Panic!", $ecc, $version, $moduleSize);
+
+You may also call align() before calling qr() to set alignment on the page.
 
 =head2 image
 
@@ -655,6 +657,8 @@ Prints a image to the printer. Takes a L<GD> Image object as input. <Maximum pri
 
     my $img = newFromGif GD::Image('header.gif') || die "Error $!";
     $device->printer->image($img);
+
+You may also call align() before calling qr() to set alignment on the page.
 
 =head2 printAreaWidth
 

@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-0.026 2016-05-24T06:08:57
+0.026 2016-05-24T06:15:18
  - Added documentation (Shantanu Bhadoria)
 
 0.025 2016-05-10T04:27:08
@@ -60,8 +60,8 @@ Changelog for Printer-ESCPOS
 
 0.014 2015-04-02T03:16:21
  - v0.014 (Shantanu Bhadoria)
- - Added rotate 90 function (Shantanu Bhadoria)
  - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
+ - Added rotate 90 function (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
  - Added USB read functionality (Shantanu Bhadoria)
  - POD Fixes (Shantanu Bhadoria)

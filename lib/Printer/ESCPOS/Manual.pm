@@ -169,6 +169,24 @@ In all the methods described below its assumed that variable C<<< $device >>> ha
 connection to the printer with one of the driverTypes mentioned above.
 The following methods prepare the text and text formatting data to be sent to the printer.
 
+=head3 qr
+
+Prints a qr code to the printer. In Generic profile, this creates a QR Code image using LE<lt>GD::Barcode::QRcodeE<gt>. A native
+implementation may be created using a printer model specific profile.
+
+     $device->printer->qr('Print this QR Code');
+     $device->printer->qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
+
+You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
+at http:E<sol>E<sol>www.qrcode.comE<sol>enE<sol>aboutE<sol>version.html.
+
+     my $ecc = 'L'; # Default value
+     my $version = 5; # Default value
+     my $moduleSize = 3; # Default value
+     $device->printer->qr("Don't Panic!", $ecc, $version, $moduleSize);
+
+You may also call align() before calling qr() to set alignment on the page.
+
 =head3 image
 
 Prints a GD image object to the printer
