@@ -127,7 +127,8 @@ the driver uses 38400 as default baudrate. If necessary you can change this valu
          baudrate       => 9600,
      );
 
-If your printer is not printing properly when connected on physical serial port try setting the flag I<serialOverUSB> to B<0> to tell L<Printer::ESCPOS> to use special buffer management optimizations for physical serial ports
+If your printer is not printing properly when connected on physical serial port try setting the flag I<serialOverUSB> to
+B<0> to tell L<Printer::ESCPOS> to use special buffer management optimizations for physical serial ports
 
      my $device = Printer::ESCPOS->new(
          driverType     => 'Serial',
@@ -150,7 +151,12 @@ This is a I<driverType> for printers connected over a network.
 =head3 BASIC DEVICE FILE Driver
 
 The Mandatory parameters for a B<File> I<driverType> are I<driverType>( B<File> ) and I<deviceFilePath>
-This Driver is included for those instances when your printing needs are simple(You don't want to check the printer for printer status etc. and are only interested in pushing data to the printer for printing) and B<Serial> driver type is just refusing to work altogether. In this I<driverType> the data is written directly to the printer device file and from there sent to the printer. This is the basic text method for ESCPOS printers and it almost always works but it doesn't allow you to read Printer Status which might not be a deal breaker for most people. This I<driverType> can also be used for Printers which connect on USB ports but don't show up as Serial devices in syslog
+This Driver is included for those instances when your printing needs are simple(You don't want to check the printer for
+printer status etc. and are only interested in pushing data to the printer for printing) and B<Serial> driver type is
+just refusing to work altogether. In this I<driverType> the data is written directly to the printer device file and from
+there sent to the printer. This is the basic text method for ESCPOS printers and it almost always works but it doesn't
+allow you to read Printer Status which might not be a deal breaker for most people. This I<driverType> can also be used
+for Printers which connect on USB ports but don't show up as Serial devices in syslog
 
      my $device = Printer::ESCPOS->new(
          driverType     => 'File',
@@ -159,7 +165,8 @@ This Driver is included for those instances when your printing needs are simple(
 
 =head2 PREPARING FORMATTED TEXT FOR PRINTER
 
-In all the methods described below its assumed that variable C<<< $device >>> has been initialized using the appropriate connection to the printer with one of the driverTypes mentioned above.
+In all the methods described below its assumed that variable C<<< $device >>> has been initialized using the appropriate
+connection to the printer with one of the driverTypes mentioned above.
 The following methods prepare the text and text formatting data to be sent to the printer.
 
 =head3 image
@@ -203,7 +210,8 @@ Default tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
 
 =head3 tab
 
-moves the cursor to next horizontal tab position like a C<<< "\t" >>>. This command is ignored unless the next horizontal tab position has been set. You may substitute this command with a C<<< "\t" >>> as well.
+moves the cursor to next horizontal tab position like a C<<< "\t" >>>. This command is ignored unless the next horizontal tab
+position has been set. You may substitute this command with a C<<< "\t" >>> as well.
 
 This
 
@@ -278,7 +286,9 @@ Reverse whiteE<sol>black printing mode pass B<0> for off and B<1> for on
 
 =head3 color
 
-Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text is printed. Pass B<0> or B<1> to switch between the two colors.
+Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second
+color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text
+is printed. Pass B<0> or B<1> to switch between the two colors.
 
      $device->printer->lf();
      $device->printer->color(0); #black
@@ -304,7 +314,8 @@ Sets Upside Down Printing onE<sol>off (pass B<0> or B<1>)
 
 =head3 fontHeight
 
-Set font height. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and B<7> for non-printmode state (default)
+Set font height. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and
+B<7> for non-printmode state (default)
 
      $device->printer->fontHeight(1);
      $device->printer->text("double height\n");
@@ -316,7 +327,8 @@ Set font height. Only supports B<0> or B<1> for printmode set to 1, supports val
 
 =head3 fontWidth
 
-Set font width. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and B<7> for non-printmode state (default)
+Set font width. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and
+B<7> for non-printmode state (default)
 
      $device->printer->fontWidth(1);
      $device->printer->text("double width\n");
@@ -376,7 +388,9 @@ Sets the distance from the beginning of the line to the position at which charac
 
 Sets the left margin. Takes two single byte parameters, I<nL> and I<nH>.
 
-To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number) part of a number, while MOD indicates the remainder of a division operation. Must be sent before a new line begins to be effective.
+To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number)
+part of a number, while MOD indicates the remainder of a division operation. Must be sent before a new line begins to be
+effective.
 
 For example, to break the value 520 into two bytes, use the following two equations:
 I<nH> = INT 520E<sol>256
@@ -395,7 +409,8 @@ Rotate printout by 90 degrees
 
 =head3 barcode
 
-This method prints a barcode to the printer. This can be bundled with other text formatting commands at the appropriate point where you would like to print a barcode on your print out. takes argument I<barcode> as the barcode value.
+This method prints a barcode to the printer. This can be bundled with other text formatting commands at the appropriate
+point where you would like to print a barcode on your print out. takes argument I<barcode> as the barcode value.
 
 In the simplest form you can use this command as follows:
 
@@ -527,15 +542,20 @@ $flag = 3 # Double width and Double Height
 
 =head3 cutPaper
 
-Cuts the paper, if I<feed> is set to B<0> then printer doesnt feed paper to cutting position before cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed is automatically executed before paper cut though.
+Cuts the paper, if I<feed> is set to B<0> then printer doesnt feed paper to cutting position before cutting it. The
+default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed
+is automatically executed before paper cut though.
 
      $device->printer->cutPaper( feed => 0 )
 
-While not strictly a text formatting option, in receipt printer the cut paper instruction is sent along with the rest of the text and text formatting data and the printer cuts the paper at the appropriate points wherever this command is used.
+While not strictly a text formatting option, in receipt printer the cut paper instruction is sent along with the rest of
+the text and text formatting data and the printer cuts the paper at the appropriate points wherever this command is
+used.
 
 =head3 drawerKickPulse
 
-Trigger drawer kick. Used to open cash drawer connected to the printer. In some use cases it may be used to trigger other devices by close contact.
+Trigger drawer kick. Used to open cash drawer connected to the printer. In some use cases it may be used to trigger
+other devices by close contact.
 
      $device->printer->drawerKickPulse( $pin, $time );
 
@@ -555,18 +575,25 @@ For default values use without any params to kick drawer pin 2 with a 800ms puls
 
      $device->printer->drawerKickPulse();
 
-Again like cutPaper command this is obviously not a text formatting command but this command is sent along with the rest of the text and text formatting data and the printer sends the pulse at the appropriate points wherever this command is used. While originally designed for triggering a cash drawer to open, in practice this port can be used for all sorts of devices like pulsing light, or sound alarm etc.
+Again like cutPaper command this is obviously not a text formatting command but this command is sent along with the rest
+of the text and text formatting data and the printer sends the pulse at the appropriate points wherever this command is
+used. While originally designed for triggering a cash drawer to open, in practice this port can be used for all sorts of
+devices like pulsing light, or sound alarm etc.
 
 =head2 PRINTING
 
 =head3 print
 
-Once Initialization is done and the formatted text for printing is prepared using the above commands, its time to send these commands to printer. This is a single easy step.
+Once Initialization is done and the formatted text for printing is prepared using the above commands, its time to send
+these commands to printer. This is a single easy step.
 
      $device->printer->print();
 
 Why an extra print step to send this data to the printer?
-This is necessary because many printers have difficulty handling large amount of print data sent across in a single large stream. Separating the preparation of data from transmission of data to the printer allows L<Printer::ESCPOS> to do some buffer management and optimization in the way the entire data is sent to the printer with tiny timed breaks between chunks of data for a reliable printer output.
+This is necessary because many printers have difficulty handling large amount of print data sent across in a single
+large stream. Separating the preparation of data from transmission of data to the printer allows L<Printer::ESCPOS> to do
+some buffer management and optimization in the way the entire data is sent to the printer with tiny timed breaks between
+chunks of data for a reliable printer output.
 
 =head2 GETTING PRINTER HEALTH STATUS
 
@@ -586,7 +613,8 @@ Returns printer status in a hashref.
 
 =head3 offlineStatus
 
-Returns a hashref for paper cover closed status, feed button pressed status, paper end stop status, and a aggregate error status either of which will prevent the printer from processing a printing request.
+Returns a hashref for paper cover closed status, feed button pressed status, paper end stop status, and a aggregate
+error status either of which will prevent the printer from processing a printing request.
 
      return {
          cover_is_closed     => $flags[5],
@@ -607,7 +635,9 @@ Returns hashref with error flags for auto_cutter_error, unrecoverable error and 
 
 =head3 paperSensorStatus
 
-Gets printer paper Sensor status. Returns a hashref with four sensor statuses. Two paper near end sensors and two paper end sensors for printers supporting this feature. The exact returned status might differ based on the make of your printer. If any of the flags is set to 1 it implies that the paper is out or near end.
+Gets printer paper Sensor status. Returns a hashref with four sensor statuses. Two paper near end sensors and two paper
+end sensors for printers supporting this feature. The exact returned status might differ based on the make of your
+printer. If any of the flags is set to 1 it implies that the paper is out or near end.
 
      return {
          paper_roll_near_end_sensor_1 => $flags[5],
@@ -618,7 +648,8 @@ Gets printer paper Sensor status. Returns a hashref with four sensor statuses. T
 
 =head3 inkStatusA
 
-Only available for dot-matrix and other ink consuming printers. Gets printer ink status for inkA(usually black ink). Returns a hashref with ink statuses.
+Only available for dot-matrix and other ink consuming printers. Gets printer ink status for inkA(usually black ink).
+Returns a hashref with ink statuses.
 
      return {
          ink_near_end          => $flags[5],
@@ -629,7 +660,8 @@ Only available for dot-matrix and other ink consuming printers. Gets printer ink
 
 =head3 inkStatusB
 
-Only available for dot-matrix and other ink consuming printers. Gets printer ink status for inkB(usually red ink). Returns a hashref with ink statuses.
+Only available for dot-matrix and other ink consuming printers. Gets printer ink status for inkB(usually red ink).
+Returns a hashref with ink statuses.
 
      return {
          ink_near_end          => $flags[5],

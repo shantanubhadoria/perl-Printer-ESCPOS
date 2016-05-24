@@ -61,7 +61,7 @@ version 0.026
 
 =head2 deviceFilePath
 
-This variable contains the path for the printer device file on UNIX-like systems. I haven't added support for Windows and it probably wont work in doz as a local printer without some modifications. Feel free to try it out and let me know what happens. This must be passed in the constructor
+This variable contains the path for the printer device file on UNIX-like systems.
 
 =head1 AUTHOR
 

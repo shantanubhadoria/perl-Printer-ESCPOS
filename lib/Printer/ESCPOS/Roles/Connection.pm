@@ -72,14 +72,16 @@ version 0.026
 
 =head2 write
 
-Writes prepared data to the module buffer. This data is dispatched to printer with print() method. The print method takes care of buffer control issues.
+Writes prepared data to the module buffer. This data is dispatched to printer with print() method. The print method
+takes care of buffer control issues.
 
 =head2 print
 
-If a string is passed then it passes the string to the printer else passes the buffer data to the printer and clears the buffer.
+If a string is passed then it passes the string to the printer else passes the buffer data to the printer and clears
+the buffer.
 
     $device->printer->print(); # Prints and clears the Buffer.
-    $device->printer->print($raw); # Prints $raw 
+    $device->printer->print($raw); # Prints $raw
 
 =head1 AUTHOR
 

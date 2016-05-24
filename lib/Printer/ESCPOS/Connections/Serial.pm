@@ -124,19 +124,21 @@ version 0.026
 
 =head2 deviceFilePath
 
-This variable contains the path for the printer device file like '/dev/ttyS0' when connected as a serial device on UNIX-like systems. For Windows this will be the serial port name like 'COM1', 'COM2' etc. This must be passed in the constructor. I haven't tested this on windows, so if you are able to use serial port successfully on windows, drop me a email to let me know that I got it right :)
+This variable contains the path for the printer device file like '/dev/ttyS0' when connected as a serial device on
+UNIX-like systems. For Windows this will be the serial port name like 'COM1', 'COM2' etc. This must be passed in the
+constructor. I haven't tested this on windows, so if you are able to use serial port successfully on windows, drop me a
+email to let me know that I got it right :)
 
 =head2 baudrate
 
-When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but not always. 
-
-This param may be specified when creating printer object to make sure it works properly.
+When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but
+not always.This param may be specified when creating printer object to make sure it works properly.
 
 $printer = Printer::Thermal->new(deviceFilePath => '/dev/ttyACM0', baudrate => 9600);
 
 =head2 readConstTime
 
-Seconds per unfulfilled read call, default 150 
+Seconds per unfulfilled read call, default 150
 
 =head2 serialOverUSB
 
@@ -146,7 +148,7 @@ Set this value to 1 if you are connecting your printer using the USB Cable but i
 
 =head2 read
 
-Read Data from the printer 
+Read Data from the printer
 
 =head2 print
 

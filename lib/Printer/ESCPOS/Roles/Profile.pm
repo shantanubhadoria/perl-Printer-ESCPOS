@@ -104,11 +104,13 @@ version 0.026
 
 =head2 driver
 
-Stores the connection object from the Printer::ESCPOS::Connections::*. In any normal use case you must not modify this attribute.
+Stores the connection object from the Printer::ESCPOS::Connections::*. In any normal use case you must not modify this
+attribute.
 
 =head2 usePrintMode
 
-Use Print mode to set font, underline, double width, double height and emphasized if false uses the individual command ESC M n for font "c" ESC M is forced irrespective of this flag
+Use Print mode to set font, underline, double width, double height and emphasized if false uses the individual command
+ESC M n for font "c" ESC M is forced irrespective of this flag
 
 =head2 fontStyle
 
@@ -132,13 +134,14 @@ Set/unset underline property
 
 =head1 METHODS
 
-=head2 text 
+=head2 text
 
-Sends raw text to the local buffer ready for sending this to the printer. This would contain a set of strings to print or ESCPOS Codes.
+Sends raw text to the local buffer ready for sending this to the printer. This would contain a set of strings to print
+or ESCPOS Codes.
 
     $device->printer->text("Hello World\n");
 
-=head2 print 
+=head2 print
 
 prints data in the buffer
 

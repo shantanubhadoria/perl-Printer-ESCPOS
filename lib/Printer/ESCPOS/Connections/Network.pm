@@ -85,17 +85,19 @@ version 0.026
 
 =head2 deviceIP
 
-Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect
+to the printer. This can be passed in the constructor.
 
 =head2 devicePort
 
-Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect
+to the printer. This can be passed in the constructor.
 
 =head1 METHODS
 
 =head2 read
 
-Read Data from the printer 
+Read Data from the printer
 
 =head1 AUTHOR
 
