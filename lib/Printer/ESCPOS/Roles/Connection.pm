@@ -21,7 +21,8 @@ has _buffer => (
 
 =method write
 
-Writes prepared data to the module buffer. This data is dispatched to printer with print() method. The print method takes care of buffer control issues.
+Writes prepared data to the module buffer. This data is dispatched to printer with print() method. The print method
+takes care of buffer control issues.
 
 =cut
 
@@ -33,10 +34,11 @@ sub write {
 
 =method print
 
-If a string is passed then it passes the string to the printer else passes the buffer data to the printer and clears the buffer.
+If a string is passed then it passes the string to the printer else passes the buffer data to the printer and clears
+the buffer.
 
     $device->printer->print(); # Prints and clears the Buffer.
-    $device->printer->print($raw); # Prints $raw 
+    $device->printer->print($raw); # Prints $raw
 
 =cut
 
@@ -53,7 +55,7 @@ sub print {
     }
     my $n = 64; # Size of each chunk in bytes
 
-    @chunks = unpack "a$n" x ((length($printString)/$n)-1) . "a*", $printString;    
+    @chunks = unpack "a$n" x ((length($printString)/$n)-1) . "a*", $printString;
     for my $chunk( @chunks ){
         $self->_connection->write($chunk);
     }

@@ -68,17 +68,22 @@ has driverType => (
 
 =attr profile
 
-There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra features. For using special features of a particular brand you may create a sub class in the name space Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending the Generic Profile( L<Printer::ESCPOS::Profiles::Generic> ).
+There are minor differences in ESC POS printers across different brands and models in terms of specifications and extra
+features. For using special features of a particular brand you may create a sub class in the name space
+Printer::ESCPOS::Profiles::* and load your profile here. I would recommend extending the Generic
+Profile( L<Printer::ESCPOS::Profiles::Generic> ).
 Use the following classes as examples.
 L<Printer::ESCPOS::Profiles::Generic>
 L<Printer::ESCPOS::Profiles::SinocanPSeries>
 
-Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a L<Moo::Role> and can be included in your class with the following line.
+Note that your driver class will have to implement the Printer::ESCPOS::Roles::Profile Interface. This is a L<Moo::Role>
+and can be included in your class with the following line.
 
     use Moo;
     with 'Printer::ESCPOS::Roles::Profile';
 
-By default the generic profile is loaded but if you have written your own Printer::ESCPOS::Profile::* class and want to override the generic class pass the I<profile> Param during object creation.
+By default the generic profile is loaded but if you have written your own Printer::ESCPOS::Profile::* class and want to
+override the generic class pass the I<profile> Param during object creation.
 
     my $device = Printer::ESCPOS->new(
         driverType => 'Network',
@@ -98,7 +103,10 @@ has profile => (
 
 =attr deviceFilePath
 
-File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory parameter if you are using B<File> or B<Serial> I<driverType>.
+File path for UNIX device file. e.g. "/dev/ttyACM0", or port name for Win32 (untested) like 'COM1', COM2' etc. This is a
+mandatory parameter if you are using B<File> or B<Serial> I<driverType>. I haven't had a chance to test this on windows
+so if you are able to successfully use this with a serial port on windows, drop me a email to let me know that I got it
+right :)
 
 =cut
 
@@ -118,7 +126,8 @@ has portName => (
 
 =attr deviceIP
 
-Contains the IP address of the device when its a network printer. The module creates L<IO:Socket::INET> object to connect to the printer. This can be passed in the constructor.
+Contains the IP address of the device when its a network printer. The module creates L<IO:Socket::INET> object to
+connect to the printer. This can be passed in the constructor.
 
 =cut
 
@@ -128,7 +137,8 @@ has deviceIP => (
 
 =attr devicePort
 
-Contains the network port of the device when its a network printer. The module creates L<IO:Socket::INET> object to connect to the printer. This can be passed in the constructor.
+Contains the network port of the device when its a network printer. The module creates L<IO:Socket::INET> object to
+connect to the printer. This can be passed in the constructor.
 
 =cut
 
@@ -139,7 +149,8 @@ has devicePort => (
 
 =attr baudrate
 
-When used as a local serial device you can set the I<baudrate> of the printer too. Default (38400) will usually work, but not always.
+When used as a local serial device you can set the I<baudrate> of the printer too. Default (38400) will usually work,
+but not always.
 
 =cut
 
@@ -150,7 +161,8 @@ has baudrate => (
 
 =attr serialOverUSB
 
-Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you are using the B<Serial> driver.
+Set this value to 1 if you are connecting your printer using the USB Cable but it shows up as a serial device and you
+are using the B<Serial> driver.
 
 =cut
 
@@ -161,7 +173,8 @@ has serialOverUSB => (
 
 =attr vendorId
 
-This is a required param for B<USB> I<driverType>. It contains the USB printer's Vendor ID when using B<USB> I<driverType>. Use lsusb command to get this value for your printer.
+This is a required param for B<USB> I<driverType>. It contains the USB printer's Vendor ID when using B<USB>
+I<driverType>. Use lsusb command to get this value for your printer.
 
 =cut
 
@@ -171,7 +184,8 @@ has vendorId => (
 
 =attr productId
 
-This is a required param for B<USB> I<driverType>. It contains the USB printer's product Id when using B<USB> I<driverType>. Use lsusb command to get this value for your printer.
+This is a required param for B<USB> I<driverType>. It contains the USB printer's product Id when using B<USB>
+I<driverType>. Use lsusb command to get this value for your printer.
 
 =cut
 
@@ -181,7 +195,8 @@ has productId => (
 
 =attr endPoint
 
-This is a optional param for B<USB> I<driverType>. It contains the USB endPoint for L<Device::USB> to write to if the value is not 0x01 for your printer. Get it using the following command:
+This is a optional param for B<USB> I<driverType>. It contains the USB endPoint for L<Device::USB> to write to if the
+value is not 0x01 for your printer. Get it using the following command:
 
     shantanu@shantanu-G41M-ES2L:~$ sudo lsusb -vvv -d 1504:0006 | grep bEndpointAddress | grep OUT
             bEndpointAddress     0x01  EP 1 OUT
@@ -290,11 +305,13 @@ __END__
 If you are just starting up with POS RECEIPT Printers, you must first refer to [Printer::ESCPOS::Manual] to get started.
 
 Printer::ESCPOS provides four different types of printer connections to talk to a ESCPOS printer.
-As of v0.012 ~driverType~ *Serial*, *Network*, *File* and *USB* are all implemented in this module. *USB* ~driverType~ is not supported prior to v0.012.
+As of v0.012 ~driverType~ *Serial*, *Network*, *File* and *USB* are all implemented in this module. *USB* ~driverType~
+is not supported prior to v0.012.
 
 == USB Printer
 
-*USB* ~driverType~ allows you to talk to your Printer using the ~vendorId~ and ~productId~ values for your printer. These can be retrieved using lsusb command
+*USB* ~driverType~ allows you to talk to your Printer using the ~vendorId~ and ~productId~ values for your printer.
+These can be retrieved using lsusb command
 
     shantanu@shantanu-G41M-ES2L:~/github$ lsusb
     . . .
@@ -319,7 +336,9 @@ For USB Printers [Printer::ESCPOS] uses a default ~endPoint~ of 0x01 and a defau
     use GD;
     my $img = newFromGif GD::Image('header.gif') || die "Error $!";
     $device->printer->image($img); # Takes a GD image object
-    
+
+    $device->printer->qr("Don't Panic!"); # Print a QR Code
+
     $device->printer->printAreaWidth( nL => 0, nH => 1);
     $device->printer->text("Print Area Width Modified\n");
     $device->printer->printAreaWidth(); # Reset to default
@@ -377,7 +396,9 @@ you have configured your printer
 Use the *Serial* ~driverType~ for local printer connected on serial port(or a printer connected via
 a physical USB port in USB to Serial mode), check syslog(Usually under /var/log/syslog)
 for what device file was created for your printer when you connect it to your system(For
-plug and play printers).
+plug and play printers). You may also use a Windows port name like 'COM1', 'COM2' etc. as
+deviceFilePath param when running this under windows. The Device::SerialPort claims to support this
+syntax. (Drop me a email if you are able to make it work in windows as I have not tested it out yet)
 
     use Printer::ESCPOS;
     use Data::Dumper; # Just to get dumps of status functions supported for Serial driverType.
@@ -424,7 +445,9 @@ printerStatus, offlineStatus, errorStatus or paperSensorStatus functions
 
 = DESCRIPTION
 
-You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you may extend this module by adding specialized funtions for your printer in it's own subclass. Refer to [Printer::ESCPOS::Roles::Profile] and [Printer::ESCPOS::Profiles::Generic]
+You can use this module for all your ESC-POS Printing needs. If some of your printer's functions are not included, you
+may extend this module by adding specialized funtions for your printer in it's own subclass. Refer to
+[Printer::ESCPOS::Roles::Profile] and [Printer::ESCPOS::Profiles::Generic]
 
 = USAGE
 
@@ -434,16 +457,21 @@ Refer to the following manual to get started with [Printer::ESCPOS]
 
 == Quick usage summary in steps:
 
-0 Create a device object $device by providing parameters for one of the supported printer types. Call $device->printer->init to initialize the printer.
-0 call text() and other Text formatting functions on $device->printer for the data to be sent to the printer. Make sure to end it all with a linefeed $device->printer->lf().
+0 Create a device object $device by providing parameters for one of the supported printer types. Call
+$device->printer->init to initialize the printer.
+0 call text() and other Text formatting functions on $device->printer for the data to be sent to the printer. Make sure
+to end it all with a linefeed $device->printer->lf().
 0 Then call the print() method to dispatch the sequences from the module buffer to the printer
     $device->printer->print()
 
-Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke up if you send them too many print commands in quick succession. To avoid this, aggregate the data to be sent to the printer with text() and other text formatting functions and then send it all in one go using print() at the very end.
+Note: While you may call print() after every single command code, this is not advisable as some printers tend to choke
+up if you send them too many print commands in quick succession. To avoid this, aggregate the data to be sent to the
+printer with text() and other text formatting functions and then send it all in one go using print() at the very end.
 
 = NOTES
 
-* In Serial mode if the printer prints out garbled characters instead of proper text, try specifying the baudrate parameter when you create the printer object. The default baudrate is set at 38400
+* In Serial mode if the printer prints out garbled characters instead of proper text, try specifying the baudrate
+parameter when you create the printer object. The default baudrate is set at 38400
     $device = Printer::ESCPOS->new(
         driverType     => 'Serial',
         deviceFilePath => $path,

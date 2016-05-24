@@ -18,7 +18,8 @@ use IO::Socket;
 
 =attr deviceIP
 
-Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+Contains the IP address of the device when its a network printer. The module creates IO:Socket::INET object to connect
+to the printer. This can be passed in the constructor.
 
 =cut
 
@@ -28,7 +29,8 @@ has deviceIP => (
 
 =attr devicePort
 
-Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect to the printer. This can be passed in the constructor.
+Contains the network port of the device when its a network printer. The module creates IO:Socket::INET object to connect
+to the printer. This can be passed in the constructor.
 
 =cut
 
@@ -58,7 +60,7 @@ sub _build__connection {
 
 =method read
 
-Read Data from the printer 
+Read Data from the printer
 
 =cut
 

@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Connections::Serial;
 
 # PODNAME: Printer::ESCPOS::Connections::Serial
-# ABSTRACT: Serial Connection Interface for L<Printer::ESCPOS> (supports status commands) 
+# ABSTRACT: Serial Connection Interface for L<Printer::ESCPOS> (supports status commands)
 # COPYRIGHT
 # VERSION
 
@@ -19,7 +19,10 @@ use Time::HiRes qw(usleep);
 
 =attr deviceFilePath
 
-This variable contains the path for the printer device file when connected as a serial device on UNIX-like systems. I haven't added support for Windows and it probably wont work in doz as a local printer without some modifications. Feel free to try it out and let me know what happens. This must be passed in the constructor
+This variable contains the path for the printer device file like '/dev/ttyS0' when connected as a serial device on
+UNIX-like systems. For Windows this will be the serial port name like 'COM1', 'COM2' etc. This must be passed in the
+constructor. I haven't tested this on windows, so if you are able to use serial port successfully on windows, drop me a
+email to let me know that I got it right :)
 
 =cut
 
@@ -29,9 +32,8 @@ has deviceFilePath => (
 
 =attr baudrate
 
-When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but not always. 
-
-This param may be specified when creating printer object to make sure it works properly.
+When used as a local serial device you can set the baudrate of the printer too. Default (38400) will usually work, but
+not always.This param may be specified when creating printer object to make sure it works properly.
 
 $printer = Printer::Thermal->new(deviceFilePath => '/dev/ttyACM0', baudrate => 9600);
 
@@ -44,7 +46,7 @@ has baudrate => (
 
 =attr readConstTime
 
-Seconds per unfulfilled read call, default 150 
+Seconds per unfulfilled read call, default 150
 
 =cut
 
@@ -83,7 +85,7 @@ sub _build__connection {
 
 =method read
 
-Read Data from the printer 
+Read Data from the printer
 
 =cut
 

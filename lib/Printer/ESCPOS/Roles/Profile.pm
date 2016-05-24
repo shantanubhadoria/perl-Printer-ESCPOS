@@ -4,7 +4,7 @@ use warnings;
 package Printer::ESCPOS::Roles::Profile;
 
 # PODNAME: Printer::ESCPOS::Roles::Profile
-# ABSTRACT: Role for all Printer Profiles for L<Printer::ESCPOS> 
+# ABSTRACT: Role for all Printer Profiles for L<Printer::ESCPOS>
 # COPYRIGHT
 # VERSION
 
@@ -15,7 +15,8 @@ requires 'init';
 
 =attr driver
 
-Stores the connection object from the Printer::ESCPOS::Connections::*. In any normal use case you must not modify this attribute.
+Stores the connection object from the Printer::ESCPOS::Connections::*. In any normal use case you must not modify this
+attribute.
 
 =cut
 
@@ -26,7 +27,8 @@ has driver => (
 
 =attr usePrintMode
 
-Use Print mode to set font, underline, double width, double height and emphasized if false uses the individual command ESC M n for font "c" ESC M is forced irrespective of this flag
+Use Print mode to set font, underline, double width, double height and emphasized if false uses the individual command
+ESC M n for font "c" ESC M is forced irrespective of this flag
 
 =cut
 
@@ -90,9 +92,10 @@ has underlineStatus => (
   default => 0,
 );
 
-=method text 
+=method text
 
-Sends raw text to the local buffer ready for sending this to the printer. This would contain a set of strings to print or ESCPOS Codes.
+Sends raw text to the local buffer ready for sending this to the printer. This would contain a set of strings to print
+or ESCPOS Codes.
 
     $device->printer->text("Hello World\n");
 
@@ -103,7 +106,7 @@ sub text {
     $self->driver->write( $text );
 }
 
-=method print 
+=method print
 
 prints data in the buffer
 

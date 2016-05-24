@@ -84,7 +84,7 @@ sub _build__connection {
 
 =method read
 
-Read Data from the printer 
+Read Data from the printer
 
 =cut
 
@@ -136,17 +136,17 @@ For using the printer in USB mode you will need to get a few details for your pr
 retrieve the ~vendorId~ and ~productId~ params using the lsusb command
 
     shantanu@shantanu-G41M-ES2L:~$ lsusb
-    Bus 002 Device 002: ID 8087:8000 Intel Corp. 
+    Bus 002 Device 002: ID 8087:8000 Intel Corp.
     Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-    Bus 001 Device 002: ID 8087:8008 Intel Corp. 
+    Bus 001 Device 002: ID 8087:8008 Intel Corp.
     Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
     Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
     Bus 003 Device 020: ID 05e0:1200 Symbol Technologies Bar Code Scanner
-    Bus 003 Device 005: ID 413c:2111 Dell Computer Corp. 
+    Bus 003 Device 005: ID 413c:2111 Dell Computer Corp.
     Bus 003 Device 004: ID 046d:c03e Logitech, Inc. Premium Optical Wheel Mouse (M-BT58)
-    Bus 003 Device 009: ID 1cbe:0002 Luminary Micro Inc. 
-    Bus 003 Device 007: ID 0cf3:0036 Atheros Communications, Inc. 
-    Bus 003 Device 008: ID 1504:0006  
+    Bus 003 Device 009: ID 1cbe:0002 Luminary Micro Inc.
+    Bus 003 Device 007: ID 0cf3:0036 Atheros Communications, Inc.
+    Bus 003 Device 008: ID 1504:0006
     Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
 
 My printer shows up at the second to last line in the list.
@@ -168,7 +168,7 @@ Now you have all the values you need for your printer to work in USB mode.
         driverType => 'USB',
         vendorId   => 0x1504,
         productId  => 0x0006,
-        endPoint   => 0x01,   # There is no need to specify endPOint in 
+        endPoint   => 0x01,   # There is no need to specify endPOint in
                               # this case as 0x01 is the default value
     );
     $device->printer->text("Blah Blah\n");
