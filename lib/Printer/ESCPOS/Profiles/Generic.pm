@@ -20,6 +20,7 @@ use 5.010;
 use Moo;
 with 'Printer::ESCPOS::Roles::Profile';
 use Carp;
+use GD::Barcode::QRcode;
 
 use constant {
     _ESC => "\x1b",
@@ -55,8 +56,15 @@ sub enable {
 
 
 sub qr {
-    my ( $self, $string, $params ) = @_;
-    my $qrImage = GD::Barcode::QRCode->new($string);
+    my ( $self, $string, $ecc, $version, $moduleSize ) = @_;
+    $ecc        ||= 'L';
+    $version    ||= 5;
+    $moduleSize ||= 3;
+
+    my $qrImage =
+      GD::Barcode::QRcode->new( $string,
+        { Ecc => $ecc, Version => $version, ModuleSize => $moduleSize } )
+      ->plot();
     $self->image($qrImage);
 }
 
@@ -630,6 +638,14 @@ implementation may be created using a printer model specific profile.
 
     $device->printer->qr('Print this QR Code');
     $device->printer->qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
+
+You may also pass in additional QR Code format params like Ecc, Version and moduleSize
+L<http://www.qrcode.com/en/about/version.html>
+
+    my $ecc = 'L'; # Default value
+    my $version = 5; # Default value
+    my $moduleSize = 3; # Default value
+    $device->printer->qr('Print this QR Code', $ecc, $version, $moduleSize);
 
 =head2 image
 
