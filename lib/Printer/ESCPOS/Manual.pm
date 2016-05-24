@@ -13,7 +13,7 @@ package Printer::ESCPOS::Manual;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.025'; # VERSION
+our $VERSION = '0.026'; # VERSION
 
 1;
 
@@ -27,9 +27,9 @@ Printer::ESCPOS::Manual - Manual for Printing POS Receipts using L<Printer::ESCP
 
 =head1 VERSION
 
-version 0.025
+version 0.026
 
-=head1 SYNOPSIS 
+=head1 SYNOPSIS
 
 =head2 BASIC USAGE
 
@@ -41,8 +41,8 @@ version 0.025
          deviceFilePath => '/dev/ttyACM0'
      );
  
-     # All Printers have their own initialization 
-     # recommendations(Cleaning buffers etc.). Run 
+     # All Printers have their own initialization
+     # recommendations(Cleaning buffers etc.). Run
      # this command to let the module do this for you.
      $device->printer->init();
  
@@ -57,9 +57,9 @@ version 0.025
  
  
      # Add a cut paper command at the end to cut the receipt
-     # This command will be ignored by your printer if it 
-     # doesn't have a paper cutter on it 
-     $device->printer->cutPaper(); 
+     # This command will be ignored by your printer if it
+     # doesn't have a paper cutter on it
+     $device->printer->cutPaper();
  
  
      # Send the Prepared data to the printer.
@@ -133,7 +133,7 @@ If your printer is not printing properly when connected on physical serial port 
          driverType     => 'Serial',
          deviceFilePath => '/dev/ttyACM0',
          baudrate       => 9600,
-         serialOverUSB  => 0 
+         serialOverUSB  => 0
      );
 
 =head3 NETWORK PRINTER
@@ -162,6 +162,15 @@ This Driver is included for those instances when your printing needs are simple(
 In all the methods described below its assumed that variable C<<< $device >>> has been initialized using the appropriate connection to the printer with one of the driverTypes mentioned above.
 The following methods prepare the text and text formatting data to be sent to the printer.
 
+=head3 image
+
+Prints a GD image object to the printer
+
+     use GD;
+ 
+     my $img = newFromGif GD::Image('header.gif') || die "Error $!";
+     $device->printer->image($img);
+
 =head3 text
 
 Sends raw text to the printer.
@@ -170,9 +179,9 @@ Sends raw text to the printer.
 
 =head3 printAreaWidth
 
-Sets the Print area width specified by I<nL> and I<NH>. The width is calculated as 
+Sets the Print area width specified by I<nL> and I<NH>. The width is calculated as
 
-     ( nL + nH * 256 ) * horiz_motion_unit 
+     ( nL + nH * 256 ) * horiz_motion_unit
 
 A pre-requisite line feed is automatically executed before printAreaWidth method.
 
@@ -192,7 +201,7 @@ Default tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
 
 =back
 
-=head3 tab 
+=head3 tab
 
 moves the cursor to next horizontal tab position like a C<<< "\t" >>>. This command is ignored unless the next horizontal tab position has been set. You may substitute this command with a C<<< "\t" >>> as well.
 
@@ -229,16 +238,16 @@ Set Font style, you can pass B<a>, B<b> or B<c>. Many printers don't support sty
      $device->printer->font('b');
      $device->printer->text('Writing in Font B');
 
-=head3 bold 
+=head3 bold
 
-Set bold mode B<0> for off and B<1> for on. Also called emphasized mode in some printer manuals 
+Set bold mode B<0> for off and B<1> for on. Also called emphasized mode in some printer manuals
 
      $device->printer->bold(1);
      $device->printer->text("This is Bold Text\n");
      $device->printer->bold(0);
      $device->printer->text("This is not Bold Text\n");
 
-=head3 doubleStrike 
+=head3 doubleStrike
 
 Set double-strike mode B<0> for off and B<1> for on
 
@@ -249,7 +258,7 @@ Set double-strike mode B<0> for off and B<1> for on
 
 =head3 underline
 
-set underline, B<0> for off, B<1> for on and B<2> for double thickness 
+set underline, B<0> for off, B<1> for on and B<2> for double thickness
 
      $device->printer->underline(1);
      $device->printer->text("This is Underlined Text\n");
@@ -273,29 +282,29 @@ Most thermal printers support just one color, black. Some ESCPOS printers(especi
 
      $device->printer->lf();
      $device->printer->color(0); #black
-     $device->printer->text("black"); 
+     $device->printer->text("black");
      $device->printer->lf();
      $device->printer->color(1); #red
-     $device->printer->text("Red"); 
+     $device->printer->text("Red");
      $device->printer->print();
 
-=head3 justify 
+=head3 justify
 
 Set Justification. Options B<left>, B<right> and B<center>
 
      $device->printer->justify( 'right' );
-     $device->printer->text("This is right justified"); 
+     $device->printer->text("This is right justified");
 
 =head3 upsideDown
 
 Sets Upside Down Printing onE<sol>off (pass B<0> or B<1>)
 
      $device->printer->upsideDownPrinting(1);
-     $device->printer->text("This text is upside down"); 
+     $device->printer->text("This text is upside down");
 
-=head3 fontHeight 
+=head3 fontHeight
 
-Set font height. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and B<7> for non-printmode state (default) 
+Set font height. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and B<7> for non-printmode state (default)
 
      $device->printer->fontHeight(1);
      $device->printer->text("double height\n");
@@ -305,9 +314,9 @@ Set font height. Only supports B<0> or B<1> for printmode set to 1, supports val
      $device->printer->text("quadruple height\n");
      . . .
 
-=head3 fontWidth 
+=head3 fontWidth
 
-Set font width. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and B<7> for non-printmode state (default) 
+Set font width. Only supports B<0> or B<1> for printmode set to 1, supports values B<0>, B<1>, B<2>, B<3>, B<4>, B<5>, B<6> and B<7> for non-printmode state (default)
 
      $device->printer->fontWidth(1);
      $device->printer->text("double width\n");
@@ -325,7 +334,7 @@ Sets character spacing. Takes a value between 0 and 255
      $device->printer->text("Blah Blah Blah\n");
      $device->printer->print();
 
-=head3 lineSpacing 
+=head3 lineSpacing
 
 Sets the line spacing i.e the spacing between each line of printout.
 
@@ -339,7 +348,7 @@ Sets the line spacing i.e the spacing between each line of printout.
 
 =back
 
-=head3 selectDefaultLineSpacing 
+=head3 selectDefaultLineSpacing
 
 Reverts to default line spacing for the printer
 
@@ -408,7 +417,7 @@ However there are several customizations available including barcode I<system>, 
          height      => $height,        # no of dots in vertical direction
          system      => $system,        # Barcode system
          width       => 2               # 2:0.25mm, 3:0.375mm, 4:0.5mm, 5:0.625mm, 6:0.75mm
-         barcode     => '123456789012', # Check barcode system you are using for allowed 
+         barcode     => '123456789012', # Check barcode system you are using for allowed
                                         # characters in barcode
      );
      $device->printer->barcode(
@@ -456,17 +465,17 @@ CODABAR
 
 =item *
 
-CODE93  
+CODE93
 
 =item *
 
-CODE128 
+CODE128
 
 =back
 
 =head3 printNVImage
 
-Prints bit image stored in Non-Volatile (NV) memory of the printer. 
+Prints bit image stored in Non-Volatile (NV) memory of the printer.
 
      $device->printer->printNVImage($flag);
 
@@ -492,7 +501,7 @@ $flag = 3 # Double width and Double Height
 
 =head3 printImage
 
-Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset. 
+Prints bit image stored in Volatile memory of the printer. This image gets erased when printer is reset.
 
      $device->printer->printImage($flag);
 
@@ -561,7 +570,7 @@ This is necessary because many printers have difficulty handling large amount of
 
 =head2 GETTING PRINTER HEALTH STATUS
 
-The B<Serial> I<driverType> allows reading of printer health, paper and other status parameters from the printer. 
+The B<Serial> I<driverType> allows reading of printer health, paper and other status parameters from the printer.
 At the moment there are following commands available for getting printer status.
 
 =head3 printerStatus

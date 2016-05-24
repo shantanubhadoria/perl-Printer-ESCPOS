@@ -13,7 +13,7 @@ package Printer::ESCPOS::Connections::Serial;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.025'; # VERSION
+our $VERSION = '0.026'; # VERSION
 
 # Dependencies
 
@@ -118,13 +118,13 @@ Printer::ESCPOS::Connections::Serial - Serial Connection Interface for L<Printer
 
 =head1 VERSION
 
-version 0.025
+version 0.026
 
 =head1 ATTRIBUTES
 
 =head2 deviceFilePath
 
-This variable contains the path for the printer device file when connected as a serial device on UNIX-like systems. I haven't added support for Windows and it probably wont work in doz as a local printer without some modifications. Feel free to try it out and let me know what happens. This must be passed in the constructor
+This variable contains the path for the printer device file like '/dev/ttyS0' when connected as a serial device on UNIX-like systems. For Windows this will be the serial port name like 'COM1', 'COM2' etc. This must be passed in the constructor. I haven't tested this on windows, so if you are able to use serial port successfully on windows, drop me a email to let me know that I got it right :)
 
 =head2 baudrate
 

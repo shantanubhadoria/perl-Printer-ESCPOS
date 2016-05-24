@@ -13,7 +13,7 @@ package Printer::ESCPOS;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.025'; # VERSION
+our $VERSION = '0.026'; # VERSION
 
 # Dependencies
 use 5.010;
@@ -167,7 +167,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 =head1 VERSION
 
-version 0.025
+version 0.026
 
 =head1 SYNOPSIS
 
@@ -199,6 +199,10 @@ For USB Printers L<Printer::ESCPOS> uses a default I<endPoint> of 0x01 and a def
          vendorId       => $vendorId,
          productId      => $productId,
      );
+ 
+     use GD;
+     my $img = newFromGif GD::Image('header.gif') || die "Error $!";
+     $device->printer->image($img); # Takes a GD image object
  
      $device->printer->printAreaWidth( nL => 0, nH => 1);
      $device->printer->text("Print Area Width Modified\n");
@@ -257,7 +261,9 @@ you have configured your printer
 Use the B<Serial> I<driverType> for local printer connected on serial port(or a printer connected via
 a physical USB port in USB to Serial mode), check syslog(Usually under E<sol>varE<sol>logE<sol>syslog)
 for what device file was created for your printer when you connect it to your system(For
-plug and play printers).
+plug and play printers). You may also use a Windows port name like 'COM1', 'COM2' etc. as 
+deviceFilePath param when running this under windows. The Device::SerialPort claims to support this
+syntax. (Drop me a email if you are able to make it work in windows as I have not tested it out yet)
 
      use Printer::ESCPOS;
      use Data::Dumper; # Just to get dumps of status functions supported for Serial driverType.
@@ -375,7 +381,7 @@ The above $device object will use the Printer::ESCPOS::Profile::USERCUSTOM profi
 
 =head2 deviceFilePath
 
-File path for UNIX device file. e.g. "/dev/ttyACM0" this is a mandatory parameter if you are using B<File> or B<Serial> I<driverType>.
+File path for UNIX device file. e.g. "/dev/ttyACM0", or port name for Win32 (untested) like 'COM1', COM2' etc. This is a mandatory parameter if you are using B<File> or B<Serial> I<driverType>. I haven't had a chance to test this on windows so if you are able to successfully use this with a serial port on windows, drop me a email to let me know that I got it right :)
 
 =head2 portName
 
