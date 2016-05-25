@@ -798,10 +798,6 @@ I<version> (optional, default B<5>): The symbol versions of QR Code range from V
 version has a different module configuration or number of modules. (The module refers to the black and white dots that
 make up QR Code.)
 
-Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
-correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
-resulting in larger QR Code symbols.
-
 I<moduleSize> (optional, default B<3>): width of each module in pixels.
 
     my $ecc = 'L'; # Default value
