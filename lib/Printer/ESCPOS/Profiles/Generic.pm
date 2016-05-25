@@ -59,6 +59,29 @@ sub enable {
 }
 
 
+sub qr {
+    my ( $self, $string, $ecc, $version, $moduleSize ) = @_;
+    $ecc        ||= 'L';
+    $version    ||= 5;
+    $moduleSize ||= 3;
+
+    my %eccAllowedValues;
+    @eccAllowedValues{qw(L M Q H)} = ();
+    confess "Ecc must be one of 'L', 'M', 'Q' or 'H'"
+      unless ( exists $eccAllowedValues{$ecc} );
+    confess "Version must be between 1 to 40"
+      unless ( $version <= 40 and $version >= 1 and $version =~ /\d?\d/ );
+    confess "Module size must be between a positive integer"
+      unless ( isint $moduleSize == 1 );
+
+    my $qrImage =
+      GD::Barcode::QRcode->new( $string,
+        { Ecc => $ecc, Version => $version, ModuleSize => $moduleSize } )
+      ->plot();
+    $self->image($qrImage);
+}
+
+
 sub image {
     my ( $self, $img ) = @_;
     my $paddingLeft  = '';
@@ -735,6 +758,8 @@ Pass B<1> to enable, pass B<0> to disable
 
     $device->printer->enable(0) # disabled
     $device->printer->enable(1) # enabled
+
+=head2 qr
 
 =head2 image
 
