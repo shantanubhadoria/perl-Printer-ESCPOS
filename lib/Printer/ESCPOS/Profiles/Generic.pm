@@ -540,6 +540,7 @@ sub barcode {
         below         => 2,
         aboveandbelow => 3,
     );
+
     $self->driver->write(
         _GS . 'H' . chr( $map{ $params{HRIPosition} || 'below' } ) );
 
@@ -566,14 +567,14 @@ sub barcode {
     );
     $params{system} ||= 'CODE93';
 
-    if ( $map{ $params{system} } < 9 ) {
+    if ( exists $map{ $params{system} } ) {
         $self->driver->write( _GS . 'k'
               . chr( $map{ $params{system} } + 65 )
               . chr( length $params{barcode} )
               . $params{barcode} );
     }
     else {
-        die "Invalid system in barcode";
+        confess "Invalid system in barcode";
     }
 }
 
@@ -602,7 +603,7 @@ sub printImage {
 
 sub cutPaper {
     my ( $self, %params ) = @_;
-    $params{feed} = defined $params{feed} ? $params{feed} : 0;
+    $params{feed} ||= 0;
 
     $self->lf();
     if ( $params{feed} == 0 ) {
@@ -1078,10 +1079,13 @@ preceding this command on the same line in the buffer.
 
 In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable area
 
-I<leftMargin>: Left Margin, range: 0 to 65535. If the margin exceeds the printable area, the left margin is
+I<leftMargin>: Left Margin, range: B<0> to B<65535>. If the margin exceeds the printable area, the left margin is
 automatically set to the maximum value of the printable area.
 
     $device->printer->leftMargin($leftMargin);
+
+Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module
+the nL and nH syntax for this method.
 
 =head2 rot90
 
@@ -1133,23 +1137,26 @@ However there are several customizations available including barcode ~system~, ~
         barcode     => 'Shan',
     );
 
-Available barcode ~systems~:
+I<HRIPosition> (optional, default 'below'): 'none', 'above', 'below', 'aboveandbelow'
 
-* UPC-A
-* UPC-C
-* JAN13
-* JAN8
-* CODE39
-* ITF
-* CODABAR
-* CODE93
-* CODE128
+I<font> (optional, default 'b'): 'a' or 'b'
+
+I<height> (optional, default 50): height integer between 0 and 255
+
+I<width> (optional, default 50): width integer between 0 and 255
+
+I<system> (optional, default 'CODE93'): B<UPC-A>, B<UPC-B>, B<JAN13>, B<JAN8>, B<CODE39>, B<ITF>, B<CODABAR>, B<CODE93>,
+B<CODE128>
+
+I<barcode>: String to print as barcode.
 
 =head2 printNVImage
 
 Prints bit image stored in Non-Volatile (NV) memory of the printer.
 
     $device->printer->printNVImage($flag);
+
+I<flag>: height and width
 
 * $flag = 0 # Normal width and Normal Height
 * $flag = 1 # Double width and Normal Height
@@ -1169,9 +1176,11 @@ Prints bit image stored in Volatile memory of the printer. This image gets erase
 
 =head2 cutPaper
 
-Cuts the paper, if ~feed~ is set to *0* then printer doesnt feed paper to cutting position before cutting it. The
-default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed
-is automatically executed before paper cut though.
+Cuts the paper,
+
+I<feed> (optional, default 0): if ~feed~ is set to B<0> then printer doesnt feed paper to cutting position before
+cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One
+pre-requisite line feed is automatically executed before paper cut though.
 
     $device->printer->cutPaper( feed => 0 )
 
@@ -1186,8 +1195,9 @@ other devices by close contact.
 
     $device->printer->drawerKickPulse( $pin, $time );
 
-* $pin is either 0( for pin 2 ) and 1( for pin5 ) default value is 0
-* $time is a value between 1 to 8 and the pulse duration in multiples of 100ms. default value is 8
+I<pin> (optional, default 0): $pin is either 0( for pin 2 ) and 1( for pin5 )
+
+I<pin> (optional, default 8): $time is a value between 1 to 8 and the pulse duration in multiples of 100ms.
 
 For default values use without any params to kick drawer pin 2 with a 800ms pulse
 
