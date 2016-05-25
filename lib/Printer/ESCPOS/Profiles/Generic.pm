@@ -779,6 +779,15 @@ Level H – up to 30% damage
 
 =back
 
+I<version>: The symbol versions of QR Code range from Version 1 to Version 40. Each version has a different module
+configuration or number of modules. (The module refers to the black and white dots that make up QR Code.)
+
+Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
+correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
+resulting in larger QR Code symbols. (Default: 5)
+
+I<moduleSize>: width of each module in pixels.
+
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
     my $moduleSize = 3; # Default value
@@ -790,10 +799,12 @@ You may also call align() before calling qr() to set alignment on the page.
 
 Prints a image to the printer. Takes a L<GD> Image object as input. <Maximum printable image dimensions are 512x255
 
+I<image>: L<GD> image object for the image to be printed.
+
     use GD;
 
-    my $img = newFromGif GD::Image('header.gif') || die "Error $!";
-    $device->printer->image($img);
+    my $image = newFromGif GD::Image('header.gif') || die "Error $!";
+    $device->printer->image($image);
 
 You may also call align() before calling qr() to set alignment on the page.
 
