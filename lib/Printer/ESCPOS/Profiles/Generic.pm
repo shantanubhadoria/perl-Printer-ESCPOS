@@ -259,6 +259,7 @@ sub cancel {
 
 sub font {
     my ( $self, $font ) = @_;
+    $font ||= 'a';
 
     my %fontMap = (
         a => "\x00",
@@ -281,35 +282,38 @@ sub font {
 
 
 sub bold {
-    my ( $self, $emphasized ) = @_;
+    my ( $self, $bold ) = @_;
+    $bold ||= 0;
 
-    confess "Invalid value for bold '$emphasized'. Use '0' or '1'.
+    confess "Invalid value for bold '$bold'. Use '0' or '1'.
         Usage: \n\t\$device->printer->bold(1)\n"
-      unless ( $emphasized == 1 or $emphasized == 0 );
+      unless ( $bold == 1 or $bold == 0 );
 
-    $self->emphasizedStatus($emphasized);
+    $self->emphasizedStatus($bold);
     if ( $self->usePrintMode ) {
         $self->_updatePrintMode;
     }
     else {
-        $self->driver->write( _ESC . 'E' . int($emphasized) );
+        $self->driver->write( _ESC . 'E' . int($bold) );
     }
 }
 
 
 sub doubleStrike {
-    my ( $self, $flag ) = @_;
+    my ( $self, $doubleStrike ) = @_;
+    $doubleStrike ||= 0;
 
-    confess "Invalid value for doubleStrike '$flag'. Use '0' or '1'.
+    confess "Invalid value for doubleStrike '$doubleStrike'. Use '0' or '1'.
         Usage: \n\t\$device->printer->doubleStrike(1)\n"
-      unless ( $flag == 1 or $flag == 0 );
+      unless ( $doubleStrike == 1 or $doubleStrike == 0 );
 
-    $self->driver->write( _ESC . 'G' . int($flag) );
+    $self->driver->write( _ESC . 'G' . int($doubleStrike) );
 }
 
 
 sub underline {
     my ( $self, $underline ) = @_;
+    $underline ||= 0;
 
     confess "Invalid value for underline '$underline'. Use '0', '1' or '2'.
         Usage: \n\t\$device->printer->underline(1)\n"
@@ -327,6 +331,7 @@ sub underline {
 
 sub invert {
     my ( $self, $invert ) = @_;
+    $invert ||= 0;
 
     confess "Invalid value for invert '$invert'. Use '0' or '1'.
         Usage: \n\t\$device->printer->invert(1)\n"
@@ -338,6 +343,7 @@ sub invert {
 
 sub color {
     my ( $self, $color ) = @_;
+    $color ||= 0;
 
     confess "Invalid value for color '$color'. Use '0' or a positive integer.
         Usage: \n\t\$device->printer->color(1)\n" unless ( isint $color >= 0 );
@@ -348,6 +354,7 @@ sub color {
 
 sub justify {
     my ( $self, $justify ) = @_;
+    $color ||= 'left';
     my %jmap = (
         left   => 0,
         center => 1,
@@ -759,7 +766,7 @@ at L<http://www.qrcode.com/en/about/version.html>.
 
 I<string>: String to be printed as QR code.
 
-I<ecc> (optional): error correction level. There are four available error correction schemes in QR codes.
+I<ecc> (optional, default 'L'): error correction level. There are four available error correction schemes in QR codes.
 
 =over
 
@@ -781,14 +788,14 @@ Level H – up to 30% damage
 
 =back
 
-I<version>: The symbol versions of QR Code range from Version 1 to Version 40. Each version has a different module
+I<version> (optional, default 5): The symbol versions of QR Code range from Version 1 to Version 40. Each version has a different module
 configuration or number of modules. (The module refers to the black and white dots that make up QR Code.)
 
 Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
 correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
 resulting in larger QR Code symbols. (Default: 5)
 
-I<moduleSize>: width of each module in pixels.
+I<moduleSize> (optional, default 3): width of each module in pixels.
 
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
@@ -880,6 +887,8 @@ Cancel (delete) page data in page mode
 
 Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style *c* and only have two supported styles.
 
+I<font> (optional, default 'a'): Font to set for the printer
+
     $device->printer->font('a');
     $device->printer->text('Writing in Font A');
     $device->printer->font('b');
@@ -888,6 +897,8 @@ Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style 
 =head2 bold
 
 Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals
+
+I<bold> (optional, default 0): 1 or 0 to set or unset bold.
 
     $device->printer->bold(1);
     $device->printer->text("This is Bold Text\n");
@@ -898,6 +909,8 @@ Set bold mode *0* for off and *1* for on. Also called emphasized mode in some pr
 
 Set double-strike mode *0* for off and *1* for on
 
+I<doubleStrike> (optional, default 0): 1 or 0 to doubleStrike or unset doubleStrike.
+
     $device->printer->doubleStrike(1);
     $device->printer->text("This is Double Striked Text\n");
     $device->printer->doubleStrike(0);
@@ -905,7 +918,9 @@ Set double-strike mode *0* for off and *1* for on
 
 =head2 underline
 
-set underline, *0* for off, *1* for on and *2* for double thickness
+Set underline, *0* for off, *1* for on and *2* for double thickness
+
+I<underline> (optional, default 0): 1 or 0 to underline or unset underline.
 
     $device->printer->underline(1);
     $device->printer->text("This is Underlined Text\n");
@@ -917,6 +932,8 @@ set underline, *0* for off, *1* for on and *2* for double thickness
 =head2 invert
 
 Reverse white/black printing mode pass *0* for off and *1* for on
+
+I<invert> (optional, default 0): 1 or 0 to invert or unset invert.
 
     $device->printer->invert(1);
     $device->printer->text("This is Inverted Text\n");
@@ -930,6 +947,8 @@ color, usually red. A few rarer models also support upto 7 different colors. In 
 color is set at the beginning of a new line before any text is printed. Pass *0* or *1* to switch between the two
 colors.
 
+I<color> (optional, default 0): color number 0, 1 ...
+
     $device->printer->lf();
     $device->printer->color(0); #black
     $device->printer->text("black");
@@ -940,7 +959,9 @@ colors.
 
 =head2 justify
 
-Set Justification. Options *full*, *left*, *right* and *center*
+Set Justification. Options B<full>, B<left>, B<right> and B<center>
+
+I<justify> (optional, default 'left'): B<full>, B<left>, B<right> and B<center>
 
     $device->printer->justify( 'right' );
     $device->printer->text("This is right justified");
