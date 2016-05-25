@@ -425,52 +425,6 @@ sub fontWidth {
 }
 
 
-sub charSpacing {
-    my ( $self, $charSpacing ) = @_;
-    $charSpacing ||= 0;
-
-    confess
-"Invalid value for charSpacing '$charSpacing'. Use a integer between '0' and '255'.
-        Usage: \n\t\$device->printer->charSpacing(5)\n"
-      unless ( isint $charSpacing >= 0 and $charSpacing <= 255 );
-
-    $self->driver->write( _ESC . _SP . chr($charSpacing) );
-}
-
-
-sub lineSpacing {
-    my ( $self, $lineSpacing, $commandSet ) = @_;
-    $lineSpacing ||= 30;
-    $commandSet  ||= '3';
-
-    if ( $commandSet eq '+' or $commandSet eq '3' ) {
-        confess
-"Invalid value for lineSpacing '$lineSpacing'. Use a integer between '0' and '255' with this commandSet.
-            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n"
-          unless ( isint $lineSpacing >= 0 and $lineSpacing <= 255 );
-    }
-    elsif ( $commandSet eq 'A' ) {
-        confess
-"Invalid value for lineSpacing '$lineSpacing'. Use a integer between '0' and '85' with commandSet 'A'.
-            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n"
-          unless ( isint $lineSpacing >= 0 and $lineSpacing <= 85 );
-    }
-    else {
-        confess
-          "Invalid value for commandSet '$commandSet'. Use 'A', '3' or '+'.
-            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n";
-    }
-
-    $self->driver->write( _ESC . $commandSet . chr($lineSpacing) );
-}
-
-
-sub selectDefaultLineSpacing {
-    my ($self) = @_;
-    $self->driver->write( _ESC . '2' );
-}
-
-
 sub leftMargin {
     my ( $self, $leftMargin ) = @_;
 
@@ -1012,37 +966,6 @@ I<width> (optional, default 0): B<0> to B<7>
     $device->printer->fontWidth(3);
     $device->printer->text("quadruple width\n");
     . . .
-
-=head2 charSpacing
-
-Sets character spacing takes a value between 0 and 255
-
-I<charSpacing> (optional, default 0): B<0> to B<255>
-
-    $device->printer->charSpacing(5);
-    $device->printer->text("Blah Blah Blah\n");
-    $device->printer->print();
-
-=head2 lineSpacing
-
-Sets line spacing i.e the spacing between each line of printout. Note that some printers may not support all
-command sets for setting a line spacing. The most commonly available I<commandSet>('3') is used by default.
-
-I<lineSpacing>: ranges from 0 to 255 when commandSet is '+' or '3',
-
-Line spacing is set to lineSpacing/360 of an inch if commandSet is '+', lineSpacing/180 of an inch if commandSet is '3'
-and lineSpacing/60 of an inch if commandSet is 'A' (default: 30)
-
-I<commandSet>: ESCPOS provides three alternate commands for setting line spacing i.e. '+', '3', 'A' (default : '3').
-
-    $device->printer->lineSpacing($lineSpacing); # Use default commandSet '3'
-    $device->printer->lineSpacing($lineSpacing, $commandSet);
-
-=head2 selectDefaultLineSpacing
-
-Reverts to default line spacing for the printer
-
-    $device->printer->selectDefaultLineSpacing();
 
 =head2 leftMargin
 
