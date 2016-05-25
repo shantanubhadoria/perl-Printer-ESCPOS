@@ -752,7 +752,7 @@ power was turned on. This function is automatically called on creation of printe
 Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all
 commands except enable() or other real-time commands.
 
-Pass 1 to enable, pass 0 to disable
+Pass B<1> to enable, pass B<0> to disable
 
     $device->printer->enable(0) # disabled
     $device->printer->enable(1) # enabled
@@ -770,36 +770,37 @@ at L<http://www.qrcode.com/en/about/version.html>.
 
 I<string>: String to be printed as QR code.
 
-I<ecc> (optional, default 'L'): error correction level. There are four available error correction schemes in QR codes.
+I<ecc> (optional, default B<'L'>): error correction level. There are four available error correction schemes in QR codes.
 
 =over
 
 =item *
 
-Level L – up to 7% damage
+Level B<L> – up to 7% damage
 
 =item *
 
-Level M – up to 15% damage
+Level B<M> – up to 15% damage
 
 =item *
 
-Level Q – up to 25% damage
+Level B<Q> – up to 25% damage
 
 =item *
 
-Level H – up to 30% damage
+Level B<H> – up to 30% damage
 
 =back
 
-I<version> (optional, default 5): The symbol versions of QR Code range from Version 1 to Version 40. Each version has a different module
-configuration or number of modules. (The module refers to the black and white dots that make up QR Code.)
+I<version> (optional, default B<5>): The symbol versions of QR Code range from Version B<1> to Version B<40>. Each
+version has a different module configuration or number of modules. (The module refers to the black and white dots that
+make up QR Code.)
 
 Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
 correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
-resulting in larger QR Code symbols. (Default: 5)
+resulting in larger QR Code symbols.
 
-I<moduleSize> (optional, default 3): width of each module in pixels.
+I<moduleSize> (optional, default B<3>): width of each module in pixels.
 
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
@@ -827,22 +828,39 @@ Sets the Print area width specified by width.
 
     width x basic calculated pitch
 
-I<width>: width is a 16 bits value range, i.e. int between 0 to 65535 specifying print area width in basic calculated pitch. This
-command is effective only when processed at the beginning of the line when standard mode is being used. Printable area
-width setting is effective until init is executed, the printer is reset, or the power is turned off.
+I<width>: width is a 16 bits value range, i.e. int between B<0> to B<65535> specifying print area width in basic
+calculated pitch. This command is effective only when processed at the beginning of the line when standard mode is being
+used. Printable area width setting is effective until init is executed, the printer is reset, or the power is turned
+off.
 
     $device->printer->printAreaWidth( $width );
 
-Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module the nL
-and nH syntax for this method.
+Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module
+the nL and nH syntax for this method.
 
 =head2 tabPositions
 
 Sets horizontal tab positions for tab stops. Upto 32 tab positions can be set in most receipt printers.
 
-    $device->printer->tabPositions( 5, 9, 13 );
+I<tabPositions>: a list of positions for tab().
 
-* Default tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
+    $device->printer->tabPositions( 5, 9, 13 );
+    printer.tabPositions(5, 9, 13);
+
+    for my $plu (@plus):
+        $device->printer->text($plu{quantity});
+        $device->printer->tab();
+        $device->printer->text(' x ' . plu{name});
+        $device->printer->tab();
+        $device->printer->text('$' . plu{price});
+
+    This would print a well aligned receipt like so::
+
+    10 x Guiness Beer              $24.00
+    2  x Pizza                     $500.50
+    1  x Tandoori Chicken          $50.20
+
+Common tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
 
 =head2 tab
 

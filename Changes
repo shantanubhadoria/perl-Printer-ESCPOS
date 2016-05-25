@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-0.027 2016-05-25T07:38:16
+0.027 2016-05-25T07:46:54
  - Using globals instead of straight byte codes (Shantanu Bhadoria)
  - Fixing link in manual (Shantanu Bhadoria)
 
