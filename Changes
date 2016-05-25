@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-1.001 2016-05-25T08:25:45
+1.001 2016-05-25T08:26:07
  - added stopwords to avoid spellcheck errors (Shantanu Bhadoria)
 
 1.000 2016-05-25T08:17:48
