@@ -84,19 +84,19 @@ I<ecc> (optional, default B<'L'>): error correction level. There are four availa
 
 =item *
 
-Level B<L> – up to 7% damage
+Level B<L> - up to 7% damage
 
 =item *
 
-Level B<M> – up to 15% damage
+Level B<M> - up to 15% damage
 
 =item *
 
-Level B<Q> – up to 25% damage
+Level B<Q> - up to 25% damage
 
 =item *
 
-Level B<H> – up to 30% damage
+Level B<H> - up to 30% damage
 
 =back
 
@@ -105,7 +105,7 @@ version has a different module configuration or number of modules. (The module r
 make up QR Code.)
 
 Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
-correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
+correction level. In other words, as the amount of data increases, more modules are required to comprise QR Code,
 resulting in larger QR Code symbols.
 
 I<moduleSize> (optional, default B<3>): width of each module in pixels.
