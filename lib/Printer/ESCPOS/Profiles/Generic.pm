@@ -757,7 +757,9 @@ implementation may be created using a printer model specific profile.
 You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
 at L<http://www.qrcode.com/en/about/version.html>.
 
-I<ecc>: error correction level. There are four available error correction schemes in QR codes.
+I<string>: String to be printed as QR code.
+
+I<ecc> (optional): error correction level. There are four available error correction schemes in QR codes.
 
 =over
 
@@ -814,7 +816,7 @@ Sets the Print area width specified by width.
 
     width x basic calculated pitch
 
-width is a 16 bits value range, i.e. int between 0 to 65535 specifying print area width in basic calculated pitch. This
+I<width>: width is a 16 bits value range, i.e. int between 0 to 65535 specifying print area width in basic calculated pitch. This
 command is effective only when processed at the beginning of the line when standard mode is being used. Printable area
 width setting is effective until init is executed, the printer is reset, or the power is turned off.
 
