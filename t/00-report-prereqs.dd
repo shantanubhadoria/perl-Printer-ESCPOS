@@ -29,6 +29,7 @@ do { my $x = {
                                       'IO::Socket' => '0',
                                       'Moo' => '0',
                                       'Moo::Role' => '0',
+                                      'Scalar::Util::Numeric' => '0',
                                       'Time::HiRes' => '0',
                                       'Type::Tiny' => '0',
                                       'aliased' => '0',
