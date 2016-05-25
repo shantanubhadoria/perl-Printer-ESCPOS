@@ -13,6 +13,7 @@ use 5.010;
 use Moo;
 with 'Printer::ESCPOS::Roles::Profile';
 use Carp;
+use Scalar::Util::Numeric qw(isint);
 use GD::Barcode::QRcode;
 
 use constant {
@@ -45,7 +46,7 @@ sub init {
 Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all
 commands except enable() or other real-time commands.
 
-Pass 1 to enable, pass 0 to disable
+Pass B<1> to enable, pass B<0> to disable
 
     $device->printer->enable(0) # disabled
     $device->printer->enable(1) # enabled
@@ -57,8 +58,10 @@ sub enable {
 
     if ( $n == 1 ) {
         $self->driver->print( _ESC . '=' . chr(1) );
-    } else {
+    } elsif( $n == 0 ){
         $self->driver->print( _ESC . '=' . chr(2) );
+    } else {
+        confess "Invalid parameter please use '0' or '1'";
     }
 }
 
@@ -73,6 +76,40 @@ implementation may be created using a printer model specific profile.
 You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
 at L<http://www.qrcode.com/en/about/version.html>.
 
+I<string>: String to be printed as QR code.
+
+I<ecc> (optional, default B<'L'>): error correction level. There are four available error correction schemes in QR codes.
+
+=over
+
+=item *
+
+Level B<L> – up to 7% damage
+
+=item *
+
+Level B<M> – up to 15% damage
+
+=item *
+
+Level B<Q> – up to 25% damage
+
+=item *
+
+Level B<H> – up to 30% damage
+
+=back
+
+I<version> (optional, default B<5>): The symbol versions of QR Code range from Version B<1> to Version B<40>. Each
+version has a different module configuration or number of modules. (The module refers to the black and white dots that
+make up QR Code.)
+
+Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
+correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
+resulting in larger QR Code symbols.
+
+I<moduleSize> (optional, default B<3>): width of each module in pixels.
+
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
     my $moduleSize = 3; # Default value
@@ -83,23 +120,31 @@ You may also call align() before calling qr() to set alignment on the page.
 =cut
 
 sub qr {
-  my ($self, $string, $ecc, $version, $moduleSize) = @_;
-  $ecc ||= 'L';
-  $version ||= 5;
-  $moduleSize ||= 3;
+    my ($self, $string, $ecc, $version, $moduleSize) = @_;
+    $ecc ||= 'L';
+    $version ||= 5;
+    $moduleSize ||= 3;
 
-  my $qrImage = GD::Barcode::QRcode->new($string,{ Ecc => $ecc, Version => $version, ModuleSize => $moduleSize})->plot();
-  $self->image($qrImage);
+    my %eccAllowedValues;
+    @eccAllowedValues{qw(L M Q H)} = ();
+    confess "Ecc must be one of 'L', 'M', 'Q' or 'H'" unless(exists $eccAllowedValues{$ecc});
+    confess "Version must be between 1 to 40" unless($version <= 40 and $version >= 1 and $version =~ /\d?\d/);
+    confess "Module size must be between a positive integer" unless(isint $moduleSize == 1);
+
+    my $qrImage = GD::Barcode::QRcode->new($string,{ Ecc => $ecc, Version => $version, ModuleSize => $moduleSize})->plot();
+    $self->image($qrImage);
 }
 
 =method image
 
 Prints a image to the printer. Takes a L<GD> Image object as input. <Maximum printable image dimensions are 512x255
 
+I<image>: L<GD> image object for the image to be printed.
+
     use GD;
 
-    my $img = newFromGif GD::Image('header.gif') || die "Error $!";
-    $device->printer->image($img);
+    my $image = newFromGif GD::Image('header.gif') || die "Error $!";
+    $device->printer->image($image);
 
 You may also call align() before calling qr() to set alignment on the page.
 
@@ -111,10 +156,10 @@ sub image {
     my $paddingRight = '';
 
     if($img->width > 512) {
-        croak 'Width is greater than 512 pixels and could be truncated at print time';
+        carp 'Width is greater than 512 pixels and could be truncated at print time';
     }
     if($img->height > 255) {
-        croak 'Height is greated than 255 pixels';
+        confess 'Height is greated than 255 pixels';
     }
 
     my @padding = $self->_pad_image_size( $img->width );
@@ -203,37 +248,69 @@ sub _print_image {
 
 =method printAreaWidth
 
-Sets the Print area width specified by nL and NH. The width is calculated as
-    ( nL + nH * 256 ) * horiz_motion_unit
+Sets the Print area width specified by width.
 
-A pre-requisite line feed is automatically executed before printAreaWidth method.
+    width x basic calculated pitch
 
-    $device->printer->printAreaWidth( nL => 0, nH =>0 );
+I<width>: width is a 16 bits value range, i.e. int between B<0> to B<65535> specifying print area width in basic
+calculated pitch. This command is effective only when processed at the beginning of the line when standard mode is being
+used. Printable area width setting is effective until init is executed, the printer is reset, or the power is turned
+off.
+
+    $device->printer->printAreaWidth( $width );
+
+Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module
+the nL and nH syntax for this method.
 
 =cut
 
 sub printAreaWidth {
-    my ( $self, %params ) = @_;
-    $params{nL} = defined $params{nL} ? $params{nL} : 65;
-    $params{nH} = defined $params{nH} ? $params{nH} : 2;
+    my ( $self, $width ) = @_;
 
-    $self->lf();
-    $self->driver->write( _GS . 'W' . chr( $params{nL} ) . chr( $params{nH} ) );
+    confess "Width must be a integer between 0 and 65535 in printAreaWidth(). Invalid value '$width'.
+        Usage: \n\t\$device->printer->printAreaWidth(\$width)\n"
+        unless(isint $width == 1 and $width <=65535 and $width >= 1);
+
+    my $nH = $width >> 8;
+    my $nL = $width - ($nH << 8);
+
+    $self->driver->write( _GS . 'W' . chr( $nL ) . chr( $nH ) );
 }
 
 =method tabPositions
 
 Sets horizontal tab positions for tab stops. Upto 32 tab positions can be set in most receipt printers.
 
-    $device->printer->tabPositions( 5, 9, 13 );
+I<tabPositions>: a list of positions for tab().
 
-* Default tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
+    $device->printer->tabPositions( 5, 9, 13 );
+    printer.tabPositions(5, 9, 13);
+
+    for my $plu (@plus):
+        $device->printer->text($plu{quantity});
+        $device->printer->tab();
+        $device->printer->text(' x ' . plu{name});
+        $device->printer->tab();
+        $device->printer->text('$' . plu{price});
+
+    This would print a well aligned receipt like so::
+
+    10 x Guiness Beer              $24.00
+    2  x Pizza                     $500.50
+    1  x Tandoori Chicken          $50.20
+
+
+Common tab positions are usually in intervals of 8 chars (9, 17, 25) etc.
 
 =cut
 
 sub tabPositions {
     my ( $self, @positions ) = @_;
     my $pos = '';
+
+    for (@positions) {confess "Tab position must be a positive integer. Invalid value '$_'.
+        Usage: \n\t\$device->printer->tabPositions(4,8,16 ...)\n"
+        unless isint $_ == 1};
 
     $pos .= chr( $_ ) for @positions;
     $self->driver->write( _ESC . 'D' . $pos . chr(0) );
@@ -326,6 +403,8 @@ sub cancel {
 
 Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style *c* and only have two supported styles.
 
+I<font> (optional, default 'a'): Font to set for the printer
+
     $device->printer->font('a');
     $device->printer->text('Writing in Font A');
     $device->printer->font('b');
@@ -335,17 +414,21 @@ Set Font style, you can pass *a*, *b* or *c*. Many printers don't support style 
 
 sub font {
     my ( $self, $font ) = @_;
+    $font ||= 'a';
+
+    my %fontMap = (
+        a => "\x00",
+        b => "\x01",
+        c => "\x02",
+    );
+
+    confess "Invalid value for font '$font'. Use 'a', 'b' or 'c'.
+        Usage: \n\t\$device->printer->font('a')\n" unless exists $fontMap{$font};
 
     $self->fontStyle( $font );
     if( $self->usePrintMode && $font ne 'c') {
         $self->_updatePrintMode;
     } else {
-        my %fontMap = (
-            a => "\x00",
-            b => "\x01",
-            c => "\x02",
-        );
-
         $self->driver->write( _ESC . 'M' . $fontMap{$font});
     }
 }
@@ -353,6 +436,8 @@ sub font {
 =method bold
 
 Set bold mode *0* for off and *1* for on. Also called emphasized mode in some printer manuals
+
+I<bold> (optional, default 0): 1 or 0 to set or unset bold.
 
     $device->printer->bold(1);
     $device->printer->text("This is Bold Text\n");
@@ -362,19 +447,25 @@ Set bold mode *0* for off and *1* for on. Also called emphasized mode in some pr
 =cut
 
 sub bold {
-    my ( $self, $emphasized ) = @_;
+    my ( $self, $bold ) = @_;
+    $bold ||= 0;
 
-    $self->emphasizedStatus( $emphasized );
+    confess "Invalid value for bold '$bold'. Use '0' or '1'.
+        Usage: \n\t\$device->printer->bold(1)\n" unless($bold == 1 or $bold == 0);
+
+    $self->emphasizedStatus( $bold );
     if( $self->usePrintMode ) {
         $self->_updatePrintMode;
     } else {
-        $self->driver->write( _ESC . 'E' . int( $emphasized ) );
+        $self->driver->write( _ESC . 'E' . int( $bold ) );
     }
 }
 
 =method doubleStrike
 
 Set double-strike mode *0* for off and *1* for on
+
+I<doubleStrike> (optional, default 0): 1 or 0 to doubleStrike or unset doubleStrike.
 
     $device->printer->doubleStrike(1);
     $device->printer->text("This is Double Striked Text\n");
@@ -384,14 +475,20 @@ Set double-strike mode *0* for off and *1* for on
 =cut
 
 sub doubleStrike {
-    my ( $self, $flag ) = @_;
+    my ( $self, $doubleStrike ) = @_;
+    $doubleStrike ||= 0;
 
-    $self->driver->write( _ESC . 'G' . int( $flag ) );
+    confess "Invalid value for doubleStrike '$doubleStrike'. Use '0' or '1'.
+        Usage: \n\t\$device->printer->doubleStrike(1)\n" unless($doubleStrike == 1 or $doubleStrike == 0);
+
+    $self->driver->write( _ESC . 'G' . int( $doubleStrike ) );
 }
 
 =method underline
 
-set underline, *0* for off, *1* for on and *2* for double thickness
+Set underline, *0* for off, *1* for on and *2* for double thickness
+
+I<underline> (optional, default 0): 1 or 0 to underline or unset underline.
 
     $device->printer->underline(1);
     $device->printer->text("This is Underlined Text\n");
@@ -404,6 +501,10 @@ set underline, *0* for off, *1* for on and *2* for double thickness
 
 sub underline {
     my ( $self, $underline ) = @_;
+    $underline ||= 0;
+
+    confess "Invalid value for underline '$underline'. Use '0', '1' or '2'.
+        Usage: \n\t\$device->printer->underline(1)\n" unless($underline == 2 or $underline == 1 or $underline == 0);
 
     $self->underlineStatus($underline);
     if( $self->usePrintMode ) {
@@ -417,6 +518,8 @@ sub underline {
 
 Reverse white/black printing mode pass *0* for off and *1* for on
 
+I<invert> (optional, default 0): 1 or 0 to invert or unset invert.
+
     $device->printer->invert(1);
     $device->printer->text("This is Inverted Text\n");
     $device->printer->invert(0);
@@ -426,14 +529,22 @@ Reverse white/black printing mode pass *0* for off and *1* for on
 
 sub invert {
     my ( $self, $invert ) = @_;
+    $invert ||= 0;
+
+    confess "Invalid value for invert '$invert'. Use '0' or '1'.
+        Usage: \n\t\$device->printer->invert(1)\n" unless($invert == 1 or $invert == 0);
+
     $self->driver->write( _GS . 'B' . chr( $invert ) );
 }
 
 =method color
 
 Most thermal printers support just one color, black. Some ESCPOS printers(especially dot matrix) also support a second
-color, usually red. In many models, this only works when the color is set at the beginning of a new line before any text
-is printed. Pass *0* or *1* to switch between the two colors.
+color, usually red. A few rarer models also support upto 7 different colors. In many models, this only works when the
+color is set at the beginning of a new line before any text is printed. Pass *0* or *1* to switch between the two
+colors.
+
+I<color> (optional, default 0): color number 0, 1 ...
 
     $device->printer->lf();
     $device->printer->color(0); #black
@@ -448,13 +559,19 @@ is printed. Pass *0* or *1* to switch between the two colors.
 
 sub color {
     my ( $self, $color ) = @_;
+    $color ||= 0;
+
+    confess "Invalid value for color '$color'. Use '0' or a positive integer.
+        Usage: \n\t\$device->printer->color(1)\n" unless(isint $color >= 0);
 
     $self->driver->write( _ESC . 'r' . chr( $color ) );
 }
 
 =method justify
 
-Set Justification. Options *left*, *right* and *center*
+Set Justification. Options B<full>, B<left>, B<right> and B<center>
+
+I<justify> (optional, default 'left'): B<full>, B<left>, B<right> or B<center>
 
     $device->printer->justify( 'right' );
     $device->printer->text("This is right justified");
@@ -462,19 +579,26 @@ Set Justification. Options *left*, *right* and *center*
 =cut
 
 sub justify {
-    my ( $self, $j ) = @_;
-
+    my ( $self, $justify ) = @_;
+    $justify ||= 'left';
     my %jmap = (
         left   => 0,
         center => 1,
         right  => 2,
+        full   => 3,
     );
-    $self->driver->write( _ESC . 'a' . int( $jmap{lc $j} ) );
+
+    confess "Invalid value for justify '$justify'. Use 'full', 'left', 'center' or 'right'.
+        Usage: \n\t\$device->printer->justify('left')\n" unless(exists $jmap{$justify});
+
+    $self->driver->write( _ESC . 'a' . int( $jmap{lc $justify} ) );
 }
 
 =method upsideDown
 
 Sets Upside Down Printing on/off (pass *0* or *1*)
+
+I<upsideDown> (optional, default 0): B<0> or B<1>
 
     $device->printer->upsideDownPrinting(1);
     $device->printer->text("This text is upside down");
@@ -482,16 +606,22 @@ Sets Upside Down Printing on/off (pass *0* or *1*)
 =cut
 
 sub upsideDown {
-    my ( $self, $flag ) = @_;
+    my ( $self, $upsideDown ) = @_;
+    $upsideDown ||= 0;
+
+    confess "Invalid value for upsideDown '$upsideDown'. Use '0' or '1'.
+        Usage: \n\t\$device->printer->upsideDown(1)\n" unless($upsideDown == 1 or $upsideDown == 0);
 
     $self->lf();
-    $self->driver->write( _ESC . '{' . int( $flag ) );
+    $self->driver->write( _ESC . '{' . int( $upsideDown ) );
 }
 
 =method fontHeight
 
 Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and
 *7* for non-printmode state (default)
+
+I<height> (optional, default 0): B<0> to B<7>
 
     $device->printer->fontHeight(1);
     $device->printer->text("double height\n");
@@ -505,7 +635,11 @@ Set font height. Only supports *0* or *1* for printmode set to 1, supports value
 
 sub fontHeight {
     my ( $self, $height ) = @_;
+    $height ||= 0;
     my $width = $self->widthStatus;
+
+    confess "Invalid value for fontHeight '$height'. Use a integer between '0' and '7'.
+        Usage: \n\t\$device->printer->fontHeight(5)\n" unless( isint $height >= 0 and $height <= 7);
 
     $self->heightStatus( $height );
     if( $self->usePrintMode ) {
@@ -520,6 +654,8 @@ sub fontHeight {
 Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and
 *7* for non-printmode state (default)
 
+I<width> (optional, default 0): B<0> to B<7>
+
     $device->printer->fontWidth(1);
     $device->printer->text("double width\n");
     $device->printer->fontWidth(2);
@@ -532,7 +668,11 @@ Set font width. Only supports *0* or *1* for printmode set to 1, supports values
 
 sub fontWidth {
     my ( $self, $width ) = @_;
+    $width ||= 0;
     my $height = $self->heightStatus;
+
+    confess "Invalid value for fontWidth '$width'. Use a integer between '0' and '7'.
+        Usage: \n\t\$device->printer->fontWidth(5)\n" unless(isint $width >= 0 and $width <= 7);
 
     $self->widthStatus( $width );
     if( $self->usePrintMode ) {
@@ -546,6 +686,8 @@ sub fontWidth {
 
 Sets character spacing takes a value between 0 and 255
 
+I<charSpacing> (optional, default 0): B<0> to B<255>
+
     $device->printer->charSpacing(5);
     $device->printer->text("Blah Blah Blah\n");
     $device->printer->print();
@@ -553,23 +695,49 @@ Sets character spacing takes a value between 0 and 255
 =cut
 
 sub charSpacing {
-    my ( $self, $spacing ) = @_;
-    $self->driver->write( _ESC . _SP . chr( $spacing ) );
+    my ( $self, $charSpacing ) = @_;
+    $charSpacing ||= 0;
+
+    confess "Invalid value for charSpacing '$charSpacing'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->charSpacing(5)\n" unless(isint $charSpacing >= 0 and $charSpacing <= 255);
+
+    $self->driver->write( _ESC . _SP . chr( $charSpacing ) );
 }
 
 =method lineSpacing
 
-Sets the line spacing i.e the spacing between each line of printout.
+Sets line spacing i.e the spacing between each line of printout. Note that some printers may not support all
+commandsets for setting a line spacing. The most commonly available I<commandSet>('3') is used by default.
 
-    $device->printer->lineSpacing($spacing);
+I<lineSpacing>: ranges from 0 to 255 when commandSet is '+' or '3',
 
-* 0 <= $spacing <= 255
+Line spacing is set to lineSpacing/360 of an inch if commandSet is '+', lineSpacing/180 of an inch if commandSet is '3'
+and lineSpacing/60 of an inch if commandSet is 'A' (default: 30)
+
+I<commandSet>: ESCPOS provides three aternate commands for setting line spacing i.e. '+', '3', 'A' (default : '3').
+
+    $device->printer->lineSpacing($lineSpacing); # Use default commandSet '3'
+    $device->printer->lineSpacing($lineSpacing, $commandSet);
 
 =cut
 
 sub lineSpacing {
-    my ( $self, $spacing ) = @_;
-    $self->driver->write( _ESC . '3' . chr( $spacing ) );
+    my ( $self, $lineSpacing, $commandSet ) = @_;
+    $lineSpacing ||= 30;
+    $commandSet  ||= '3';
+
+    if($commandSet eq '+' or $commandSet eq '3') {
+        confess "Invalid value for lineSpacing '$lineSpacing'. Use a integer between '0' and '255' with this commandSet.
+            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n" unless(isint $lineSpacing >= 0 and $lineSpacing <= 255);
+    } elsif($commandSet eq 'A') {
+        confess "Invalid value for lineSpacing '$lineSpacing'. Use a integer between '0' and '85' with commandSet 'A'.
+            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n" unless(isint $lineSpacing >= 0 and $lineSpacing <= 85);
+    } else {
+        confess "Invalid value for commandSet '$commandSet'. Use 'A', '3' or '+'.
+            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n";
+    }
+
+    $self->driver->write( _ESC . $commandSet . chr( $lineSpacing ) );
 }
 
 =method selectDefaultLineSpacing
@@ -589,6 +757,10 @@ sub selectDefaultLineSpacing {
 
 Sets the distance from the beginning of the line to the position at which characters are to be printed.
 
+I<length>: ranges from 0 to 255
+
+I<height>: ranges from 0 to 255
+
     $device->printer->printPosition( $length, $height );
 
 * 0 <= $length <= 255
@@ -598,34 +770,50 @@ Sets the distance from the beginning of the line to the position at which charac
 
 sub printPosition {
     my ( $self, $length, $height ) = @_;
+
+    confess "Invalid value for length '$length'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->printPosition(5, 6)\n" unless(isint $length >= 0 and $length <= 255);
+    confess "Invalid value for length '$height'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->printPosition(5, 6)\n" unless(isint $height >= 0 and $height <= 255);
+
     $self->driver->write( _ESC . '$' . chr( $length )  . chr( $height ) );
 }
 
 =method leftMargin
 
-Sets the left margin. Takes two single byte parameters, ~nL~ and ~nH~.
+Sets the left margin for printing. Set the left margin at the beginning of a line. The printer ignores any data
+preceding this command on the same line in the buffer.
 
-To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number)
-part of a number, while MOD indicates the remainder of a division operation. Must be sent before a new line begins to be
-effective.
+In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable area
 
-For example, to break the value 520 into two bytes, use the following two equations:
-~nH~ = INT 520/256
-~nL~ = MOD 520/256
+I<leftMargin>: Left Margin, range: B<0> to B<65535>. If the margin exceeds the printable area, the left margin is
+automatically set to the maximum value of the printable area.
 
-    $device->printer->leftMargin(nL => $nl, nH => $nh);
+    $device->printer->leftMargin($leftMargin);
+
+
+Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module
+the nL and nH syntax for this method.
 
 =cut
 
 sub leftMargin {
-    my ( $self, %params ) = @_;
+    my ( $self, $leftMargin ) = @_;
 
-    $self->driver->write( _GS . 'L' . chr( $params{nL} ) . chr( $params{nH} ) );
+    confess "Invalid value for leftMargin '$leftMargin'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->leftMargin(30)\n" unless(isint $leftMargin >= 0 and $leftMargin <= 255);
+
+    my $nH = $leftMargin >> 8;
+    my $nL = $leftMargin - ($nH << 8);
+
+    $self->driver->write( _GS . 'L' . chr( $nL ) . chr( $nH ) );
 }
 
 =method rot90
 
 Rotate printout by 90 degrees
+
+I<rotate> (optional, default 0): B<0> or B<1>
 
     $device->printer->rot90(1);
     $device->printer->text("This is rotated 90 degrees\n");
@@ -635,9 +823,12 @@ Rotate printout by 90 degrees
 =cut
 
 sub rot90 {
-    my ( $self, $rot ) = @_;
+    my ( $self, $rotate ) = @_;
 
-    $self->driver->write( _ESC . 'V' . chr( $rot ) );
+    confess "Invalid value for rot90 '$rotate'. Use '0' or '1'.
+        Usage: \n\t\$device->printer->rot90(1)\n" unless($rotate == 1 or $rotate == 0);
+
+    $self->driver->write( _ESC . 'V' . chr( $rotate ) );
 }
 
 # This is a redundant function in ESCPOS which updates the printer
@@ -699,17 +890,18 @@ However there are several customizations available including barcode ~system~, ~
         barcode     => 'Shan',
     );
 
-Available barcode ~systems~:
+I<HRIPosition> (optional, default 'below'): 'none', 'above', 'below', 'aboveandbelow'
 
-* UPC-A
-* UPC-C
-* JAN13
-* JAN8
-* CODE39
-* ITF
-* CODABAR
-* CODE93
-* CODE128
+I<font> (optional, default 'b'): 'a' or 'b'
+
+I<height> (optional, default 50): height integer between 0 and 255
+
+I<width> (optional, default 50): width integer between 0 and 255
+
+I<system> (optional, default 'CODE93'): B<UPC-A>, B<UPC-B>, B<JAN13>, B<JAN8>, B<CODE39>, B<ITF>, B<CODABAR>, B<CODE93>,
+B<CODE128>
+
+I<barcode>: String to print as barcode.
 
 =cut
 
@@ -722,6 +914,7 @@ sub barcode {
         below         => 2,
         aboveandbelow => 3,
     );
+
     $self->driver->write( _GS . 'H' . chr(
             $map{$params{HRIPosition} || 'below'}
         ) );
@@ -756,7 +949,7 @@ sub barcode {
     $params{system} ||= 'CODE93';
 
     if(
-        $map{$params{system}} < 9
+        exists $map{$params{system}}
     ) {
         $self->driver->write( _GS . 'k'
             . chr( $map{$params{system}} + 65 )
@@ -764,7 +957,7 @@ sub barcode {
             . $params{barcode}
         );
     } else {
-        die "Invalid system in barcode";
+        confess "Invalid system in barcode";
     }
 }
 
@@ -777,6 +970,8 @@ sub barcode {
 Prints bit image stored in Non-Volatile (NV) memory of the printer.
 
     $device->printer->printNVImage($flag);
+
+I<flag>: height and width
 
 * $flag = 0 # Normal width and Normal Height
 * $flag = 1 # Double width and Normal Height
@@ -816,9 +1011,11 @@ sub printImage {
 
 =method cutPaper
 
-Cuts the paper, if ~feed~ is set to *0* then printer doesnt feed paper to cutting position before cutting it. The
-default behavior is that the printer doesn't feed paper to cutting position before cutting. One pre-requisite line feed
-is automatically executed before paper cut though.
+Cuts the paper,
+
+I<feed> (optional, default 0): if ~feed~ is set to B<0> then printer doesnt feed paper to cutting position before
+cutting it. The default behavior is that the printer doesn't feed paper to cutting position before cutting. One
+pre-requisite line feed is automatically executed before paper cut though.
 
     $device->printer->cutPaper( feed => 0 )
 
@@ -830,7 +1027,7 @@ used.
 
 sub cutPaper {
     my ( $self, %params ) = @_;
-    $params{feed} = defined $params{feed} ? $params{feed} : 0;
+    $params{feed} ||= 0;
 
     $self->lf();
     if( $params{feed} == 0 ) {
@@ -848,8 +1045,9 @@ other devices by close contact.
 
     $device->printer->drawerKickPulse( $pin, $time );
 
-* $pin is either 0( for pin 2 ) and 1( for pin5 ) default value is 0
-* $time is a value between 1 to 8 and the pulse duration in multiples of 100ms. default value is 8
+I<pin> (optional, default 0): $pin is either 0( for pin 2 ) and 1( for pin5 )
+
+I<pin> (optional, default 8): $time is a value between 1 to 8 and the pulse duration in multiples of 100ms.
 
 For default values use without any params to kick drawer pin 2 with a 800ms pulse
 

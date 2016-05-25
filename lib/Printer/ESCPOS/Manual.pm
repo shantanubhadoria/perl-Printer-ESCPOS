@@ -190,12 +190,12 @@ Sends raw text to the printer.
 
 === printAreaWidth
 
-Sets the Print area width specified by ~nL~ and ~NH~. The width is calculated as
-    ( nL + nH * 256 ) * horiz_motion_unit
+Sets the Print area width specified by width which is a int between *0* to *65535*
 
-A pre-requisite line feed is automatically executed before printAreaWidth method.
+    $device->printer->printAreaWidth( 255 );
 
-    $device->printer->printAreaWidth( nL => 0, nH =>0 );
+Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module
+the nL and nH syntax for this method.
 
 === tabPositions
 
@@ -368,17 +368,15 @@ Sets the distance from the beginning of the line to the position at which charac
 
 === leftMargin
 
-Sets the left margin. Takes two single byte parameters, ~nL~ and ~nH~.
+Sets the left margin for printing. Set the left margin at the beginning of a line. The printer ignores any data
+preceding this command on the same line in the buffer.
 
-To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number)
-part of a number, while MOD indicates the remainder of a division operation. Must be sent before a new line begins to be
-effective.
+In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable area
 
-For example, to break the value 520 into two bytes, use the following two equations:
-~nH~ = INT 520/256
-~nL~ = MOD 520/256
+Left Margin, range: 0 to 65535. If the margin exceeds the printable area, the left margin is automatically set to the
+maximum value of the printable area.
 
-    $device->printer->leftMargin(nL => $nl, nH => $nh);
+    $device->printer->leftMargin($leftMargin);
 
 === rot90
 
