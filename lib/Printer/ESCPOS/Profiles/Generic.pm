@@ -181,7 +181,7 @@ sub _pad_image_size {
 sub _print_image {
     my ($self, $pixelLine, $imageSize) = @_;
 
-    $self->driver->write("\x1d\x76\x30\x00");
+    $self->driver->write(_GS . "v\x30\x00");
     my $buffer = sprintf("%02X%02X%02X%02X", ((($imageSize->[0] / $imageSize->[1]) / 8), 0, $imageSize->[1], 0));
     $self->driver->write(pack("H*", $buffer));
 
@@ -469,7 +469,6 @@ sub justify {
         center => 1,
         right  => 2,
     );
-    $self->lf();
     $self->driver->write( _ESC . 'a' . int( $jmap{lc $j} ) );
 }
 
