@@ -11,7 +11,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 # VERSION
 
-version 0.027
+version 1.001
 
 # SYNOPSIS
 

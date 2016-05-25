@@ -707,14 +707,14 @@ sub charSpacing {
 =method lineSpacing
 
 Sets line spacing i.e the spacing between each line of printout. Note that some printers may not support all
-commandsets for setting a line spacing. The most commonly available I<commandSet>('3') is used by default.
+command sets for setting a line spacing. The most commonly available I<commandSet>('3') is used by default.
 
 I<lineSpacing>: ranges from 0 to 255 when commandSet is '+' or '3',
 
 Line spacing is set to lineSpacing/360 of an inch if commandSet is '+', lineSpacing/180 of an inch if commandSet is '3'
 and lineSpacing/60 of an inch if commandSet is 'A' (default: 30)
 
-I<commandSet>: ESCPOS provides three aternate commands for setting line spacing i.e. '+', '3', 'A' (default : '3').
+I<commandSet>: ESCPOS provides three alternate commands for setting line spacing i.e. '+', '3', 'A' (default : '3').
 
     $device->printer->lineSpacing($lineSpacing); # Use default commandSet '3'
     $device->printer->lineSpacing($lineSpacing, $commandSet);
