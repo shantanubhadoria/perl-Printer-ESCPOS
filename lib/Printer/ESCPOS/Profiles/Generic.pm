@@ -759,7 +759,7 @@ at L<http://www.qrcode.com/en/about/version.html>.
 
 I<ecc>: error correction level. There are four available error correction schemes in QR codes.
 
-=over 1
+=over
 
 =item *
 
