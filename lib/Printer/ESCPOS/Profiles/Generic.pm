@@ -761,6 +761,30 @@ Pass B<1> to enable, pass B<0> to disable
 
 =head2 qr
 
+=over
+
+=item *
+
+Level B<L> – up to 7% damage
+
+=item *
+
+Level B<M> – up to 15% damage
+
+=item *
+
+Level B<Q> – up to 25% damage
+
+=item *
+
+Level B<H> – up to 30% damage
+
+=back
+
+I<version> (optional, default B<5>): The symbol versions of QR Code range from Version B<1> to Version B<40>. Each
+version has a different module configuration or number of modules. (The module refers to the black and white dots that
+make up QR Code.)
+
 Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
 correction level. In other words, as the amount of data increases, more modules are required to comprise QR Code,
 resulting in larger QR Code symbols.
