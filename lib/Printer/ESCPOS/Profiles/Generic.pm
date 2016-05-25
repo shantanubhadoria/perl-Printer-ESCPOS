@@ -435,19 +435,19 @@ sub lineSpacing {
     if ( $commandSet eq '+' or $commandSet eq '3' ) {
         confess
 "Invalid value for lineSpacing '$lineSpacing'. Use a integer between '0' and '255' with this commandSet.
-          Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n"
+            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n"
           unless ( isint $lineSpacing >= 0 and $lineSpacing <= 255 );
     }
     elsif ( $commandSet eq 'A' ) {
         confess
 "Invalid value for lineSpacing '$lineSpacing'. Use a integer between '0' and '85' with commandSet 'A'.
-          Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n"
+            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n"
           unless ( isint $lineSpacing >= 0 and $lineSpacing <= 85 );
     }
     else {
         confess
           "Invalid value for commandSet '$commandSet'. Use 'A', '3' or '+'.
-          Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n";
+            Usage: \n\t\$device->printer->lineSpacing(5, 'A')\n";
     }
 
     $self->driver->write( _ESC . $commandSet . chr($lineSpacing) );
@@ -462,21 +462,42 @@ sub selectDefaultLineSpacing {
 
 sub printPosition {
     my ( $self, $length, $height ) = @_;
+
+    confess
+      "Invalid value for length '$length'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->printPosition(5, 6)\n"
+      unless ( isint $length >= 0 and $length <= 255 );
+    confess
+      "Invalid value for length '$height'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->printPosition(5, 6)\n"
+      unless ( isint $height >= 0 and $height <= 255 );
+
     $self->driver->write( _ESC . '$' . chr($length) . chr($height) );
 }
 
 
 sub leftMargin {
-    my ( $self, %params ) = @_;
+    my ( $self, $leftMargin ) = @_;
 
-    $self->driver->write( _GS . 'L' . chr( $params{nL} ) . chr( $params{nH} ) );
+    confess
+"Invalid value for leftMargin '$leftMargin'. Use a integer between '0' and '255'.
+        Usage: \n\t\$device->printer->leftMargin(30)\n"
+      unless ( isint $leftMargin >= 0 and $leftMargin <= 255 );
+
+    $nH = $leftMargin >> 8 $nL = $leftMargin - ( $nH << 8 )
+
+      $self->driver->write( _GS . 'L' . chr($nL) . chr($nH) );
 }
 
 
 sub rot90 {
-    my ( $self, $rot ) = @_;
+    my ( $self, $rotate ) = @_;
 
-    $self->driver->write( _ESC . 'V' . chr($rot) );
+    confess "Invalid value for rot90 '$rotate'. Use '0' or '1'.
+        Usage: \n\t\$device->printer->rot90(1)\n"
+      unless ( $rotate == 1 or $rotate == 0 );
+
+    $self->driver->write( _ESC . 'V' . chr($rotate) );
 }
 
 # This is a redundant function in ESCPOS which updates the printer
@@ -736,6 +757,13 @@ implementation may be created using a printer model specific profile.
 You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
 at L<http://www.qrcode.com/en/about/version.html>.
 
+I<ecc>: error correction level. There are four available error correction schemes in QR codes.
+
+* Level L – up to 7% damage
+* Level M – up to 15% damage
+* Level Q – up to 25% damage
+* Level H – up to 30% damage
+
     my $ecc = 'L'; # Default value
     my $version = 5; # Default value
     my $moduleSize = 3; # Default value
@@ -766,7 +794,7 @@ width setting is effective until init is executed, the printer is reset, or the 
 
     $device->printer->printAreaWidth( $width );
 
-Note: If you are using Printer::ESCPOS version before v1.* Please check documentation for older version of this module the nL
+Note: If you are using Printer::ESCPOS version prior to v1.* Please check documentation for older version of this module the nL
 and nH syntax for this method.
 
 =head2 tabPositions
@@ -932,8 +960,8 @@ Sets character spacing takes a value between 0 and 255
 
 =head2 lineSpacing
 
-Sets line spacing i.e the spacing between each line of printout., note that some printers may not support all
-commandsets for setting a line spacing. The most commonly available I<commandSet>('3') is chosen by default.
+Sets line spacing i.e the spacing between each line of printout. Note that some printers may not support all
+commandsets for setting a line spacing. The most commonly available I<commandSet>('3') is used by default.
 
 I<lineSpacing>: ranges from 0 to 255 when commandSet is '+' or '3',
 
@@ -942,6 +970,7 @@ and lineSpacing/60 of an inch if commandSet is 'A' (default: 30)
 
 I<commandSet>: ESCPOS provides three aternate commands for setting line spacing i.e. '+', '3', 'A' (default : '3').
 
+    $device->printer->lineSpacing($lineSpacing); # Use default commandSet '3'
     $device->printer->lineSpacing($lineSpacing, $commandSet);
 
 =head2 selectDefaultLineSpacing
@@ -961,17 +990,15 @@ Sets the distance from the beginning of the line to the position at which charac
 
 =head2 leftMargin
 
-Sets the left margin. Takes two single byte parameters, ~nL~ and ~nH~.
+Sets the left margin for printing. Set the left margin at the beginning of a line. The printer ignores any data
+preceding this command on the same line in the buffer.
 
-To determine the value of these two bytes, use the INT and MOD conventions. INT indicates the integer (or whole number)
-part of a number, while MOD indicates the remainder of a division operation. Must be sent before a new line begins to be
-effective.
+In page mode sets the left margin to leftMargin x (horizontal motion unit) from the left edge of the printable area
 
-For example, to break the value 520 into two bytes, use the following two equations:
-~nH~ = INT 520/256
-~nL~ = MOD 520/256
+I<leftMargin>: Left Margin, range: 0 to 65535. If the margin exceeds the printable area, the left margin is
+automatically set to the maximum value of the printable area.
 
-    $device->printer->leftMargin(nL => $nl, nH => $nh);
+    $device->printer->leftMargin($leftMargin);
 
 =head2 rot90
 

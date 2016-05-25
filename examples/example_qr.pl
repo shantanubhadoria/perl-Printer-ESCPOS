@@ -19,9 +19,10 @@ my $printer_usb = Printer::ESCPOS->new(
 
 # $printer_usb->printer->justify("left");
 # $printer_usb->printer->qr("WIFI:T:WPA;S:CoreBPM Guest;P:CoreBPM.2016;;",'L',4,0);
-$printer_usb->printer->printAreaWidth(23);
-$printer_usb->printer->tabPositions(4, 2);
 $printer_usb->printer->font('a');
+$printer_usb->printer->text("adadsad asd sad asd \n");
+$printer_usb->printer->font('b');
+$printer_usb->printer->text("bdadsad asd sad asd \n");
 
 
 =head2
