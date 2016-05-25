@@ -761,10 +761,6 @@ Pass B<1> to enable, pass B<0> to disable
 
 =head2 qr
 
-Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
-correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
-resulting in larger QR Code symbols.
-
 I<moduleSize> (optional, default B<3>): width of each module in pixels.
 
     my $ecc = 'L'; # Default value
