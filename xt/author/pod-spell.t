@@ -86,6 +86,12 @@ lsusb
 portName
 Ecc
 moduleSize
+HRIPosition
+aboveandbelow
+aternate
+commandSet
+ecc
+upto
 Shantanu
 Bhadoria
 shantanu
