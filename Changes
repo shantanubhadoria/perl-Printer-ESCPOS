@@ -1,6 +1,12 @@
 Changelog for Printer-ESCPOS
 
-0.027 2016-05-25T08:11:45
+1.001 2016-05-25T08:18:20
+ - No changes found
+
+1.000 2016-05-25T08:17:48
+ - Added exceptions for invalid parameters, added calculations for nL and
+   nH values in module instead of making the user calculate the values
+   (Shantanu Bhadoria)
  - Using globals instead of straight byte codes (Shantanu Bhadoria)
  - Fixing link in manual (Shantanu Bhadoria)
 

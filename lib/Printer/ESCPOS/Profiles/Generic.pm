@@ -13,7 +13,7 @@ package Printer::ESCPOS::Profiles::Generic;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.027'; # VERSION
+our $VERSION = '1.001'; # VERSION
 
 # Dependencies
 use 5.010;
@@ -495,9 +495,10 @@ sub leftMargin {
         Usage: \n\t\$device->printer->leftMargin(30)\n"
       unless ( isint $leftMargin >= 0 and $leftMargin <= 255 );
 
-    $nH = $leftMargin >> 8 $nL = $leftMargin - ( $nH << 8 )
+    my $nH = $leftMargin >> 8;
+    my $nL = $leftMargin - ( $nH << 8 );
 
-      $self->driver->write( _GS . 'L' . chr($nL) . chr($nH) );
+    $self->driver->write( _GS . 'L' . chr($nL) . chr($nH) );
 }
 
 
@@ -739,7 +740,7 @@ Printer::ESCPOS::Profiles::Generic - Generic Profile for Printers for L<Printer:
 
 =head1 VERSION
 
-version 0.027
+version 1.001
 
 =head1 METHODS
 
