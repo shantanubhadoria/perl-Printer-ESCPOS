@@ -354,7 +354,7 @@ sub color {
 
 sub justify {
     my ( $self, $justify ) = @_;
-    $color ||= 'left';
+    $justify ||= 'left';
     my %jmap = (
         left   => 0,
         center => 1,
@@ -372,19 +372,21 @@ sub justify {
 
 
 sub upsideDown {
-    my ( $self, $flag ) = @_;
+    my ( $self, $upsideDown ) = @_;
+    $upsideDown ||= 0;
 
-    confess "Invalid value for upsideDown '$flag'. Use '0' or '1'.
+    confess "Invalid value for upsideDown '$upsideDown'. Use '0' or '1'.
         Usage: \n\t\$device->printer->upsideDown(1)\n"
-      unless ( $flag == 1 or $flag == 0 );
+      unless ( $upsideDown == 1 or $upsideDown == 0 );
 
     $self->lf();
-    $self->driver->write( _ESC . '{' . int($flag) );
+    $self->driver->write( _ESC . '{' . int($upsideDown) );
 }
 
 
 sub fontHeight {
     my ( $self, $height ) = @_;
+    $height ||= 0;
     my $width = $self->widthStatus;
 
     confess
@@ -404,6 +406,7 @@ sub fontHeight {
 
 sub fontWidth {
     my ( $self, $width ) = @_;
+    $width ||= 0;
     my $height = $self->heightStatus;
 
     confess
@@ -424,6 +427,7 @@ sub fontWidth {
 
 sub charSpacing {
     my ( $self, $charSpacing ) = @_;
+    $charSpacing ||= 0;
 
     confess
 "Invalid value for charSpacing '$charSpacing'. Use a integer between '0' and '255'.
@@ -961,7 +965,7 @@ I<color> (optional, default 0): color number 0, 1 ...
 
 Set Justification. Options B<full>, B<left>, B<right> and B<center>
 
-I<justify> (optional, default 'left'): B<full>, B<left>, B<right> and B<center>
+I<justify> (optional, default 'left'): B<full>, B<left>, B<right> or B<center>
 
     $device->printer->justify( 'right' );
     $device->printer->text("This is right justified");
@@ -970,6 +974,8 @@ I<justify> (optional, default 'left'): B<full>, B<left>, B<right> and B<center>
 
 Sets Upside Down Printing on/off (pass *0* or *1*)
 
+I<upsideDown> (optional, default 0): B<0> or B<1>
+
     $device->printer->upsideDownPrinting(1);
     $device->printer->text("This text is upside down");
 
@@ -977,6 +983,8 @@ Sets Upside Down Printing on/off (pass *0* or *1*)
 
 Set font height. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and
 *7* for non-printmode state (default)
+
+I<height> (optional, default 0): B<0> to B<7>
 
     $device->printer->fontHeight(1);
     $device->printer->text("double height\n");
@@ -991,6 +999,8 @@ Set font height. Only supports *0* or *1* for printmode set to 1, supports value
 Set font width. Only supports *0* or *1* for printmode set to 1, supports values *0*, *1*, *2*, *3*, *4*, *5*, *6* and
 *7* for non-printmode state (default)
 
+I<width> (optional, default 0): B<0> to B<7>
+
     $device->printer->fontWidth(1);
     $device->printer->text("double width\n");
     $device->printer->fontWidth(2);
@@ -1002,6 +1012,8 @@ Set font width. Only supports *0* or *1* for printmode set to 1, supports values
 =head2 charSpacing
 
 Sets character spacing takes a value between 0 and 255
+
+I<charSpacing> (optional, default 0): B<0> to B<255>
 
     $device->printer->charSpacing(5);
     $device->printer->text("Blah Blah Blah\n");

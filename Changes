@@ -1,6 +1,6 @@
 Changelog for Printer-ESCPOS
 
-0.027 2016-05-25T07:30:33
+0.027 2016-05-25T07:35:21
  - Using globals instead of straight byte codes (Shantanu Bhadoria)
  - Fixing link in manual (Shantanu Bhadoria)
 
@@ -71,8 +71,8 @@ Changelog for Printer-ESCPOS
 
 0.014 2015-04-02T03:16:21
  - v0.014 (Shantanu Bhadoria)
- - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added rotate 90 function (Shantanu Bhadoria)
+ - Added rotate 90 function Fixed POD Doc (Shantanu Bhadoria)
  - Added POD Documentation (Shantanu Bhadoria)
  - Added USB read functionality (Shantanu Bhadoria)
  - POD Fixes (Shantanu Bhadoria)
