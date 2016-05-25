@@ -761,6 +761,11 @@ Pass B<1> to enable, pass B<0> to disable
 
 =head2 qr
 
+    my $ecc = 'L'; # Default value
+    my $version = 5; # Default value
+    my $moduleSize = 3; # Default value
+    $device->printer->qr("Don't Panic!", $ecc, $version, $moduleSize);
+
 You may also call align() before calling qr() to set alignment on the page.
 
 =head2 image
