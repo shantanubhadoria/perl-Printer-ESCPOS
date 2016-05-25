@@ -761,13 +761,21 @@ I<ecc>: error correction level. There are four available error correction scheme
 
 =over 1
 
-=item * Level L – up to 7% damage
+=item *
 
-=item * Level M – up to 15% damage
+Level L – up to 7% damage
 
-=item * Level Q – up to 25% damage
+=item *
 
-=item * Level H – up to 30% damage
+Level M – up to 15% damage
+
+=item *
+
+Level Q – up to 25% damage
+
+=item *
+
+Level H – up to 30% damage
 
 =back
 
