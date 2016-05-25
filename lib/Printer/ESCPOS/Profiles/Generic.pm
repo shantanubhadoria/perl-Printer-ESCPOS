@@ -761,42 +761,9 @@ Pass B<1> to enable, pass B<0> to disable
 
 =head2 qr
 
-Prints a qr code to the printer. In Generic profile, this creates a QR Code image using L<GD::Barcode::QRcode>. A native
-implementation may be created using a printer model specific profile.
-
-    $device->printer->qr('Print this QR Code');
-    $device->printer->qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
-
-You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
-at L<http://www.qrcode.com/en/about/version.html>.
-
-I<string>: String to be printed as QR code.
-
-I<ecc> (optional, default B<'L'>): error correction level. There are four available error correction schemes in QR codes.
-
-=over
-
-=item *
-
-Level B<L> – up to 7% damage
-
-=item *
-
-Level B<M> – up to 15% damage
-
-=item *
-
-Level B<Q> – up to 25% damage
-
-=item *
-
-Level B<H> – up to 30% damage
-
-=back
-
-I<version> (optional, default B<5>): The symbol versions of QR Code range from Version B<1> to Version B<40>. Each
-version has a different module configuration or number of modules. (The module refers to the black and white dots that
-make up QR Code.)
+Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
+correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
+resulting in larger QR Code symbols.
 
 I<moduleSize> (optional, default B<3>): width of each module in pixels.
 
