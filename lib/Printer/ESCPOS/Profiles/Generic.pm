@@ -44,6 +44,21 @@ sub init {
 }
 
 
+sub enable {
+    my ( $self, $n ) = @_;
+
+    if ( $n == 1 ) {
+        $self->driver->print( _ESC . '=' . chr(1) );
+    }
+    elsif ( $n == 0 ) {
+        $self->driver->print( _ESC . '=' . chr(2) );
+    }
+    else {
+        confess "Invalid parameter please use '0' or '1'";
+    }
+}
+
+
 sub leftMargin {
     my ( $self, $leftMargin ) = @_;
 
@@ -305,6 +320,16 @@ version 1.001
 
 Initializes the Printer. Clears the data in print buffer and resets the printer to the mode that was in effect when the
 power was turned on. This function is automatically called on creation of printer object.
+
+=head2 enable
+
+Enables/Disables the printer with a '_ESC =' command (Set peripheral device). When disabled, the printer ignores all
+commands except enable() or other real-time commands.
+
+Pass B<1> to enable, pass B<0> to disable
+
+    $device->printer->enable(0) # disabled
+    $device->printer->enable(1) # enabled
 
 =head2 leftMargin
 
