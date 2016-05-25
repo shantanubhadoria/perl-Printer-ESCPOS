@@ -471,22 +471,6 @@ sub selectDefaultLineSpacing {
 }
 
 
-sub printPosition {
-    my ( $self, $length, $height ) = @_;
-
-    confess
-      "Invalid value for length '$length'. Use a integer between '0' and '255'.
-        Usage: \n\t\$device->printer->printPosition(5, 6)\n"
-      unless ( isint $length >= 0 and $length <= 255 );
-    confess
-      "Invalid value for length '$height'. Use a integer between '0' and '255'.
-        Usage: \n\t\$device->printer->printPosition(5, 6)\n"
-      unless ( isint $height >= 0 and $height <= 255 );
-
-    $self->driver->write( _ESC . '$' . chr($length) . chr($height) );
-}
-
-
 sub leftMargin {
     my ( $self, $leftMargin ) = @_;
 
@@ -1059,19 +1043,6 @@ I<commandSet>: ESCPOS provides three alternate commands for setting line spacing
 Reverts to default line spacing for the printer
 
     $device->printer->selectDefaultLineSpacing();
-
-=head2 printPosition
-
-Sets the distance from the beginning of the line to the position at which characters are to be printed.
-
-I<length>: ranges from 0 to 255
-
-I<height>: ranges from 0 to 255
-
-    $device->printer->printPosition( $length, $height );
-
-* 0 <= $length <= 255
-* 0 <= $height <= 255
 
 =head2 leftMargin
 
