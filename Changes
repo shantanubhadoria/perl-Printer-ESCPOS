@@ -1,6 +1,10 @@
 Changelog for Printer-ESCPOS
 
-1.001 2016-05-25T08:39:39
+1.002 2016-05-25T08:44:02
+ - Fixed POD documentation mistakes referencing older syntax (Shantanu
+   Bhadoria)
+
+1.001 2016-05-25T08:39:32
  - Removed utf8 char from pod to avoid pod croaks (Shantanu Bhadoria)
  - added stopwords to avoid spellcheck errors (Shantanu Bhadoria)
 
