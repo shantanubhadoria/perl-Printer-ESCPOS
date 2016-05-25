@@ -761,21 +761,6 @@ Pass B<1> to enable, pass B<0> to disable
 
 =head2 qr
 
-I<version> (optional, default B<5>): The symbol versions of QR Code range from Version B<1> to Version B<40>. Each
-version has a different module configuration or number of modules. (The module refers to the black and white dots that
-make up QR Code.)
-
-Each QR Code symbol version has the maximum data capacity according to the amount of data, character type and error
-correction level.　In other words, as the amount of data increases, more modules are required to comprise QR Code,
-resulting in larger QR Code symbols.
-
-I<moduleSize> (optional, default B<3>): width of each module in pixels.
-
-    my $ecc = 'L'; # Default value
-    my $version = 5; # Default value
-    my $moduleSize = 3; # Default value
-    $device->printer->qr("Don't Panic!", $ecc, $version, $moduleSize);
-
 You may also call align() before calling qr() to set alignment on the page.
 
 =head2 image
