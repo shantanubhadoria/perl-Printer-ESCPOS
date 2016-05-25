@@ -11,7 +11,7 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
 
 # VERSION
 
-version 1.001
+version 1.002
 
 # SYNOPSIS
 
@@ -52,7 +52,7 @@ For USB Printers [Printer::ESCPOS](https://metacpan.org/pod/Printer::ESCPOS) use
     
         $device->printer->qr("Don't Panic!"); # Print a QR Code
     
-        $device->printer->printAreaWidth( nL => 0, nH => 1);
+        $device->printer->printAreaWidth(5000);
         $device->printer->text("Print Area Width Modified\n");
         $device->printer->printAreaWidth(); # Reset to default
         $device->printer->text("print area width reset\n");
@@ -86,7 +86,7 @@ you have configured your printer
     
         # These commands won't actually send anything to the printer but will store all the
         # merged data including control codes to module buffer.
-        $device->printer->printAreaWidth( nL => 0, nH => 1);
+        $device->printer->printAreaWidth(7000);
         $device->printer->text("Print Area Width Modified\n");
         $device->printer->printAreaWidth(); # Reset to default
         $device->printer->text("print area width reset\n");
