@@ -13,7 +13,7 @@ package Printer::ESCPOS::Connections::Network;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.026'; # VERSION
+our $VERSION = '0.027'; # VERSION
 
 # Dependencies
 
@@ -79,7 +79,7 @@ Printer::ESCPOS::Connections::Network - Network Connection Interface for L<Print
 
 =head1 VERSION
 
-version 0.026
+version 0.027
 
 =head1 ATTRIBUTES
 

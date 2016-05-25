@@ -13,7 +13,7 @@ package Printer::ESCPOS::Roles::Connection;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.026'; # VERSION
+our $VERSION = '0.027'; # VERSION
 
 # Dependencies
 
@@ -66,7 +66,7 @@ Printer::ESCPOS::Roles::Connection - Role for Connection Classes for L<Printer::
 
 =head1 VERSION
 
-version 0.026
+version 0.027
 
 =head1 METHODS
 

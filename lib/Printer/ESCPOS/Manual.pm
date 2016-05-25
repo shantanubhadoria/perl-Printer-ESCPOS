@@ -13,7 +13,7 @@ package Printer::ESCPOS::Manual;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '0.026'; # VERSION
+our $VERSION = '0.027'; # VERSION
 
 1;
 
@@ -27,7 +27,7 @@ Printer::ESCPOS::Manual - Manual for Printing POS Receipts using L<Printer::ESCP
 
 =head1 VERSION
 
-version 0.026
+version 0.027
 
 =head1 SYNOPSIS
 
@@ -178,7 +178,7 @@ implementation may be created using a printer model specific profile.
      $device->printer->qr('WIFI:T:WPA;S:ShantanusWifi;P:wifipasswordhere;;')  # Create a QR code for connecting to a Wifi
 
 You may also pass in optional QR Code format parameters like Ecc, Version and moduleSize. Read more about these params
-at http:E<sol>E<sol>www.qrcode.comE<sol>enE<sol>aboutE<sol>version.html.
+at L<http://www.qrcode.com/en/about/version.html>.
 
      my $ecc = 'L'; # Default value
      my $version = 5; # Default value

@@ -1,6 +1,9 @@
 Changelog for Printer-ESCPOS
 
-0.026 2016-05-24T06:36:19
+0.027 2016-05-25T03:06:58
+ - Fixing link in manual (Shantanu Bhadoria)
+
+0.026 2016-05-24T06:36:06
  - Adding stopwords to avoid pod spell errors (Shantanu Bhadoria)
  - Removed header.gif to reduce filesize and avoid test croaks (Shantanu
    Bhadoria)
