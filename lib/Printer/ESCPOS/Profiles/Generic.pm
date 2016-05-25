@@ -1044,6 +1044,10 @@ Reverts to default line spacing for the printer
 
 Sets the distance from the beginning of the line to the position at which characters are to be printed.
 
+I<length>: ranges from 0 to 255
+
+I<height>: ranges from 0 to 255
+
     $device->printer->printPosition( $length, $height );
 
 * 0 <= $length <= 255
@@ -1064,6 +1068,8 @@ automatically set to the maximum value of the printable area.
 =head2 rot90
 
 Rotate printout by 90 degrees
+
+I<rotate> (optional, default 0): B<0> or B<1>
 
     $device->printer->rot90(1);
     $device->printer->text("This is rotated 90 degrees\n");
