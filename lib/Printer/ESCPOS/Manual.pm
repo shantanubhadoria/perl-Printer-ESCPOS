@@ -177,7 +177,7 @@ You may also call align() before calling qr() to set alignment on the page.
 
     use utf8;
 
-    $device->printer->utf8ImagedText("शांतनु भदौरिया",
+    $device->printer->utf8ImagedText("Hello World",
       fontFamily => "Rubik",
       fontStyle => "Normal",
       fontSize => 25,
