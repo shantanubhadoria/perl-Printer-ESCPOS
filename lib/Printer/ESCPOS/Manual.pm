@@ -173,6 +173,43 @@ at [http://www.qrcode.com/en/about/version.html].
 
 You may also call align() before calling qr() to set alignment on the page.
 
+=== utf8ImagedText
+
+    use utf8;
+
+    $device->printer->utf8ImagedText("शांतनु भदौरिया",
+      fontFamily => "Rubik",
+      fontStyle => "Normal",
+      fontSize => 25,
+      lineHeight => 40
+    );
+
+This method uses native fonts to print utf8 compatible characters including international wide characters. This method
+is slower than direct text printing but it allows exceptional styling options allowing you to print text using system
+fonts in a wide range of font sizes and styles with many more choices than what a thermal printer otherwise provides.
+
+In the background this function uses [Pango] and [Cairo] libraries to create a one line image from a given font styles,
+font family in a given font size. Note that you must not use this method to print more than a single line at a time.
+When you want to print the next line call this method again to print to the next line.
+
+*string*: String to be printed in the line.
+
+*fontFamily* (optional, default **"Purisa"**): Font family to use. On linux systems with font config installed use the
+following command to choose from the list of available fonts:
+
+    fc-list | sed 's/.*:\(.*,\|\s\)\(.*\):.*/\2/'
+
+You may also install more fonts from https://fonts.google.com/ to your system fonts( copy the font to /usr/share/fonts )
+
+*fontStyle* (optional, default **"Normal"**): Font style like Bold, Normal, Italic etc.
+
+*fontSize* (optional, default **20**): Font size
+
+*lineHeight* (optional, default **42**): Line Height in pixels, make sure this is bigger than the font height in pixels for your chosen font size.
+
+*paperWidth* (optional, default **500**): This is set to 500 pixels by default as this is the most common width for receipt printers. Change this
+as per your printer specs.
+
 === image
 
 Prints a GD image object to the printer

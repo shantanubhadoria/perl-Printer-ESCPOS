@@ -141,8 +141,8 @@ sub qr {
 =method utf8ImagedText
 
     use utf8;
-    
-    $printer_usb->printer->utf8ImagedText("शांतनु भदौरिया",
+
+    $device->printer->utf8ImagedText("शांतनु भदौरिया",
       fontFamily => "Rubik",
       fontStyle => "Normal",
       fontSize => 25,
@@ -166,13 +166,13 @@ following command to choose from the list of available fonts:
 
 You may also install more fonts from https://fonts.google.com/ to your system fonts( copy the font to /usr/share/fonts )
 
-I<fontStyle>: Font style like Bold, Normal, Italic etc.
+I<fontStyle> (optional, default B<'Normal'>): Font style like Bold, Normal, Italic etc.
 
-I<fontSize>: Font size
+I<fontSize> (optional, default B<20>): Font size
 
-I<lineHeight>: Line Height in pixels, make sure this is bigger than the font height in pixels for your chosen font size.
+I<lineHeight> (optional, default B<42>): Line Height in pixels, make sure this is bigger than the font height in pixels for your chosen font size.
 
-I<paperWidth>: This is set to 500 pixels by default as this is the most common width for receipt printers. Change this
+I<paperWidth> (optional, default B<500>): This is set to 500 pixels by default as this is the most common width for receipt printers. Change this
 as per your printer specs.
 
 =cut
