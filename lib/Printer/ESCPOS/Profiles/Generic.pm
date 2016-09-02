@@ -16,6 +16,9 @@ use Carp;
 use Scalar::Util::Numeric qw(isint);
 use GD::Barcode::QRcode;
 
+use Pango;
+use utf8;
+
 use constant {
     _ESC => "\x1b",
     _GS  => "\x1d",
@@ -133,6 +136,72 @@ sub qr {
 
     my $qrImage = GD::Barcode::QRcode->new($string,{ Ecc => $ecc, Version => $version, ModuleSize => $moduleSize})->plot();
     $self->image($qrImage);
+}
+
+=method utf8ImagedText
+
+    use utf8;
+    
+    $printer_usb->printer->utf8ImagedText("शांतनु भदौरिया",
+      fontFamily => "Rubik",
+      fontStyle => "Normal",
+      fontSize => 25,
+      lineHeight => 40
+    );
+
+This method uses native fonts to print utf8 compatible characters including international wide characters. This method
+is slower than direct text printing but it allows exceptional styling options allowing you to print text using system
+fonts in a wide range of font sizes and styles with many more choices than what a thermal printer otherwise provides.
+
+In the background this function uses [Pango] and [Cairo] libraries to create a one line image from a given font styles,
+font family in a given font size. Note that you must not use this method to print more than a single line at a time.
+When you want to print the next line call this method again to print to the next line.
+
+I<string>: String to be printed in the line.
+
+I<fontFamily> (optional, default B<'Purisa'>): Font family to use. On linux systems with font config installed use the
+following command to choose from the list of available fonts:
+
+    fc-list | sed 's/.*:\(.*,\|\s\)\(.*\):.*/\2/'
+
+You may also install more fonts from https://fonts.google.com/ to your system fonts( copy the font to /usr/share/fonts )
+
+I<fontStyle>: Font style like Bold, Normal, Italic etc.
+
+I<fontSize>: Font size
+
+I<lineHeight>: Line Height in pixels, make sure this is bigger than the font height in pixels for your chosen font size.
+
+I<paperWidth>: This is set to 500 pixels by default as this is the most common width for receipt printers. Change this
+as per your printer specs.
+
+=cut
+
+sub utf8ImagedText {
+    my ($self, $string, %params) = @_;
+    my $fontFamily = $params{fontFamily} // "Purisa";
+    my $fontStyle = $params{fontStyle} // "Normal";
+    my $fontSize = $params{fontSize} // 20;
+    my $lineHeight = $params{lineHeight} // 42;
+    my $paperWidth = $params{paperWidth} // 500;
+
+
+    my $surface = Cairo::ImageSurface->create('argb32', $paperWidth, $lineHeight);
+    my $cr = Cairo::Context->create ($surface);
+    $cr->set_antialias('none');
+    $cr->set_source_rgb (255, 255, 255);
+    $cr->paint();
+    $cr->set_source_rgb (0, 0, 0);
+    my $layout = Pango::Cairo::create_layout ($cr);
+    $layout->set_text ($string);
+    my $font = Pango::FontDescription->from_string ("$fontFamily $fontStyle $fontSize");
+    $layout->set_font_description ($font);
+
+    Pango::Cairo::show_layout($cr, $layout);
+    my $tempdir = File::Temp::tempdir();
+    $surface->write_to_png ($tempdir . '/cairopangoprinterimage.png');
+    my $img = newFromPng GD::Image($tempdir . '/cairopangoprinterimage.png') || die "Error $!";
+    $self->image($img);
 }
 
 =method image
