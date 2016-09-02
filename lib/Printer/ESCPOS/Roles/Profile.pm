@@ -13,7 +13,7 @@ package Printer::ESCPOS::Roles::Profile;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '1.002'; # VERSION
+our $VERSION = '1.003'; # VERSION
 
 # Dependencies
 use 5.010;
@@ -98,7 +98,7 @@ Printer::ESCPOS::Roles::Profile - Role for all Printer Profiles for L<Printer::E
 
 =head1 VERSION
 
-version 1.002
+version 1.003
 
 =head1 ATTRIBUTES
 

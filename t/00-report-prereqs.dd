@@ -29,6 +29,7 @@ do { my $x = {
                                       'IO::Socket' => '0',
                                       'Moo' => '0',
                                       'Moo::Role' => '0',
+                                      'Pango' => '0',
                                       'Scalar::Util::Numeric' => '0',
                                       'Time::HiRes' => '0',
                                       'Type::Tiny' => '0',
@@ -36,6 +37,7 @@ do { my $x = {
                                       'constant' => '0',
                                       'perl' => '5.010',
                                       'strict' => '0',
+                                      'utf8' => '0',
                                       'warnings' => '0'
                                     }
                     },

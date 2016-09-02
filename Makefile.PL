@@ -28,12 +28,14 @@ my %WriteMakefileArgs = (
     "IO::Socket" => 0,
     "Moo" => 0,
     "Moo::Role" => 0,
+    "Pango" => 0,
     "Scalar::Util::Numeric" => 0,
     "Time::HiRes" => 0,
     "Type::Tiny" => 0,
     "aliased" => 0,
     "constant" => 0,
     "strict" => 0,
+    "utf8" => 0,
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
@@ -45,7 +47,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "blib" => "1.01"
   },
-  "VERSION" => "1.002",
+  "VERSION" => "1.003",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -66,6 +68,7 @@ my %FallbackPrereqs = (
   "IPC::Open3" => 0,
   "Moo" => 0,
   "Moo::Role" => 0,
+  "Pango" => 0,
   "Scalar::Util::Numeric" => 0,
   "Test::More" => 0,
   "Time::HiRes" => 0,
@@ -74,6 +77,7 @@ my %FallbackPrereqs = (
   "blib" => "1.01",
   "constant" => 0,
   "strict" => 0,
+  "utf8" => 0,
   "warnings" => 0
 );
 
