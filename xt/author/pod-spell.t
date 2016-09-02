@@ -92,6 +92,13 @@ aternate
 commandSet
 ecc
 upto
+ImagedText
+Pango
+Purisa
+fontFamily
+fontSize
+lineHeight
+paperWidth
 Shantanu
 Bhadoria
 shantanu
