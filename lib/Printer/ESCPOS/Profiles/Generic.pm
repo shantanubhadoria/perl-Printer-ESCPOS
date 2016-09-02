@@ -142,7 +142,7 @@ sub qr {
 
     use utf8;
 
-    $device->printer->utf8ImagedText("शांतनु भदौरिया",
+    $device->printer->utf8ImagedText("Hello World\x{8A9E}",
       fontFamily => "Rubik",
       fontStyle => "Normal",
       fontSize => 25,
