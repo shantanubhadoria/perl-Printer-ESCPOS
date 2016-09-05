@@ -13,7 +13,7 @@ package Printer::ESCPOS::Manual;
 # This is free software; you can redistribute it and/or modify it under
 # the same terms as the Perl 5 programming language system itself.
 #
-our $VERSION = '1.003'; # VERSION
+our $VERSION = '1.004'; # VERSION
 
 1;
 
@@ -27,7 +27,7 @@ Printer::ESCPOS::Manual - Manual for Printing POS Receipts using L<Printer::ESCP
 
 =head1 VERSION
 
-version 1.003
+version 1.004
 
 =head1 SYNOPSIS
 
@@ -206,22 +206,22 @@ In the background this function uses L<Pango> and L<Cairo> libraries to create a
 font family in a given font size. Note that you must not use this method to print more than a single line at a time.
 When you want to print the next line call this method again to print to the next line.
 
-B<string>: String to be printed in the line.
+I<string>: String to be printed in the line.
 
-B<fontFamily> (optional, default B<>"Purisa"**): Font family to use. On linux systems with font config installed use the
+I<fontFamily> (optional, default B<'Purisa'>): Font family to use. On linux systems with font config installed use the
 following command to choose from the list of available fonts:
 
      fc-list | sed 's/.*:\(.*,\|\s\)\(.*\):.*/\2/'
 
 You may also install more fonts from https:E<sol>E<sol>fonts.google.comE<sol> to your system fonts( copy the font to E<sol>usrE<sol>shareE<sol>fonts )
 
-B<fontStyle> (optional, default B<>"Normal"**): Font style like Bold, Normal, Italic etc.
+I<fontStyle> (optional, default B<'Normal'>): Font style like Bold, Normal, Italic etc.
 
-B<fontSize> (optional, default B<>20**): Font size
+I<fontSize> (optional, default B<20>): Font size
 
-B<lineHeight> (optional, default B<>42**): Line Height in pixels, make sure this is bigger than the font height in pixels for your chosen font size.
+I<lineHeight> (optional, default B<42>): Line Height in pixels, make sure this is bigger than the font height in pixels for your chosen font size.
 
-B<paperWidth> (optional, default B<>500**): This is set to 500 pixels by default as this is the most common width for receipt printers. Change this
+I<paperWidth> (optional, default B<500>): This is set to 500 pixels by default as this is the most common width for receipt printers. Change this
 as per your printer specs.
 
 =head3 image
