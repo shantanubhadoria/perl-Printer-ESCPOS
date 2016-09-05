@@ -153,7 +153,7 @@ This method uses native fonts to print utf8 compatible characters including inte
 is slower than direct text printing but it allows exceptional styling options allowing you to print text using system
 fonts in a wide range of font sizes and styles with many more choices than what a thermal printer otherwise provides.
 
-In the background this function uses [Pango] and [Cairo] libraries to create a one line image from a given font styles,
+In the background this function uses L<Pango> and L<Cairo> libraries to create a one line image from a given font styles,
 font family in a given font size. Note that you must not use this method to print more than a single line at a time.
 When you want to print the next line call this method again to print to the next line.
 
