@@ -33,39 +33,40 @@ no_index:
 provides:
   Printer::ESCPOS:
     file: lib/Printer/ESCPOS.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Connections::File:
     file: lib/Printer/ESCPOS/Connections/File.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Connections::Network:
     file: lib/Printer/ESCPOS/Connections/Network.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Connections::Serial:
     file: lib/Printer/ESCPOS/Connections/Serial.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Connections::USB:
     file: lib/Printer/ESCPOS/Connections/USB.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Manual:
     file: lib/Printer/ESCPOS/Manual.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Profiles::Generic:
     file: lib/Printer/ESCPOS/Profiles/Generic.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Profiles::SinocanPSeries:
     file: lib/Printer/ESCPOS/Profiles/SinocanPSeries.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Roles::Connection:
     file: lib/Printer/ESCPOS/Roles/Connection.pm
-    version: '1.004'
+    version: '1.005'
   Printer::ESCPOS::Roles::Profile:
     file: lib/Printer/ESCPOS/Roles/Profile.pm
-    version: '1.004'
+    version: '1.005'
 requires:
   Carp: '0'
   Class::Load: '0'
   Device::SerialPort: '0'
   Device::USB: '0'
+  File::Temp: '0'
   GD::Barcode::QRcode: '0'
   IO::File: '0'
   IO::Socket: '0'
@@ -85,6 +86,6 @@ resources:
   bugtracker: https://github.com/shantanubhadoria/perl-printer-escpos/issues
   homepage: https://metacpan.org/release/Printer-ESCPOS
   repository: git://github.com/shantanubhadoria/perl-printer-escpos.git
-version: '1.004'
+version: '1.005'
 x_contributors:
   - 'Shantanu Bhadoria <shantanu att cpan dott org>'

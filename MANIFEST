@@ -16,6 +16,7 @@ examples/example_serial.pl
 examples/example_small.pl
 examples/example_usb.pl
 examples/example_usb2.pl
+examples/example_utf8.pl
 lib/Printer/ESCPOS.pm
 lib/Printer/ESCPOS/Connections/File.pm
 lib/Printer/ESCPOS/Connections/Network.pm

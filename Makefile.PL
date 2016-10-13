@@ -23,6 +23,7 @@ my %WriteMakefileArgs = (
     "Class::Load" => 0,
     "Device::SerialPort" => 0,
     "Device::USB" => 0,
+    "File::Temp" => 0,
     "GD::Barcode::QRcode" => 0,
     "IO::File" => 0,
     "IO::Socket" => 0,
@@ -47,7 +48,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "blib" => "1.01"
   },
-  "VERSION" => "1.004",
+  "VERSION" => "1.005",
   "test" => {
     "TESTS" => "t/*.t"
   }

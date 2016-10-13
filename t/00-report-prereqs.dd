@@ -24,6 +24,7 @@ do { my $x = {
                                       'Class::Load' => '0',
                                       'Device::SerialPort' => '0',
                                       'Device::USB' => '0',
+                                      'File::Temp' => '0',
                                       'GD::Barcode::QRcode' => '0',
                                       'IO::File' => '0',
                                       'IO::Socket' => '0',
