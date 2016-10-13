@@ -6,15 +6,15 @@ Printer::ESCPOS - Interface for all thermal, dot-matrix and other receipt printe
     <p>
     <img src="https://img.shields.io/badge/perl-5.10+-brightgreen.svg" alt="Requires Perl 5.10+" />
     <a href="https://travis-ci.org/shantanubhadoria/perl-Printer-ESCPOS"><img src="https://api.travis-ci.org/shantanubhadoria/perl-Printer-ESCPOS.svg?branch=build/master" alt="Travis status" /></a>
-    <a href="http://matrix.cpantesters.org/?dist=Printer-ESCPOS%201.004"><img src="https://badgedepot.code301.com/badge/cpantesters/Printer-ESCPOS/1.004" alt="CPAN Testers result" /></a>
-    <a href="http://cpants.cpanauthors.org/dist/Printer-ESCPOS-1.004"><img src="https://badgedepot.code301.com/badge/kwalitee/Printer-ESCPOS/1.004" alt="Distribution kwalitee" /></a>
+    <a href="http://matrix.cpantesters.org/?dist=Printer-ESCPOS%201.005"><img src="https://badgedepot.code301.com/badge/cpantesters/Printer-ESCPOS/1.005" alt="CPAN Testers result" /></a>
+    <a href="http://cpants.cpanauthors.org/dist/Printer-ESCPOS-1.005"><img src="https://badgedepot.code301.com/badge/kwalitee/Printer-ESCPOS/1.005" alt="Distribution kwalitee" /></a>
     <a href="https://gratipay.com/shantanubhadoria"><img src="https://img.shields.io/gratipay/shantanubhadoria.svg" alt="Gratipay" /></a>
     </p>
 </div>
 
 # VERSION
 
-version 1.004
+version 1.005
 
 # SYNOPSIS
 
