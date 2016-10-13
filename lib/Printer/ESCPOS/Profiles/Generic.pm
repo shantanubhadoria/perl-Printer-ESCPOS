@@ -18,6 +18,7 @@ use GD::Barcode::QRcode;
 
 use Pango;
 use utf8;
+use File::Temp;
 
 use constant {
     _ESC => "\x1b",
