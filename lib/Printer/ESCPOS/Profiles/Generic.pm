@@ -363,7 +363,7 @@ I<tabPositions>: a list of positions for tab().
         $device->printer->text('$' . $plu->{price});
     }
 
-    This would print a well aligned receipt like so::
+This would print a well aligned receipt like so:
 
     10 x Guiness Beer              $24.00
     2  x Pizza                     $500.50
