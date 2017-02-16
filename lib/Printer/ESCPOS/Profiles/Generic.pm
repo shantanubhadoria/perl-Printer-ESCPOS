@@ -229,7 +229,7 @@ sub image {
         carp 'Width is greater than 512 pixels and could be truncated at print time';
     }
     if($img->height > 255) {
-        confess 'Height is greated than 255 pixels';
+        confess 'Height is greater than 255 pixels';
     }
 
     my @padding = $self->_pad_image_size( $img->width );
