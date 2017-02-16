@@ -354,14 +354,14 @@ Sets horizontal tab positions for tab stops. Upto 32 tab positions can be set in
 I<tabPositions>: a list of positions for tab().
 
     $device->printer->tabPositions( 5, 9, 13 );
-    printer.tabPositions(5, 9, 13);
 
-    for my $plu (@plus):
-        $device->printer->text($plu{quantity});
+    for my $plu (@plus) {
+        $device->printer->text($plu->{quantity});
         $device->printer->tab();
-        $device->printer->text(' x ' . plu{name});
+        $device->printer->text(' x ' . $plu->{name});
         $device->printer->tab();
-        $device->printer->text('$' . plu{price});
+        $device->printer->text('$' . $plu->{price});
+    }
 
     This would print a well aligned receipt like so::
 
