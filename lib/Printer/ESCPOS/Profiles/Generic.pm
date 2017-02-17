@@ -229,7 +229,7 @@ sub image {
         carp 'Width is greater than 512 pixels and could be truncated at print time';
     }
     if($img->height > 255) {
-        confess 'Height is greated than 255 pixels';
+        confess 'Height is greater than 255 pixels';
     }
 
     my @padding = $self->_pad_image_size( $img->width );
@@ -354,16 +354,16 @@ Sets horizontal tab positions for tab stops. Upto 32 tab positions can be set in
 I<tabPositions>: a list of positions for tab().
 
     $device->printer->tabPositions( 5, 9, 13 );
-    printer.tabPositions(5, 9, 13);
 
-    for my $plu (@plus):
-        $device->printer->text($plu{quantity});
+    for my $plu (@plus) {
+        $device->printer->text($plu->{quantity});
         $device->printer->tab();
-        $device->printer->text(' x ' . plu{name});
+        $device->printer->text(' x ' . $plu->{name});
         $device->printer->tab();
-        $device->printer->text('$' . plu{price});
+        $device->printer->text('$' . $plu->{price});
+    }
 
-    This would print a well aligned receipt like so::
+This would print a well aligned receipt like so:
 
     10 x Guiness Beer              $24.00
     2  x Pizza                     $500.50
