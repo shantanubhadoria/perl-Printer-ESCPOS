@@ -68,7 +68,6 @@ has _connection => (
     init_arg   => undef,
 );
 
-
 sub _build__connection {
     my ($self) = @_;
 
@@ -125,7 +124,6 @@ sub print {
         usleep(5000);    # USB Port is sometimes annoying, it doesn't always tell you when it is ready to get the next chunk
     }
 }
-
 
 no Moo;
 __PACKAGE__->meta->make_immutable;
