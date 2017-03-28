@@ -121,7 +121,7 @@ sub print {
     @chunks = unpack "a$n" x ( ( length($buffer) / $n ) - 1 ) . "a*", $buffer;
     for my $chunk (@chunks) {
         $self->_connection->bulk_write($self->endPoint, $chunk, $self->timeout);
-        usleep(5000);    # USB Port is sometimes annoying, it doesn't always tell you when it is ready to get the next chunk
+        usleep(10000);    # USB Port is sometimes annoying, it doesn't always tell you when it is ready to get the next chunk
     }
 }
 
