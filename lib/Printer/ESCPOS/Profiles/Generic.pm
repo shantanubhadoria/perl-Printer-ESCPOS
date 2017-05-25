@@ -670,7 +670,7 @@ Sets Upside Down Printing on/off (pass *0* or *1*)
 
 I<upsideDown> (optional, default 0): B<0> or B<1>
 
-    $device->printer->upsideDownPrinting(1);
+    $device->printer->upsideDown(1);
     $device->printer->text("This text is upside down");
 
 =cut
