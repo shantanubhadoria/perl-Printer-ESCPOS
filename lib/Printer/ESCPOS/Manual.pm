@@ -343,7 +343,7 @@ Set Justification. Options *left*, *right* and *center*
 
 Sets Upside Down Printing on/off (pass *0* or *1*)
 
-    $device->printer->upsideDownPrinting(1);
+    $device->printer->upsideDown(1);
     $device->printer->text("This text is upside down");
 
 === fontHeight
